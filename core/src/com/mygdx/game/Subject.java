@@ -1,0 +1,38 @@
+package com.mygdx.game;
+
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector3;
+
+public class Subject {
+    public static final int sizeX = 30;
+    public static final int sizeY = 25;
+    float x, y;
+    Texture texture;
+    String name;
+    boolean free;
+
+    public Subject(Texture texture, String name) {
+        this.texture = texture;
+        this.name = name;
+        free = true;
+    }
+
+    public void setPosition(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public void draw() {
+        MyGame.batch.draw(texture, x, y, sizeX, sizeY);
+    }
+
+    public boolean take() {
+
+        System.out.println("take " + x + " " + y);
+        if (Helper.dist(World.pers.getCenter(), new Vector3(x, y, 0)) > 50) {
+            return false;
+        }
+        free = false;
+        return true;
+    }
+}
