@@ -1,9 +1,5 @@
 package com.mygdx.game;
 
-/**
- * Created by iliamikado on 01.10.2019.
- */
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;

@@ -2,10 +2,6 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.math.Vector3;
 
-/**
- * Created by iliamikado on 03.10.2019.
- */
-
 public class Rectangle {
     float x, y, width, height;
 

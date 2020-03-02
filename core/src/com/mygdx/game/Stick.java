@@ -5,10 +5,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-/**
- * Created by iliamikado on 04.10.2019.
- */
-
 public class Stick {
     Texture img1, img2;
     int x1, y1;

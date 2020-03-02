@@ -8,12 +8,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
-
-/**
- * Created by iliamikado on 01.10.2019.
- */
-
-
 public class MainMenuScreen implements Screen {
     SpriteBatch batch;
     BitmapFont font;

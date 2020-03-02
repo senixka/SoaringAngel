@@ -4,8 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
+import com.mygdx.game.Mobs.Slime;
 import com.mygdx.game.Weapons.Shotgun;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,9 +19,8 @@ public class World {
     public static List<Bullet> bullets;
     public static List<Subject> subjects;
     public static int [][] map;
-    public static final int pixSize = 25;
+    public static final int pixSize = 50;
     public static Texture pix;
-
     public static Texture pix2;
 
     public static void start(GameController controller2) {
@@ -37,10 +39,12 @@ public class World {
 
         bullets = new LinkedList<Bullet>();
 
-        pix = new Texture(Gdx.files.internal("blue.png"));
-        pix2 = new Texture(Gdx.files.internal("desert.png"));
+        pix = new Texture(Gdx.files.internal("StonePix.psd"));
+        pix2 = new Texture(Gdx.files.internal("StonePixDown.psd"));
+
 
         createMap();
+
     }
 
     public static void update(float delta) {
@@ -76,6 +80,8 @@ public class World {
             }
         }
         bullets = temp2;
+
+
     }
 
     public static void take() {
@@ -92,15 +98,24 @@ public class World {
         if (!Helper.globalCheck()) {
             return;
         }
+
         if (World.pers == null) {
             System.out.println("Whaat");
             return;
         }
 
+
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map.length; j++) {
                 if (map[i][j] == 0) {
-                    //MyGame.batch.draw(pix2, i * pixSize - 2, j * pixSize - 2, pixSize + 4, pixSize + 4);
+                    MyGame.batch.draw(pix2, i * pixSize, j * pixSize - pixSize / 2, pixSize, pixSize / 2);
+                }
+            }
+        }
+
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map.length; j++) {
+                if (map[i][j] == 0) {
                     MyGame.batch.draw(pix, i * pixSize, j * pixSize, pixSize, pixSize);
                 }
             }
@@ -122,6 +137,7 @@ public class World {
     public static Vector3 getFocus() {
         return pers.getCenter();
     }
+
 
     public static void setTarget() {
         float dist = 300;

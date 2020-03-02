@@ -22,13 +22,17 @@ public class GameController implements InputProcessor {
         if (Input.Keys.A == keycode) {
             flagA = true;
         }
+
         if (Input.Keys.SPACE == keycode) {
             World.pers.attack();
         }
+
         if (Input.Keys.ESCAPE == keycode) {
             MyGame.staticSetScreen(new PauseMenuScreen());
         }
-
+        if (Input.Keys.SHIFT_LEFT == keycode) {
+            World.pers.setSpeedBoost(200);
+        }
         return false;
     }
 
@@ -46,6 +50,9 @@ public class GameController implements InputProcessor {
         if (Input.Keys.A == keycode) {
             flagA = false;
         }
+        if (Input.Keys.SHIFT_LEFT == keycode) {
+            World.pers.setSpeedBoost(0);
+        }
         return false;
     }
 
@@ -54,6 +61,7 @@ public class GameController implements InputProcessor {
         if (character == 'e') {
             World.take();
         }
+
         if (character == 'i') {
             World.pers.y += 50;
         }

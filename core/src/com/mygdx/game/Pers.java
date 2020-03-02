@@ -2,18 +2,18 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.Weapons.FirstGun;
 import com.mygdx.game.Weapons.Shotgun;
 
-/**
- * Created by iliamikado on 02.10.2019.
- */
-
 public class Pers {
-    public  float x = 0, y = 0;
-    public int sizeX = 8 * 5;
-    public int sizeY = 11 * 5;
+    float x = 0, y = 0;
+    int sizeX = 8 * 5;
+    int sizeY = 11 * 5;
     int speed = 200;
+    int speedBoost = 0;
     Texture texture;
     Mob target;
     Weapon weapon;
@@ -25,6 +25,10 @@ public class Pers {
         texture = new Texture(Gdx.files.internal("Human.psd"));
         lastVect = new Vector3(5, 0, 0);
         weapon = new Shotgun();
+    }
+
+    public void setSpeedBoost(int speedBoost) {
+        this.speedBoost = speedBoost;
     }
 
     public void setPosition(int x, int y) {
@@ -58,7 +62,7 @@ public class Pers {
 
 
         if (tempFlagX) {
-            x += vector3.x * speed * delta;
+            x += vector3.x * (speed + speedBoost) * delta;
         }
 
         tempX = (int) ((getCenter().x) / World.pixSize);
@@ -75,7 +79,7 @@ public class Pers {
         }
 
         if (tempFlagY) {
-            y += vector3.y * speed * delta;
+            y += vector3.y * (speed + speedBoost) * delta;
         }
     }
 

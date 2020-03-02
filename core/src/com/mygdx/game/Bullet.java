@@ -3,6 +3,9 @@ package com.mygdx.game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 
+import java.io.IOError;
+import java.io.IOException;
+
 public class Bullet {
     Texture texture;
     Vector3 vect;
@@ -15,8 +18,8 @@ public class Bullet {
     public Bullet(Texture texture, int speed, float sizeX, float sizeY, int damage, Vector3 vect, float x, float y) {
         this.texture = texture;
         this.vect = vect;
-        //this.speed = speed;
-        this.speed = 600;
+        this.speed = speed;
+
         this.x = x;
         this.y = y;
         this.sizeX = sizeX;
@@ -76,4 +79,3 @@ public class Bullet {
         MyGame.batch.draw(texture, x, y, sizeX, sizeY);
     }
 }
-
