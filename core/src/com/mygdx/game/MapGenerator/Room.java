@@ -41,7 +41,7 @@ public class Room {
     }
 
     public boolean isPointInRoom(int pointX, int pointY) {
-        if (x <= pointX && pointX < x + height && y <= pointY && pointY < y + width) {
+        if (x <= pointX && pointX < x + height - 1 && y <= pointY && pointY < y + width - 1) {
             return true;
         }
         return false;

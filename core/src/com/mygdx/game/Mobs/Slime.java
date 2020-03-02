@@ -17,8 +17,8 @@ public class Slime extends Mob {
     @Override
     public void move(Vector3 vec) {
         Vector3 newVec = GameMapGenerator.gameCordsToMap(new Vector3(vec.x + x, vec.y + y, 0));
-        System.out.println(room.x + " " + room.y + " " + (int)newVec.x + " " + (int)newVec.y);
-        if (room.isPointInRoom((int) newVec.x + 1, (int) newVec.y + 1)) {
+        //System.out.println(room.x + " " + room.y + " " + (int)newVec.x + " " + (int)newVec.y);
+        if (room.isPointInRoom((int) newVec.x, (int) newVec.y)) {
             x += vec.x;
             y += vec.y;
         }
@@ -26,7 +26,7 @@ public class Slime extends Mob {
 
     @Override
     public void update(float delta) {
-        float perX = World.pers.x, perY = World.pers.y;
+        float perX = World.pers.getX(), perY = World.pers.getY();
         Vector3 vec = new Vector3(perX - x,perY - y, 0).nor();
         vec.x *= delta * speed;
         vec.y *= delta * speed;
