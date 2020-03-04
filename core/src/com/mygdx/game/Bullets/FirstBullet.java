@@ -7,6 +7,6 @@ import com.mygdx.game.Bullet;
 
 public class FirstBullet extends Bullet {
     public FirstBullet(Vector3 vect, float x, float y) {
-        super(new Texture(Gdx.files.internal("red.png")), 300, 20, 20, 5, vect, x, y);
+        super(new Texture(Gdx.files.internal("red.png")), 600, 20, 20, 5, vect, x, y);
     }
 }

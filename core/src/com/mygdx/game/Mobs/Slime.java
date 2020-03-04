@@ -17,8 +17,10 @@ public class Slime extends Mob {
     @Override
     public void move(Vector3 vec) {
         Vector3 newVec = GameMapGenerator.gameCordsToMap(new Vector3(vec.x + x, vec.y + y, 0));
+        //System.out.println(newVec.x);
         //System.out.println(room.x + " " + room.y + " " + (int)newVec.x + " " + (int)newVec.y);
-        if (room.isPointInRoom((int) newVec.x, (int) newVec.y)) {
+        //if (room.isPointInRoom((int) newVec.x, (int) newVec.y)) {
+        if (room.isPointAccessible((int) newVec.x, (int) newVec.y)) {
             x += vec.x;
             y += vec.y;
         }

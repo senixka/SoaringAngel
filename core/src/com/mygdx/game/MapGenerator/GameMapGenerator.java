@@ -1,9 +1,9 @@
 package com.mygdx.game.MapGenerator;
 
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.Helper;
 import com.mygdx.game.World;
 
-import java.security.SecureRandom;
 import java.util.*;
 
 public class GameMapGenerator {
@@ -12,14 +12,15 @@ public class GameMapGenerator {
      * 0 <= WAY_EPS <= 10000
      */
     public static int WIDTH, HEIGHT, ROOM_EPS, WAY_EPS;
-    private SecureRandom secureRandom;
+    public static int[][] localGameMap;
+    //private SecureRandom secureRandom;
 
     public GameMapGenerator(int HEIGHT, int WIDTH, int BORDER, int MIN_HEIGHT, int MIN_WIDTH, int ROOM_EPS, int WAY_EPS) {
         this.HEIGHT = HEIGHT;
         this.WIDTH = WIDTH;
         this.ROOM_EPS = ROOM_EPS;
         this.WAY_EPS = WAY_EPS;
-        this.secureRandom = new SecureRandom();
+        //this.secureRandom = new SecureRandom();
         Node.BORDER = BORDER;
         Node.MIN_HEIGHT = MIN_HEIGHT;
         Node.MIN_WIDTH = MIN_WIDTH;
@@ -37,6 +38,7 @@ public class GameMapGenerator {
 
     public int[][] generate() {
         int[][] gameMap = new int[HEIGHT][WIDTH];
+        localGameMap = new int[HEIGHT][WIDTH];
         Node root = new Node(0, 0, HEIGHT - 1, WIDTH - 1);
         ArrayList<Room> rooms = new ArrayList<>();
 
@@ -47,6 +49,11 @@ public class GameMapGenerator {
         connectRooms(rooms);
 
         initGameMap(gameMap, rooms);
+        for (int i = 0; i < HEIGHT; ++i) {
+            for (int j = 0; j < WIDTH; ++j) {
+                localGameMap[i][j] = gameMap[i][j];
+            }
+        }
         return gameMap;
     }
 
@@ -61,6 +68,46 @@ public class GameMapGenerator {
             Room temp = rooms.get(i);
             printRoomToMap(gameMap, temp);
             printWaysToMap(gameMap, temp);
+        }
+        for (int i = 0; i < rooms.size(); ++i) {
+            Room temp = rooms.get(i);
+            printRoomShelterToMap(gameMap, temp);
+        }
+    }
+
+    private void printRoomShelterToMap(int[][] gameMap, Room room) {
+        ArrayList<Instruction> temp = room.shelter.shelters.get(room.shelter.index).tmp;
+        for (int i = 0; i < temp.size(); ++i) {
+            Instruction inst = temp.get(i);
+            printInstructionToMap(gameMap, room, inst);
+        }
+    }
+
+    private void printInstructionToMap(int[][] gameMap, Room room, Instruction inst) {
+        int tempX = (int) ((float) room.x + inst.x * (float) room.height);
+        int tempY = (int) ((float) room.y + inst.y * (float) room.width);
+        Vector3 vec = inst.vec;
+        if (vec.x == 0 && vec.y == 0) {
+            gameMap[tempX][tempY] = 0;
+        }
+        else if (vec.x == 0 && vec.y != 0) {
+            int delta = (int) ((float) room.width * inst.len);
+            for (int i = tempY; i >= room.y && i < room.y + room.width && Math.abs(i - tempY) <= delta; i += vec.y) {
+                gameMap[tempX][i] = 0;
+            }
+        }
+        else if (vec.x != 0 && vec.y == 0) {
+            int delta = (int) ((float) room.height * inst.len);
+            for (int i = tempX; i >= room.x && i < room.x + room.height && Math.abs(i - tempX) <= delta; i += vec.x) {
+                gameMap[i][tempY] = 0;
+            }
+        }
+        else {
+            int delta = Math.min((int) ((float) room.height * inst.len), (int) ((float) room.width * inst.len));
+            for (int i = tempX, j = tempY; i >= room.x && i < room.x + room.height && Math.abs(i - tempX) <= delta &&
+                j >= room.y && j < room.y + room.width && Math.abs(j - tempY) <= delta; i += vec.x, j += vec.y) {
+                gameMap[i][j] = 0;
+            }
         }
     }
 
@@ -92,10 +139,12 @@ public class GameMapGenerator {
             int newH = (v.height - 2 * (v.MIN_HEIGHT + 2 * v.BORDER)) / 2, newW = (v.width - 2 * (v.MIN_WIDTH + 2 * v.BORDER)) / 2;
             int deltaH = 0, deltaW = 0;
             if (newH > 0) {
-                deltaH = (Math.abs(secureRandom.nextInt()) % newH);
+                //deltaH = (Math.abs(secureRandom.nextInt()) % newH);
+                deltaH = Rand.AbsModInt(newH);
             }
             if (newW > 0) {
-                deltaW = (Math.abs(secureRandom.nextInt()) % newW);
+                //deltaW = (Math.abs(secureRandom.nextInt()) % newW);
+                deltaW = Rand.AbsModInt(newW);
             }
             if (splittable == 0) {
                 // horizontal
@@ -163,7 +212,8 @@ public class GameMapGenerator {
 
     private void sparseRooms(ArrayList<Room> rooms) {
         for (int i = 0; i < rooms.size(); ++i) {
-            if (Math.abs(secureRandom.nextInt()) % 1000 < ROOM_EPS) {
+            if (Rand.AbsModInt(1000) < ROOM_EPS) {
+            //if (Math.abs(secureRandom.nextInt()) % 1000 < ROOM_EPS) {
                 rooms.get(i).isRoomVisible = false;
                 rooms.remove(i);
                 --i;
@@ -194,7 +244,8 @@ public class GameMapGenerator {
 
         for (int i = 0; i < rooms.size(); ++i) {
             for (int j = i + 1; j < rooms.size(); ++j) {
-                if (Math.abs(secureRandom.nextInt()) % 10000 < WAY_EPS) {
+                if (Rand.AbsModInt(10000) < WAY_EPS) {
+                //if (Math.abs(secureRandom.nextInt()) % 10000 < WAY_EPS) {
                     connectTwoRooms(rooms.get(i), rooms.get(j));
                 }
             }

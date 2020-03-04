@@ -32,4 +32,9 @@ public class Helper {
         Rectangle r2 = new Rectangle(x2, y2, sizeX2, sizeY2);
         return r1.intersect(r2);
     }
+
+    public static boolean intersect(Rectangle r1, Rectangle r2) {
+        return r1.intersect(r2);
+    }
+
 }

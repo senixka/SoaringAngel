@@ -12,7 +12,8 @@ public class Room {
     public boolean isRoomVisible;
     public ArrayList<ArrayList<Pair>> ways;
     public ArrayList<Mob> mobs;
-    private SecureRandom secureRandom;
+    public Shelter shelter;
+    //private SecureRandom secureRandom;
 
     public Room(int x, int y, int width, int height) {
         this.x = x;
@@ -22,12 +23,15 @@ public class Room {
         this.isRoomVisible = true;
         this.ways = new ArrayList<>();
         this.mobs = new ArrayList<>();
-        this.secureRandom = new SecureRandom();
+        this.shelter = new Shelter();
+        //this.secureRandom = new SecureRandom();
     }
 
     public Pair getRandomPointInRoom() {
-        int newX = (Math.abs(secureRandom.nextInt()) % height);
-        int newY = (Math.abs(secureRandom.nextInt()) % width);
+        //int newX = (Math.abs(secureRandom.nextInt()) % height);
+        int newX = Rand.AbsModInt(height);
+        //int newY = (Math.abs(secureRandom.nextInt()) % width);
+        int newY = Rand.AbsModInt(width);
         return (new Pair(x + newX, y + newY));
     }
 
@@ -43,6 +47,15 @@ public class Room {
     public boolean isPointInRoom(int pointX, int pointY) {
         if (x <= pointX && pointX < x + height - 1 && y <= pointY && pointY < y + width - 1) {
             return true;
+        }
+        return false;
+    }
+
+    public boolean isPointAccessible (int pointX, int pointY) {
+        if (isPointInRoom(pointX, pointY)) {
+            if (GameMapGenerator.localGameMap[pointX][pointY] == 1) {
+                return true;
+            }
         }
         return false;
     }
