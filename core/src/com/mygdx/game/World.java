@@ -4,11 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
-import com.mygdx.game.Mobs.Slime;
 import com.mygdx.game.Weapons.Shotgun;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,7 +15,7 @@ public class World {
     public static List<Mob> mobs;
     public static List<Bullet> bullets;
     public static List<Subject> subjects;
-    public static int [][] map;
+    public static int[][] map;
     public static final int pixSize = 50;
     public static Texture pix;
     public static Texture pix2;
@@ -42,9 +39,7 @@ public class World {
         pix = new Texture(Gdx.files.internal("StonePix.psd"));
         pix2 = new Texture(Gdx.files.internal("StonePixDown.psd"));
 
-
         createMap();
-
     }
 
     public static void update(float delta) {
@@ -58,7 +53,6 @@ public class World {
             bullet.update(delta);
         }
         delete();
-
 
         pers.move(controller.speedVector(), delta);
         setTarget();
@@ -137,7 +131,6 @@ public class World {
     public static Vector3 getFocus() {
         return pers.getCenter();
     }
-
 
     public static void setTarget() {
         float dist = 300;

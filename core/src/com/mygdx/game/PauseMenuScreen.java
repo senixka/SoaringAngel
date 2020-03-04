@@ -9,12 +9,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class PauseMenuScreen implements Screen {
-    MyGame game;
-    SpriteBatch batch;
-    BitmapFont font;
-    OrthographicCamera camera;
-    Texture background;
-    PauseMenuController controller;
+    public MyGame game;
+    public SpriteBatch batch;
+    public BitmapFont font;
+    public OrthographicCamera camera;
+    public Texture background;
+    public PauseMenuController controller;
 
     public PauseMenuScreen() {
         batch = MyGame.batch;

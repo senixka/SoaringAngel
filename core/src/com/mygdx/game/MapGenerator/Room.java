@@ -4,7 +4,6 @@ import com.mygdx.game.Mobs.Slime;
 import com.mygdx.game.Mob;
 import com.mygdx.game.World;
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
 
 public class Room {
@@ -13,7 +12,6 @@ public class Room {
     public ArrayList<ArrayList<Pair>> ways;
     public ArrayList<Mob> mobs;
     public Shelter shelter;
-    //private SecureRandom secureRandom;
 
     public Room(int x, int y, int width, int height) {
         this.x = x;
@@ -24,13 +22,10 @@ public class Room {
         this.ways = new ArrayList<>();
         this.mobs = new ArrayList<>();
         this.shelter = new Shelter();
-        //this.secureRandom = new SecureRandom();
     }
 
     public Pair getRandomPointInRoom() {
-        //int newX = (Math.abs(secureRandom.nextInt()) % height);
         int newX = Rand.AbsModInt(height);
-        //int newY = (Math.abs(secureRandom.nextInt()) % width);
         int newY = Rand.AbsModInt(width);
         return (new Pair(x + newX, y + newY));
     }
@@ -51,7 +46,7 @@ public class Room {
         return false;
     }
 
-    public boolean isPointAccessible (int pointX, int pointY) {
+    public boolean isPointAccessible(int pointX, int pointY) {
         if (isPointInRoom(pointX, pointY)) {
             if (GameMapGenerator.localGameMap[pointX][pointY] == 1) {
                 return true;

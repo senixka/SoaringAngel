@@ -4,12 +4,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 
 public class Subject {
-    public static final int sizeX = 30;
-    public static final int sizeY = 25;
-    float x, y;
-    Texture texture;
-    String name;
-    boolean free;
+    public static final int sizeX = 30, sizeY = 25;
+    public float x, y;
+    public boolean free;
+    public Texture texture;
+    public String name;
 
     public Subject(Texture texture, String name) {
         this.texture = texture;
@@ -27,7 +26,6 @@ public class Subject {
     }
 
     public boolean take() {
-
         System.out.println("take " + x + " " + y);
         if (Helper.dist(World.pers.getCenter(), new Vector3(x, y, 0)) > 50) {
             return false;

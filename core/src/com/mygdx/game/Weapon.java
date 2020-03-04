@@ -5,12 +5,13 @@ import com.badlogic.gdx.math.Vector3;
 public class Weapon {
 
     public Weapon() {
-        System.out.println("Not null");
-}
+    }
 
-    public void draw(){};
+    public void draw() {
+    }
 
-    public void attack(){};
+    public void attack() {
+    }
 
     public Pers getPers() {
         return World.pers;

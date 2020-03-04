@@ -5,7 +5,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector3;
 
 public class PauseMenuController implements InputProcessor {
-    Rectangle back;
+    public Rectangle back;
 
     public PauseMenuController() {
         back = new Rectangle(740, 420, 60, 60);

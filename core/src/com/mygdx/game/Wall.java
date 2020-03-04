@@ -4,9 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
 public class Wall {
-    int x, y;
-    int sizeX, sizeY;
-    Texture texture;
+    public int x, y, sizeX, sizeY;
+    public Texture texture;
 
     public Wall(int x, int y, int sizeX, int sizeY) {
         this.x = x;
@@ -19,6 +18,4 @@ public class Wall {
     public void draw() {
         MyGame.batch.draw(texture, x, y, sizeX, sizeY);
     }
-
-
 }

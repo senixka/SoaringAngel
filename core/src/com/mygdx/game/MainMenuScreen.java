@@ -9,11 +9,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
 public class MainMenuScreen implements Screen {
-    SpriteBatch batch;
-    BitmapFont font;
-    OrthographicCamera camera;
-    Button button1;
-
+    public SpriteBatch batch;
+    public BitmapFont font;
+    public OrthographicCamera camera;
+    public Button button1;
 
     public MainMenuScreen() {
         batch = MyGame.batch;
@@ -44,7 +43,6 @@ public class MainMenuScreen implements Screen {
         if (Gdx.input.justTouched()) {
             Vector3 vector3 = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(vector3);
-
             if (button1.isPressed(vector3)) {
                 MyGame.staticSetScreen(new GameScreen());
             }

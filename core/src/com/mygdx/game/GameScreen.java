@@ -6,16 +6,15 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector3;
 
 public class GameScreen implements Screen {
-    MyGame game;
-    SpriteBatch batch;
-    BitmapFont font;
-    OrthographicCamera camera;
-    GameController controller;
+    public MyGame game;
+    public SpriteBatch batch;
+    public BitmapFont font;
+    public OrthographicCamera camera;
+    public GameController controller;
 
-    public GameScreen()  {
+    public GameScreen() {
         batch = MyGame.batch;
         font = MyGame.font;
         font.getData().setScale(3);
@@ -44,7 +43,6 @@ public class GameScreen implements Screen {
         World.draw();
         batch.end();
     }
-
 
     public void contin() {
         controller = new GameController();

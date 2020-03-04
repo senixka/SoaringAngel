@@ -5,31 +5,6 @@ import com.badlogic.gdx.math.Vector3;
 import java.util.ArrayList;
 
 public class Shelter {
-
-//    public class Instruction {
-//        public float x, y, len;
-//        public Vector3 vec;
-//
-//        Instruction(float x, float y, float len, Vector3 vec) {
-//            this.x = x;
-//            this.y = y;
-//            this.len = len;
-//            this.vec = vec;
-//        }
-//    }
-
-//    public class ShelterTemplate {
-//        public ArrayList<Instruction> tmp;
-//
-//        public ShelterTemplate() {
-//            tmp = new ArrayList<>();
-//        }
-//
-//        public void addInst(Instruction inst) {
-//            tmp.add(inst);
-//        }
-//    }
-
     public ArrayList<ShelterTemplate> shelters;
     public int index;
 

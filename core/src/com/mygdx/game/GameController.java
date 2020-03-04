@@ -5,8 +5,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector3;
 
 public class GameController implements InputProcessor {
-
-    boolean flagA, flagS, flagD, flagW;
+    public boolean flagA, flagS, flagD, flagW;
 
     @Override
     public boolean keyDown(int keycode) {

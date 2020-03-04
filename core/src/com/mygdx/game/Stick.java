@@ -6,11 +6,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Stick {
-    Texture img1, img2;
-    int x1, y1;
-    int x2, y2;
-    int size = 100;
-    Rectangle rect;
+    public int x1, y1, x2, y2, size = 100;
+    public Texture img1, img2;
+    public Rectangle rect;
 
     public Stick() {
         img1 = new Texture(Gdx.files.internal("Controller1.psd"));

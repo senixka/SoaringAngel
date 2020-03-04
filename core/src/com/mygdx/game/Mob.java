@@ -3,7 +3,6 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
-import com.mygdx.game.MapGenerator.GameMapGenerator;
 import com.mygdx.game.MapGenerator.Room;
 
 public class Mob {
@@ -11,7 +10,7 @@ public class Mob {
     public int intX, intY, sizeX, sizeY, hp;
     public Texture texture, mark;
     public Room room;
-    boolean target;
+    public boolean target;
 
     public Mob(float x, float y, int sizeX, int sizeY, int hp, Room room, Texture texture) {
         this.x = x;
@@ -54,7 +53,9 @@ public class Mob {
         this.target = target;
     }
 
-    public void move(Vector3 vec) { }
+    public void move(Vector3 vec) {
+    }
 
-    public void update(float delta) { }
+    public void update(float delta) {
+    }
 }

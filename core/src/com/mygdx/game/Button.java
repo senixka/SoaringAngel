@@ -8,10 +8,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
 public class Button {
-    Texture img;
-    Sprite sprite;
-    String text;
-    boolean invis = false;
+    public Texture img;
+    public Sprite sprite;
+    public String text;
+    public boolean invis = false;
 
     public Button(int x, int y, int width, int height) {
         img = new Texture(Gdx.files.internal("blue.png"));
@@ -31,7 +31,7 @@ public class Button {
         text = str;
     }
 
-    public void  draw(SpriteBatch batch, BitmapFont font) {
+    public void draw(SpriteBatch batch, BitmapFont font) {
         if (invis) {
             return;
         }

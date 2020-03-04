@@ -2,24 +2,18 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
-import com.mygdx.game.Weapons.FirstGun;
 import com.mygdx.game.Weapons.Shotgun;
 
 public class Pers {
-    float x = 0, y = 0;
-    int sizeX = 8 * 5;
-    int sizeY = 11 * 5;
-    int speed = 200;
-    int speedBoost = 0;
-    Texture texture;
-    Mob target;
-    Weapon weapon;
-    Vector3 lastVect;
-
-    boolean flip = false;
+    public float x = 0, y = 0;
+    public int sizeX = 8 * 5, sizeY = 11 * 5;
+    public int speed = 200, speedBoost = 0;
+    public Texture texture;
+    public Mob target;
+    public Weapon weapon;
+    public Vector3 lastVect;
+    public boolean flip = false;
 
     public Pers() {
         texture = new Texture(Gdx.files.internal("Human.psd"));
@@ -51,7 +45,6 @@ public class Pers {
         int tempY = (int) ((getCenter().y) / World.pixSize);
         boolean tempFlagX = true;
 
-        //Rectangle r1 = new Rectangle(tempX * World.pixSize, tempY * World.pixSize, World.pixSize, World.pixSize);
         try {
             if (World.map[tempX][tempY] == 0) {
                 tempFlagX = false;
@@ -59,7 +52,6 @@ public class Pers {
         } catch (IndexOutOfBoundsException e) {
 
         }
-
 
         if (tempFlagX) {
             x += vector3.x * (speed + speedBoost) * delta;
@@ -75,7 +67,6 @@ public class Pers {
             }
 
         } catch (IndexOutOfBoundsException e) {
-
         }
 
         if (tempFlagY) {
@@ -84,7 +75,7 @@ public class Pers {
     }
 
     public Vector3 getCenter() {
-        return new Vector3(x + sizeX / 2, y + sizeY /2, 0);
+        return new Vector3(x + sizeX / 2, y + sizeY / 2, 0);
     }
 
     public void draw() {

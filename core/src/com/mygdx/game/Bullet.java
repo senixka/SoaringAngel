@@ -3,17 +3,11 @@ package com.mygdx.game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 
-import java.io.IOError;
-import java.io.IOException;
-
 public class Bullet {
-    Texture texture;
-    Vector3 vect;
-    int speed;
-    int damage;
-    float x, y;
-    float sizeX, sizeY;
-    int dead = 500;
+    public float x, y, sizeX, sizeY;
+    public int speed, damage, dead = 500;
+    public Texture texture;
+    public Vector3 vect;
 
     public Bullet(Texture texture, int speed, float sizeX, float sizeY, int damage, Vector3 vect, float x, float y) {
         this.texture = texture;
@@ -31,14 +25,13 @@ public class Bullet {
     public void update(float delta) {
         x += speed * delta * vect.x;
         y += speed * delta * vect.y;
-        dead --;
+        dead--;
     }
 
-    public  boolean isDead (){
+    public boolean isDead() {
         for (Mob mob : World.mobs) {
             if (Helper.intersect(mob.x, mob.y, mob.sizeX, mob.sizeY, x, y, sizeX, sizeY)) {
                 mob.hit(damage);
-                System.out.println("Shoooot");
                 return true;
             }
         }
@@ -73,8 +66,9 @@ public class Bullet {
         } catch (IndexOutOfBoundsException e) {
 
         }
-        return dead<0;
+        return dead < 0;
     }
+
     public void draw() {
         MyGame.batch.draw(texture, x, y, sizeX, sizeY);
     }

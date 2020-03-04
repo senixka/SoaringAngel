@@ -36,5 +36,4 @@ public class Helper {
     public static boolean intersect(Rectangle r1, Rectangle r2) {
         return r1.intersect(r2);
     }
-
 }
