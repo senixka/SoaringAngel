@@ -21,7 +21,7 @@ public class Subject {
         this.y = y;
     }
 
-    public void draw() {
+    public void drawSubject() {
         MyGame.batch.draw(texture, x, y, sizeX, sizeY);
     }
 

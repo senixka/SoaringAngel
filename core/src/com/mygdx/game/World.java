@@ -30,7 +30,7 @@ public class World {
         mobs = new LinkedList<Mob>();
 
         subjects = new LinkedList<>();
-        Subject s = Shotgun.getSub();
+        Subject s = new Shotgun();
         s.setPosition(-100, -300);
         subjects.add(s);
 
@@ -40,6 +40,7 @@ public class World {
         pix2 = new Texture(Gdx.files.internal("StonePixDown.psd"));
 
         createMap();
+        Inventory.create();
     }
 
     public static void update(float delta) {
@@ -79,10 +80,15 @@ public class World {
     }
 
     public static void take() {
+        if (Inventory.isFull()) {
+            return;
+        }
         List<Subject> temp3 = new LinkedList<>();
         for (Subject subject : subjects) {
             if (!subject.take()) {
                 temp3.add(subject);
+            } else {
+                Inventory.add(subject);
             }
         }
         subjects = temp3;
@@ -122,7 +128,7 @@ public class World {
             bullet.draw();
         }
         for (Subject subject : subjects) {
-            subject.draw();
+            subject.drawSubject();
         }
 
         pers.draw();

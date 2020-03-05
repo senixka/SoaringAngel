@@ -12,7 +12,7 @@ public class Shotgun extends Weapon {
     public Texture texture;
 
     public Shotgun() {
-        super();
+        super(new Texture(Gdx.files.internal("FirstGun.png")), "Shotgun");
         texture = new Texture(Gdx.files.internal("FirstGun.png"));
     }
 

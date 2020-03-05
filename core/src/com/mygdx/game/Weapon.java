@@ -1,10 +1,12 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 
-public class Weapon {
+public class Weapon extends Subject{
 
-    public Weapon() {
+    public Weapon(Texture texture, String name) {
+        super(texture, name);
     }
 
     public void draw() {

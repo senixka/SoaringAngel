@@ -18,7 +18,7 @@ public class Pers {
     public Pers() {
         texture = new Texture(Gdx.files.internal("Human.psd"));
         lastVect = new Vector3(5, 0, 0);
-        weapon = new Shotgun();
+        weapon = new Weapon(null, "");
     }
 
     public void setSpeedBoost(int speedBoost) {

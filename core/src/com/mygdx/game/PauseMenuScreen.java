@@ -41,6 +41,7 @@ public class PauseMenuScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         batch.draw(background, 0, 0, 800, 480);
+        Inventory.draw();
         batch.end();
     }
 
