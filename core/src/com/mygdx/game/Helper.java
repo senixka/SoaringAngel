@@ -36,4 +36,34 @@ public class Helper {
     public static boolean intersect(Rectangle r1, Rectangle r2) {
         return r1.intersect(r2);
     }
+
+    public static boolean intersectWall(Rectangle r) {
+
+        int tempX = (int) r.x / World.pixSize;
+        int tempY = (int) r.y / World.pixSize;
+        Rectangle r1 = new Rectangle(tempX * World.pixSize, tempY * World.pixSize, World.pixSize, World.pixSize);
+        try {
+            if (World.map[tempX][tempY] == 0 && r1.contains(r.x, r.y)) {
+                return true;
+            }
+            r1.x += World.pixSize;
+            if (World.map[tempX + 1][tempY] == 0 && r1.contains(r.x + r.width, r.y)) {
+                return true;
+            }
+            r1.x -= World.pixSize;
+            r1.y += World.pixSize;
+            if (World.map[tempX][tempY + 1] == 0 && r1.contains(r.x, r.y + r.height)) {
+                return true;
+            }
+            r1.x += World.pixSize;
+            if (World.map[tempX + 1][tempY + 1] == 0 && r1.contains(r.x + r.width, r.y + r.height)) {
+                return true;
+            }
+
+        } catch (IndexOutOfBoundsException e) {
+
+        }
+
+        return false;
+    }
 }

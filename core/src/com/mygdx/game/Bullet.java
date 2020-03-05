@@ -35,36 +35,8 @@ public class Bullet {
                 return true;
             }
         }
-
-//        for (Wall wall : World.walls) {
-//            if (Helper.intersect(wall.x, wall.y, wall.sizeX, wall.sizeY, x, y, sizeX, sizeY)) {
-//                System.out.println(wall.x + " " + wall.y + " " +  x + " " + sizeX + " " + y);
-//                return true;
-//            }
-//        }
-        int tempX = (int) x / World.pixSize;
-        int tempY = (int) y / World.pixSize;
-        Rectangle r1 = new Rectangle(tempX * World.pixSize, tempY * World.pixSize, World.pixSize, World.pixSize);
-        try {
-            if (World.map[tempX][tempY] == 0 && r1.contains(x, y)) {
-                return true;
-            }
-            r1.x += World.pixSize;
-            if (World.map[tempX + 1][tempY] == 0 && r1.contains(x + sizeX, y)) {
-                return true;
-            }
-            r1.x -= World.pixSize;
-            r1.y += World.pixSize;
-            if (World.map[tempX][tempY + 1] == 0 && r1.contains(x, y + sizeY)) {
-                return true;
-            }
-            r1.x += World.pixSize;
-            if (World.map[tempX + 1][tempY + 1] == 0 && r1.contains(x + sizeX, y + sizeY)) {
-                return true;
-            }
-
-        } catch (IndexOutOfBoundsException e) {
-
+        if (Helper.intersectWall(new Rectangle(x, y, sizeX, sizeY))) {
+            return true;
         }
         return dead < 0;
     }

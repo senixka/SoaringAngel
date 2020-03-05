@@ -41,33 +41,19 @@ public class Pers {
             flip = (vector3.x < 0);
         }
 
-        int tempX = (int) ((getCenter().x + vector3.x * speed * delta) / World.pixSize);
-        int tempY = (int) ((getCenter().y) / World.pixSize);
-        boolean tempFlagX = true;
+        Rectangle tempR = new Rectangle(x, y, sizeX, sizeY / 2);
 
-        try {
-            if (World.map[tempX][tempY] == 0) {
-                tempFlagX = false;
-            }
-        } catch (IndexOutOfBoundsException e) {
-
-        }
+        tempR.x += vector3.x * (speed + speedBoost) * delta;
+        boolean tempFlagX = !Helper.intersectWall(tempR);
 
         if (tempFlagX) {
             x += vector3.x * (speed + speedBoost) * delta;
         }
 
-        tempX = (int) ((getCenter().x) / World.pixSize);
-        tempY = (int) ((getCenter().y + vector3.y * speed * delta) / World.pixSize);
-        boolean tempFlagY = true;
 
-        try {
-            if (World.map[tempX][tempY] == 0) {
-                tempFlagY = false;
-            }
-
-        } catch (IndexOutOfBoundsException e) {
-        }
+        tempR.x = x;
+        tempR.y += vector3.y * (speedBoost + speed) * delta;
+        boolean tempFlagY = !Helper.intersectWall(tempR);
 
         if (tempFlagY) {
             y += vector3.y * (speed + speedBoost) * delta;

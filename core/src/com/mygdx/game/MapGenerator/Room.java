@@ -1,7 +1,9 @@
 package com.mygdx.game.MapGenerator;
 
+import com.mygdx.game.Helper;
 import com.mygdx.game.Mobs.Slime;
 import com.mygdx.game.Mob;
+import com.mygdx.game.Rectangle;
 import com.mygdx.game.World;
 
 import java.util.ArrayList;
@@ -40,16 +42,17 @@ public class Room {
     }
 
     public boolean isPointInRoom(int pointX, int pointY) {
-        if (x <= pointX && pointX < x + height - 1 && y <= pointY && pointY < y + width - 1) {
+        if (x <= pointX && pointX < x + height && y <= pointY && pointY < y + width) {
             return true;
         }
         return false;
     }
 
-    public boolean isPointAccessible(int pointX, int pointY) {
+    public boolean isPointAccessible(Mob mob, int pointX, int pointY) {
         if (isPointInRoom(pointX, pointY)) {
             if (GameMapGenerator.localGameMap[pointX][pointY] == 1) {
-                return true;
+                //return true;
+                return !Helper.intersectWall(new Rectangle(mob.x, mob.y, mob.sizeX, mob.sizeY));
             }
         }
         return false;

@@ -33,6 +33,10 @@ public class Shotgun extends Weapon {
         new FirstBullet(v.rotate(new Vector3(0, 0, 1), 45), getPers().getX(), getPers().getY());
         v = getVector().cpy();
         new FirstBullet(v.rotate(new Vector3(0, 0, 1), -45), getPers().getX(), getPers().getY());
+        v = getVector().cpy();
+        new FirstBullet(v.rotate(new Vector3(0, 0, 1), -15), getPers().getX(), getPers().getY());
+        v = getVector().cpy();
+        new FirstBullet(v.rotate(new Vector3(0, 0, 1), 15), getPers().getX(), getPers().getY());
     }
 
     @Override

@@ -35,9 +35,9 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(12f / 256, 175f / 256, 77f / 256, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        World.update(delta);
         camera.position.set(World.getFocus());
         camera.update();
-        World.update(delta);
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         World.draw();
