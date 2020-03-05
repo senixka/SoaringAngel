@@ -32,6 +32,10 @@ public class Room {
         return (new Pair(x + newX, y + newY));
     }
 
+    public Pair getCenterPointInRoom() {
+        return (new Pair(x + height / 2, y + width / 2));
+    }
+
     public void addWay(ArrayList<Pair> way) {
         ways.add(way);
     }
@@ -48,12 +52,9 @@ public class Room {
         return false;
     }
 
-    public boolean isPointAccessible(Mob mob, int pointX, int pointY) {
+    public boolean isPointAccessible(int pointX, int pointY) {
         if (isPointInRoom(pointX, pointY)) {
-            if (GameMapGenerator.localGameMap[pointX][pointY] == 1) {
-                //return true;
-                return !Helper.intersectWall(new Rectangle(mob.x, mob.y, mob.sizeX, mob.sizeY));
-            }
+            return true;
         }
         return false;
     }

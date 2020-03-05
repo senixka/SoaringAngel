@@ -1,6 +1,7 @@
 package com.mygdx.game.MapGenerator;
 
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.Helper;
 import com.mygdx.game.World;
 
 import java.util.*;
@@ -12,6 +13,9 @@ public class GameMapGenerator {
      */
     public static int WIDTH, HEIGHT, ROOM_EPS, WAY_EPS;
     public static int[][] localGameMap;
+    public static int[][] nodeGameMap, roomGameMap;
+    public static HashMap<Integer, Room> intToRoom;
+    public static HashMap<Integer, Node> intToNode;
 
     public GameMapGenerator(int HEIGHT, int WIDTH, int BORDER, int MIN_HEIGHT, int MIN_WIDTH, int ROOM_EPS, int WAY_EPS) {
         this.HEIGHT = HEIGHT;
@@ -36,11 +40,17 @@ public class GameMapGenerator {
     public int[][] generate() {
         int[][] gameMap = new int[HEIGHT][WIDTH];
         localGameMap = new int[HEIGHT][WIDTH];
-        Node root = new Node(0, 0, HEIGHT - 1, WIDTH - 1);
+        nodeGameMap = new int[HEIGHT][WIDTH];
+        roomGameMap = new int[HEIGHT][WIDTH];
+        intToNode = new HashMap<>();
+        intToRoom = new HashMap<>();
+        Node root = new Node(0, 0, HEIGHT, WIDTH);
         ArrayList<Room> rooms = new ArrayList<>();
 
         createTree(root);
         createRooms(root);
+        initNodeGameMap(root);
+        initRoomGameMap(root);
         getLeafsRoom(rooms, root);
         sparseRooms(rooms);
         connectRooms(rooms);
@@ -60,6 +70,14 @@ public class GameMapGenerator {
         return vec;
     }
 
+    public Node pointToNode(int pointX, int pointY) {
+        return intToNode.get(nodeGameMap[pointX][pointY]);
+    }
+
+    public Room pointToRoom(int pointX, int pointY) {
+        return intToRoom.get(roomGameMap[pointX][pointY]);
+    }
+
     private void initGameMap(int[][] gameMap, ArrayList<Room> rooms) {
         for (int i = 0; i < rooms.size(); ++i) {
             Room temp = rooms.get(i);
@@ -69,6 +87,34 @@ public class GameMapGenerator {
         for (int i = 0; i < rooms.size(); ++i) {
             Room temp = rooms.get(i);
             printRoomShelterToMap(gameMap, temp);
+        }
+    }
+
+    private void initRoomGameMap(Node root) {
+        ArrayList<Room> rooms = new ArrayList<>();
+        getLeafsRoom(rooms, root);
+        for (int r = 0; r < rooms.size(); ++r) {
+            Room room = rooms.get(r);
+            for (int i = room.x; i < room.x + room.height; ++i) {
+                for (int j = room.y; j < room.y + room.width; ++j) {
+                    roomGameMap[i][j] = r + 1;
+                }
+            }
+            intToRoom.put(r + 1, room);
+        }
+    }
+
+    private void initNodeGameMap(Node root) {
+        ArrayList<Node> nodes = new ArrayList<>();
+        getLeafsNode(nodes, root);
+        for (int r = 0; r < nodes.size(); ++r) {
+            Node node = nodes.get(r);
+            for (int i = node.x; i < node.x + node.height; ++i) {
+                for (int j = node.y; j < node.y + node.width; ++j) {
+                    nodeGameMap[i][j] = r + 1;
+                }
+            }
+            intToNode.put(r + 1, node);
         }
     }
 
@@ -156,8 +202,10 @@ public class GameMapGenerator {
     }
 
     private void connectTwoRooms(Room a, Room b) {
-        Pair s = a.getRandomPointInRoom();
-        Pair f = b.getRandomPointInRoom();
+        //Pair s = a.getRandomPointInRoom();
+        Pair s = a.getCenterPointInRoom();
+        //Pair f = b.getRandomPointInRoom();
+        Pair f = b.getCenterPointInRoom();
         ArrayList<Pair> fromS = new ArrayList<>();
 
         if (s.second <= f.second) {
@@ -184,26 +232,96 @@ public class GameMapGenerator {
         b.addWay(fromS);
     }
 
-    private void getLeafsRoom(ArrayList<Room> rooms, Node v) {
-        if (v.leftChild == null) {
-            rooms.add(v.room);
-        } else {
-            getLeafsRoom(rooms, v.leftChild);
-            getLeafsRoom(rooms, v.rightChild);
+    private void connectRooms(ArrayList<Room> rooms) {
+        for (int i = 0; i < HEIGHT; ++i) {
+            for (int j = 0; j < WIDTH; ++j) {
+                System.out.print(nodeGameMap[i][j] + "/");
+            }
+            System.out.print("\n");
         }
-    }
+        System.out.print("\n");
 
-    private void sparseRooms(ArrayList<Room> rooms) {
-        for (int i = 0; i < rooms.size(); ++i) {
-            if (Rand.AbsModInt(1000) < ROOM_EPS) {
-                rooms.get(i).isRoomVisible = false;
-                rooms.remove(i);
-                --i;
+        boolean[][] used = new boolean[HEIGHT][WIDTH];
+        HashMap<Node, HashSet<Node>> neighbor = new HashMap<>();
+        HashMap<Integer, HashSet<Integer>> intNeighbor = new HashMap<>();
+        int[] cordsX = {0, 0, 1, -1}, cordsY = {1, -1, 0, 0};
+
+        for (int i = 0; i < HEIGHT; ++i) {
+            for (int j = 0; j < WIDTH; ++j) {
+                //System.out.println(nodeGameMap[i][j]);
+                for (int k = 0; k < 4; ++k) {
+                    int newX = i + cordsX[k], newY = j + cordsY[k];
+                    if (newX >= 0 && newX < HEIGHT && newY >= 0 && newY < WIDTH) {
+                        if (nodeGameMap[i][j] != nodeGameMap[newX][newY]) {
+                            if (!neighbor.containsKey(pointToNode(i, j))) {
+                                neighbor.put(pointToNode(i, j), new HashSet<Node>());
+                                intNeighbor.put(nodeGameMap[i][j], new HashSet<Integer>());
+                            }
+                            //System.out.println(nodeGameMap[i][j] + " -> " + nodeGameMap[newX][newY]);
+                            neighbor.get(pointToNode(i, j)).add(pointToNode(newX, newY));
+                            intNeighbor.get(nodeGameMap[i][j]).add(nodeGameMap[newX][newY]);
+                        }
+                    }
+                }
             }
         }
-    }
 
-    private void connectRooms(ArrayList<Room> rooms) {
+        HashSet<Pair> connect = new HashSet<>();
+        for (Map.Entry<Integer, HashSet<Integer>> it : intNeighbor.entrySet()) {
+            int key = it.getKey();
+            HashSet<Integer> st = it.getValue();
+            for (int node : st) {
+                if (rooms.contains(intToNode.get(key).room) && rooms.contains(intToNode.get(node).room)) {
+                    boolean flag = false;
+                    for (Pair np : connect) {
+                        if ((np.first == key && np.second == node) ||
+                                (np.first == node && np.second == key)) {
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if (flag) {
+                        continue;
+                    }
+                    connectTwoRooms(intToNode.get(key).room, intToNode.get(node).room);
+                    connect.add(new Pair(key, node));
+                    connect.add(new Pair(node, key));
+                }
+            }
+        }
+//            boolean flag = false;
+//            for (int i = 0; i < HEIGHT; ++i) {
+//                for (int j = 0; j < WIDTH; ++j) {
+//                    if (pointToNode(i, j) == key) {
+//                        System.out.print(nodeGameMap[i][j] + ": ");
+//                        flag = true;
+//                        break;
+//                    }
+//                }
+//                if (flag) {
+//                    break;
+//                }
+//            }
+//            if (true) {
+//                flag = false;
+//                for (Node nod : st) {
+//                    flag = false;
+//                    for (int i = 0; i < HEIGHT; ++i) {
+//                        for (int j = 0; j < WIDTH; ++j) {
+//                            if (pointToNode(i, j) == nod) {
+//                                System.out.print(nodeGameMap[i][j] + " ");
+//                                flag = true;
+//                                break;
+//                            }
+//                        }
+//                        if (flag) {
+//                            break;
+//                        }
+//                    }
+//                }
+//                System.out.println();
+//            }
+
 
 //        boolean[] used = new boolean[rooms.size()];
 //        for (int i = 0; i < used.length; used[i++] = false);
@@ -220,15 +338,43 @@ public class GameMapGenerator {
 //        }
 //        connectTwoRooms(rooms.get(to), rooms.get(0));
 
-        for (int i = 0; i < rooms.size(); ++i) {
-            connectTwoRooms(rooms.get(i), rooms.get((i + 1) % rooms.size()));
-        }
+//        for (int i = 0; i < rooms.size(); ++i) {
+//            connectTwoRooms(rooms.get(i), rooms.get((i + 1) % rooms.size()));
+//        }
+//
+//        for (int i = 0; i < rooms.size(); ++i) {
+//            for (int j = i + 1; j < rooms.size(); ++j) {
+//                if (Rand.AbsModInt(10000) < WAY_EPS) {
+//                    connectTwoRooms(rooms.get(i), rooms.get(j));
+//                }
+//            }
+//        }while ()
+    }
 
+    private void getLeafsRoom(ArrayList<Room> rooms, Node v) {
+        if (v.leftChild == null) {
+            rooms.add(v.room);
+        } else {
+            getLeafsRoom(rooms, v.leftChild);
+            getLeafsRoom(rooms, v.rightChild);
+        }
+    }
+
+    private void getLeafsNode(ArrayList<Node> nodes, Node v) {
+        if (v.leftChild == null) {
+            nodes.add(v);
+        } else {
+            getLeafsNode(nodes, v.leftChild);
+            getLeafsNode(nodes, v.rightChild);
+        }
+    }
+
+    private void sparseRooms(ArrayList<Room> rooms) {
         for (int i = 0; i < rooms.size(); ++i) {
-            for (int j = i + 1; j < rooms.size(); ++j) {
-                if (Rand.AbsModInt(10000) < WAY_EPS) {
-                    connectTwoRooms(rooms.get(i), rooms.get(j));
-                }
+            if (Rand.AbsModInt(1000) < ROOM_EPS) {
+                rooms.get(i).isRoomVisible = false;
+                rooms.remove(i);
+                --i;
             }
         }
     }

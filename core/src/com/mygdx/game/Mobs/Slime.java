@@ -20,14 +20,16 @@ public class Slime extends Mob {
     public void move(Vector3 vec) {
         Vector3 newVec = GameMapGenerator.gameCordsToMap(
                 new Vector3(vec.x + x + (float) sizeX / 2, vec.y + y + (float) sizeY / 2, 0));
-        if (!Helper.intersectWall(new Rectangle(x + vec.x, y + vec.y, sizeX, sizeY / 2))) {
-            x += vec.x;
-            y += vec.y;
-        }
-//        if (room.isPointAccessible(this, (int) newVec.x, (int) newVec.y)) {
+//        if (!Helper.intersectWall(new Rectangle(x + vec.x, y + vec.y, sizeX, sizeY / 2))) {
 //            x += vec.x;
 //            y += vec.y;
 //        }
+        if (!Helper.intersectWall(new Rectangle(x + vec.x, y + vec.y, sizeX, sizeY / 2))) {
+            if (room.isPointAccessible((int) newVec.x, (int) newVec.y)) {
+                x += vec.x;
+                y += vec.y;
+            }
+        }
     }
 
     @Override
