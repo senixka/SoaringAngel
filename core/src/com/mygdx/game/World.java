@@ -18,7 +18,7 @@ public class World {
     public static List<Bullet> bullets;
     public static List<Subject> subjects;
     public static int[][] map;
-    public static final int pixSize = 10;
+    public static final int pixSize = 50;
     public static Texture pix;
     public static Texture pix2;
 
@@ -167,6 +167,9 @@ public class World {
     }
 
     public static void createMap() {
-        map = new GameMapGenerator(300, 300, 3, 10, 10, 0, 0).generate();
+        long start = System.currentTimeMillis();
+        GameMapGenerator tempGenerator = new GameMapGenerator(300, 300, 3, 10, 10, 0, 0);
+        map = tempGenerator.getMap();
+        System.out.println("Generation time: " + (double) (System.currentTimeMillis() - start) + " millis");
     }
 }

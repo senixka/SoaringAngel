@@ -1,7 +1,5 @@
 package com.mygdx.game.MapGenerator;
 
-import com.mygdx.game.World;
-
 public class Node {
     public static int BORDER, MIN_HEIGHT, MIN_WIDTH;
     public int y, x, width, height;
@@ -9,12 +7,15 @@ public class Node {
     public Room room;
     public boolean isNodeVisible;
 
-    public Node(int x, int y, int height, int width) {
+    public Node(int x, int y, int height, int width, int BORDER, int MIN_HEIGHT, int MIN_WIDTH) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.isNodeVisible = true;
+        this.BORDER = BORDER;
+        this.MIN_HEIGHT = MIN_HEIGHT;
+        this.MIN_WIDTH = MIN_WIDTH;
     }
 
     public int isPossibleToSplit() {
@@ -44,9 +45,6 @@ public class Node {
         newY0 += Rand.AbsModInt(newW + 1);
         newX1 -= Rand.AbsModInt(newH + 1);
         newY1 -= Rand.AbsModInt(newW + 1);
-        room = new Room(newX0, newY0, newY1 - newY0, newX1 - newX0);
-
-        Pair cords = room.getRandomPointInRoom();
-        room.addMob(cords.first * World.pixSize, cords.second * World.pixSize);
+        room = new Room(this, newX0, newY0, newY1 - newY0, newX1 - newX0);
     }
 }

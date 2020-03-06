@@ -1,5 +1,6 @@
 package com.mygdx.game.MapGenerator;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.World;
 
@@ -10,40 +11,28 @@ public class GameMapGenerator {
      * 0 <= ROOM_EPS <= 1000
      * 0 <= WAY_EPS <= 10000
      */
-    public static int WIDTH, HEIGHT, ROOM_EPS, WAY_EPS;
+    public static int WIDTH, HEIGHT, ROOM_EPS, BORDER, MIN_HEIGHT, MIN_WIDTH, WAY_EPS;
     public static int[][] localGameMap;
-    public static int[][] nodeGameMap, roomGameMap;
-    public static HashMap<Integer, Room> intToRoom;
-    public static HashMap<Integer, Node> intToNode;
+    private int[][] nodeGameMap, roomGameMap;
+    private HashMap<Integer, Room> intToRoom;
+    private HashMap<Integer, Node> intToNode;
+    private Node root;
 
     public GameMapGenerator(int HEIGHT, int WIDTH, int BORDER, int MIN_HEIGHT, int MIN_WIDTH, int ROOM_EPS, int WAY_EPS) {
         this.HEIGHT = HEIGHT;
         this.WIDTH = WIDTH;
         this.ROOM_EPS = ROOM_EPS;
         this.WAY_EPS = WAY_EPS;
-        Node.BORDER = BORDER;
-        Node.MIN_HEIGHT = MIN_HEIGHT;
-        Node.MIN_WIDTH = MIN_WIDTH;
-    }
+        this.BORDER = BORDER;
+        this.MIN_HEIGHT = MIN_HEIGHT;
+        this.MIN_WIDTH = MIN_WIDTH;
 
-    public void setParameters(int HEIGHT, int WIDTH, int BORDER, int MIN_HEIGHT, int MIN_WIDTH, int ROOM_EPS, int WAY_EPS) {
-        this.HEIGHT = HEIGHT;
-        this.WIDTH = WIDTH;
-        this.ROOM_EPS = ROOM_EPS;
-        this.WAY_EPS = WAY_EPS;
-        Node.BORDER = BORDER;
-        Node.MIN_HEIGHT = MIN_HEIGHT;
-        Node.MIN_WIDTH = MIN_WIDTH;
-    }
-
-    public int[][] generate() {
-        int[][] gameMap = new int[HEIGHT][WIDTH];
         localGameMap = new int[HEIGHT][WIDTH];
         nodeGameMap = new int[HEIGHT][WIDTH];
         roomGameMap = new int[HEIGHT][WIDTH];
         intToNode = new HashMap<>();
         intToRoom = new HashMap<>();
-        Node root = new Node(0, 0, HEIGHT, WIDTH);
+        this.root = new Node(0, 0, HEIGHT, WIDTH, BORDER, MIN_HEIGHT, MIN_WIDTH);
         ArrayList<Room> rooms = new ArrayList<>();
 
         createTree(root);
@@ -52,13 +41,13 @@ public class GameMapGenerator {
         initRoomGameMap(root);
         getLeafsRoom(rooms, root);
         sparseRooms(rooms);
+        initGameMap(localGameMap, rooms);
+        createMobs(rooms);
+    }
 
-        initGameMap(gameMap, rooms);
-        for (int i = 0; i < HEIGHT; ++i) {
-            for (int j = 0; j < WIDTH; ++j) {
-                localGameMap[i][j] = gameMap[i][j];
-            }
-        }
+    public int[][] getMap() {
+        int[][] gameMap = new int[HEIGHT][WIDTH];
+        copyMatrix(localGameMap, gameMap);
         return gameMap;
     }
 
@@ -68,12 +57,29 @@ public class GameMapGenerator {
         return vec;
     }
 
-    public Node pointToNode(int pointX, int pointY) {
+    private void createMobs(ArrayList<Room> rooms) {
+        for (int i = 0; i < rooms.size(); ++i) {
+            Room room = rooms.get(i);
+            for (int j = 0; j < 5; ++j) {
+                room.createMob();
+            }
+        }
+    }
+
+    private Node pointToNode(int pointX, int pointY) {
         return intToNode.get(nodeGameMap[pointX][pointY]);
     }
 
-    public Room pointToRoom(int pointX, int pointY) {
+    private Room pointToRoom(int pointX, int pointY) {
         return intToRoom.get(roomGameMap[pointX][pointY]);
+    }
+
+    private void copyMatrix(int[][] from, int[][] to) {
+        for (int i = 0; i < from.length; ++i) {
+            for (int j = 0; j < from[i].length; ++j) {
+                to[i][j] = from[i][j];
+            }
+        }
     }
 
     private void initGameMap(int[][] gameMap, ArrayList<Room> rooms) {
@@ -99,9 +105,9 @@ public class GameMapGenerator {
         }
     }
 
-    private void initRoomGameMap(Node root) {
+    private void initRoomGameMap(Node v) {
         ArrayList<Room> rooms = new ArrayList<>();
-        getLeafsRoom(rooms, root);
+        getLeafsRoom(rooms, v);
         for (int r = 0; r < rooms.size(); ++r) {
             Room room = rooms.get(r);
             for (int i = room.x; i < room.x + room.height; ++i) {
@@ -113,9 +119,9 @@ public class GameMapGenerator {
         }
     }
 
-    private void initNodeGameMap(Node root) {
+    private void initNodeGameMap(Node v) {
         ArrayList<Node> nodes = new ArrayList<>();
-        getLeafsNode(nodes, root);
+        getLeafsNode(nodes, v);
         for (int r = 0; r < nodes.size(); ++r) {
             Node node = nodes.get(r);
             for (int i = node.x; i < node.x + node.height; ++i) {
@@ -190,11 +196,11 @@ public class GameMapGenerator {
             }
 
             if (splittable == 0) {
-                v.leftChild = new Node(v.x, v.y, v.height / 2 - deltaH, v.width);
-                v.rightChild = new Node(v.x + v.height / 2 - deltaH, v.y, v.height - v.height / 2 + deltaH, v.width);
+                v.leftChild = new Node(v.x, v.y, v.height / 2 - deltaH, v.width, BORDER, MIN_HEIGHT, MIN_WIDTH);
+                v.rightChild = new Node(v.x + v.height / 2 - deltaH, v.y, v.height - v.height / 2 + deltaH, v.width, BORDER, MIN_HEIGHT, MIN_WIDTH);
             } else {
-                v.leftChild = new Node(v.x, v.y, v.height, v.width / 2 - deltaW);
-                v.rightChild = new Node(v.x, v.y + v.width / 2 - deltaW, v.height, v.width - v.width / 2 + deltaW);
+                v.leftChild = new Node(v.x, v.y, v.height, v.width / 2 - deltaW, BORDER, MIN_HEIGHT, MIN_WIDTH);
+                v.rightChild = new Node(v.x, v.y + v.width / 2 - deltaW, v.height, v.width - v.width / 2 + deltaW, BORDER, MIN_HEIGHT, MIN_WIDTH);
             }
             createTree(v.leftChild);
             createTree(v.rightChild);
@@ -303,29 +309,53 @@ public class GameMapGenerator {
         if (Math.abs(dX) > Math.abs(dY)) {
             if (dX > 0) {
                 if (dY > 0) {
-                    prt[0] = 4; prt[1] = 3; prt[2] = 2; prt[3] = 1;
+                    prt[0] = 4;
+                    prt[1] = 3;
+                    prt[2] = 2;
+                    prt[3] = 1;
                 } else {
-                    prt[0] = 4; prt[1] = 2; prt[2] = 3; prt[3] = 1;
+                    prt[0] = 4;
+                    prt[1] = 2;
+                    prt[2] = 3;
+                    prt[3] = 1;
                 }
             } else {
                 if (dY > 0) {
-                    prt[0] = 1; prt[1] = 3; prt[2] = 2; prt[3] = 4;
+                    prt[0] = 1;
+                    prt[1] = 3;
+                    prt[2] = 2;
+                    prt[3] = 4;
                 } else {
-                    prt[0] = 1; prt[1] = 2; prt[2] = 3; prt[3] = 4;
+                    prt[0] = 1;
+                    prt[1] = 2;
+                    prt[2] = 3;
+                    prt[3] = 4;
                 }
             }
         } else {
             if (dX > 0) {
                 if (dY > 0) {
-                    prt[0] = 3; prt[1] = 4; prt[2] = 2; prt[3] = 1;
+                    prt[0] = 3;
+                    prt[1] = 4;
+                    prt[2] = 2;
+                    prt[3] = 1;
                 } else {
-                    prt[0] = 3; prt[1] = 2; prt[2] = 4; prt[3] = 1;
+                    prt[0] = 3;
+                    prt[1] = 2;
+                    prt[2] = 4;
+                    prt[3] = 1;
                 }
             } else {
                 if (dY > 0) {
-                    prt[0] = 1; prt[1] = 4; prt[2] = 2; prt[3] = 3;
+                    prt[0] = 1;
+                    prt[1] = 4;
+                    prt[2] = 2;
+                    prt[3] = 3;
                 } else {
-                    prt[0] = 1; prt[1] = 2; prt[2] = 4; prt[3] = 3;
+                    prt[0] = 1;
+                    prt[1] = 2;
+                    prt[2] = 4;
+                    prt[3] = 3;
                 }
             }
         }

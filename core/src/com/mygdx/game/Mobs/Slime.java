@@ -15,9 +15,10 @@ import com.mygdx.game.World;
 public class Slime extends Mob {
 
     public int timer = 0;
+    private static final Texture zombie = new Texture(Gdx.files.internal("Zombie.psd"));
 
     public Slime(float x, float y, Room room) {
-        super(x, y, 50, 50, 20, room, new Texture(Gdx.files.internal("Zombie.psd")));
+        super(x, y, 50, 50, 20, room, zombie);
     }
 
     @Override
@@ -30,8 +31,25 @@ public class Slime extends Mob {
 //        }
         if (!Helper.intersectWall(new Rectangle(x + vec.x, y + vec.y, sizeX, sizeY / 2))) {
             if (room.isPointAccessible((int) newVec.x, (int) newVec.y)) {
-                x += vec.x;
-                y += vec.y;
+                if (!Helper.intersect(new Rectangle(x + vec.x, y + vec.y, sizeX, sizeY),
+                        new Rectangle(World.pers.getX(), World.pers.getY(), World.pers.sizeX, World.pers.sizeY))) {
+                    boolean flag = false;
+                    for (int i = 0; i < room.mobs.size(); ++i) {
+                        Mob mob = room.mobs.get(i);
+                        if (super.equals(mob)) {
+                            continue;
+                        }
+                        if (Helper.intersect(new Rectangle(x + vec.x, y + vec.y, sizeX, sizeY),
+                                new Rectangle(mob.x, mob.y, mob.sizeX, mob.sizeY))) {
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if (!flag) {
+                        x += vec.x;
+                        y += vec.y;
+                    }
+                }
             }
         }
     }

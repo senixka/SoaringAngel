@@ -68,9 +68,9 @@ public class Shelter {
          * # # # # # # # # # #
          */
         ShelterTemplate tmp = new ShelterTemplate();
-        tmp.addInst(new Instruction(0.20f, 0.20f, 0.61f, new Vector3(1, 0, 0)));
-        tmp.addInst(new Instruction(0.20f, 0.20f, 0.61f, new Vector3(0, 1, 0)));
-        tmp.addInst(new Instruction(0.20f, 0.80f, 0.61f, new Vector3(1, 0, 0)));
+        tmp.addInst(new Instruction(0.20f, 0.20f, 0.60f, new Vector3(1, 0, 0)));
+        tmp.addInst(new Instruction(0.20f, 0.20f, 0.60f, new Vector3(0, 1, 0)));
+        tmp.addInst(new Instruction(0.20f, 0.80f, 0.60f, new Vector3(1, 0, 0)));
         tmp.addInst(new Instruction(0.51f, 0.51f, 0.01f, new Vector3(0, 0, 0)));
         return tmp;
     }

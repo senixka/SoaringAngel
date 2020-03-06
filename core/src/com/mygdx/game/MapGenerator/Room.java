@@ -1,9 +1,7 @@
 package com.mygdx.game.MapGenerator;
 
-import com.mygdx.game.Helper;
 import com.mygdx.game.Mobs.Slime;
 import com.mygdx.game.Mob;
-import com.mygdx.game.Rectangle;
 import com.mygdx.game.World;
 
 import java.util.ArrayList;
@@ -14,13 +12,15 @@ public class Room {
     public ArrayList<ArrayList<Pair>> ways;
     public ArrayList<Mob> mobs;
     public Shelter shelter;
+    public Node node;
 
-    public Room(int x, int y, int width, int height) {
+    public Room(Node node, int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.isRoomVisible = true;
+        this.node = node;
         this.ways = new ArrayList<>();
         this.mobs = new ArrayList<>();
         this.shelter = new Shelter();
@@ -57,5 +57,13 @@ public class Room {
             return true;
         }
         return false;
+    }
+
+    public void createMob() {
+        Pair cords = getRandomPointInRoom();
+        while (GameMapGenerator.localGameMap[cords.first][cords.second] != 1) {
+            cords = getRandomPointInRoom();
+        }
+        addMob(cords.first * World.pixSize, cords.second * World.pixSize);
     }
 }
