@@ -102,7 +102,7 @@ public class World {
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map.length; j++) {
                 if (map[i][j] == 0) {
-                    MyGame.batch.draw(pix2, i * pixSize, j * pixSize - pixSize / 2, pixSize, pixSize / 2);
+                    MyGame.batch.draw(pix2, i * pixSize, j * pixSize + pixSize / 2, pixSize, pixSize / 2);
                 }
             }
         }
