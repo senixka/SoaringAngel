@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector3;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -12,6 +13,8 @@ public class Inventory {
     public static Subject usingSubject;
     public static Rectangle [] icons;
     public static final Texture frame = new Texture(Gdx.files.internal("red.png"));
+    public static Button take;
+    public static int aim = -1;
 
 
     public static void create() {
@@ -35,17 +38,27 @@ public class Inventory {
         icons[14] = new Rectangle(140, 335, 50, 40);
         icons[15] = new Rectangle(220, 345, 100, 80);
 
+        MyGame.font.getData().setScale(2);
+        take = new Button(400, 100, 200, 50);
+        take.setText("Equip");
+
     }
 
     public static void draw() {
 //        for (int i = 0; i < 16; i++) {
 //            MyGame.batch.draw(frame, icons[i].x, icons[i].y, icons[i].width, icons[i].height);
 //        }
+
+        if (aim != -1) {
+            MyGame.batch.draw(frame, icons[aim].x, icons[aim].y, icons[aim].width, icons[aim].height);
+            take.draw(MyGame.batch, MyGame.font);
+        }
         for (int i = 0; i < 10; i++) {
             if (subjects.size() > i) {
                 MyGame.batch.draw(subjects.get(i).texture, icons[i].x, icons[i].y, icons[i].width, icons[i].height);
             }
         }
+
 
         if (usingSubject != null) {
             MyGame.batch.draw(usingSubject.texture, icons[15].x, icons[15].y, icons[15].width, icons[15].height);
@@ -61,7 +74,6 @@ public class Inventory {
         } else {
             subjects.add(Subject);
         }
-
         if (usingSubject != null) {
             World.pers.weapon = (Weapon) usingSubject;
         }
@@ -71,10 +83,37 @@ public class Inventory {
         return subjects.size() == 10;
     }
 
-    public static void set(int ind) {
+    public static void equip() {
+        if (aim == -1) {
+            return;
+        }
+        if (aim >= subjects.size()) {
+            return;
+        }
         Subject s = usingSubject;
-        usingSubject = subjects.get(ind);
+        usingSubject = subjects.get(aim);
         subjects.remove(usingSubject);
         subjects.add(s);
+        World.pers.weapon = (Weapon) usingSubject;
+        aim = -1;
     }
+
+    public static void setAim(Vector3 v) {
+        for (int i = 0; i < icons.length; i++) {
+            if (icons[i].contains(v)) {
+                aim = i;
+                return;
+            }
+        }
+        aim = -1;
+    }
+
+    public static void touchDown(Vector3 v) {
+        if (aim != -1 && take.isPressed(v)) {
+            System.out.println("Yeeep");
+            equip();
+        }
+        setAim(v);
+    }
+
 }

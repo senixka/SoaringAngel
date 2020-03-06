@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
+import com.mygdx.game.Weapons.DNKgun;
+import com.mygdx.game.Weapons.FirstGun;
 import com.mygdx.game.Weapons.Shotgun;
 
 import java.util.LinkedList;
@@ -33,6 +35,9 @@ public class World {
         Subject s = new Shotgun();
         s.setPosition(-100, -300);
         subjects.add(s);
+        Subject s2 = new DNKgun();
+        s2.setPosition(0, -300);
+        subjects.add(s2);
 
         bullets = new LinkedList<Bullet>();
 

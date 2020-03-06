@@ -37,6 +37,7 @@ public class PauseMenuController implements InputProcessor {
         if (back.contains(v)) {
             MyGame.gameScreen.contin();
         }
+        Inventory.touchDown(v);
         return false;
     }
 
