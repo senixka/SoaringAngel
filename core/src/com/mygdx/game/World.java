@@ -18,7 +18,7 @@ public class World {
     public static List<Bullet> bullets;
     public static List<Subject> subjects;
     public static int[][] map;
-    public static final int pixSize = 50;
+    public static final int pixSize = 10;
     public static Texture pix;
     public static Texture pix2;
 

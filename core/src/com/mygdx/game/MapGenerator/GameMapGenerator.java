@@ -1,12 +1,8 @@
 package com.mygdx.game.MapGenerator;
 
 import com.badlogic.gdx.math.Vector3;
-import com.mygdx.game.Helper;
-import com.mygdx.game.MyGame;
 import com.mygdx.game.World;
-import com.sun.jmx.remote.internal.ArrayQueue;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class GameMapGenerator {
@@ -216,17 +212,12 @@ public class GameMapGenerator {
 
     private ArrayList<Pair> connectToPoints(int[][] gameMap, Pair a, Pair b) {
         ArrayList<Pair> path = new ArrayList<>();
-        int[][] used = new int[HEIGHT][WIDTH];
-        for (int i = 0; i < HEIGHT; ++i) {
-            for (int j = 0; j < WIDTH; ++j) {
-                used[i][j] = -1;
-            }
-        }
-
         if (gameMap[a.first][a.second] == 1 || gameMap[b.first][b.second] == 1) {
-            //path.add(a);
             return path;
         }
+
+        int[][] used = new int[HEIGHT][WIDTH];
+        for (int[] row : used) Arrays.fill(row, -1);
 
         ArrayDeque<Pair> q = new ArrayDeque<>();
         q.addLast(a);
@@ -241,6 +232,9 @@ public class GameMapGenerator {
             for (int i = 0; i < 4; ++i) {
                 int newX = x + cX[i], newY = y + cY[i];
                 if (newX >= 0 && newX < HEIGHT && newY >= 0 && newY < WIDTH) {
+                    if (used[newX][newY] != -1) {
+                        continue;
+                    }
                     boolean flag = false;
                     for (int j = 0; j < 8; ++j) {
                         int newNewX = newX + cordsX[j], newNewY = newY + cordsY[j];
@@ -255,25 +249,19 @@ public class GameMapGenerator {
                         }
                     }
                     if (!flag) {
-                        if (used[newX][newY] == -1) {
-                            used[newX][newY] = used[x][y] + 1;
-                            q.addLast(new Pair(newX, newY));
-                        }
+                        used[newX][newY] = used[x][y] + 1;
+                        q.addLast(new Pair(newX, newY));
                     }
                 }
             }
         }
 
-//        for (int i = 0; i < HEIGHT; ++i) {
-//            for (int j = 0 ; j < WIDTH; ++j) {
-//                System.out.print(used[i][j] + "/");
-//            }
-//            System.out.println();
-//        }
+        int dist = used[b.first][b.second];
+        if (dist == -1) {
+            return path;
+        }
 
         path.add(b);
-        int dist = used[b.first][b.second];
-        //System.out.println(dist);
         int x = b.first, y = b.second;
         while (dist > 0) {
             for (int i = 0; i < 4; ++i) {
@@ -290,64 +278,133 @@ public class GameMapGenerator {
             }
         }
 
-//        for (int i = 0; i < path.size(); ++i) {
-//            Pair temp = path.get(i);
-//            gameMap[temp.first][temp.second] = 1;
-//        }
         Collections.reverse(path);
         return path;
     }
 
-    private ArrayList<Pair> getCenteredEntersToRoom(Room r) {
+    private ArrayList<Pair> getCenteredEntersToRoom(Room r, Room to) {
         ArrayList<Pair> doors = new ArrayList<>();
         int x1 = r.x - 1, y1 = r.y + r.width / 2;
         int x2 = r.x + r.height / 2, y2 = r.y - 1;
         int x3 = r.x + r.height / 2, y3 = r.y + r.width;
         int x4 = r.x + r.height, y4 = r.y + r.width / 2;
-        if (x1 - 1 >= 0 && x1 < HEIGHT && y1 >= 0 && y1 < WIDTH) {
-            doors.add(new Pair(x1, y1));
-            doors.add(new Pair(x1 - 1, y1));
+        doors.add(new Pair(x1, y1));
+        doors.add(new Pair(x1 - 1, y1));
+        doors.add(new Pair(x2, y2));
+        doors.add(new Pair(x2, y2 - 1));
+        doors.add(new Pair(x3, y3));
+        doors.add(new Pair(x3, y3 + 1));
+        doors.add(new Pair(x4, y4));
+        doors.add(new Pair(x4 + 1, y4));
+
+        int[] prt = new int[4];
+        int dX = r.getCenterPointInRoom().first - to.getCenterPointInRoom().first;
+        int dY = r.getCenterPointInRoom().second - to.getCenterPointInRoom().second;
+        if (Math.abs(dX) > Math.abs(dY)) {
+            if (dX > 0) {
+                if (dY > 0) {
+                    prt[0] = 4; prt[1] = 3; prt[2] = 2; prt[3] = 1;
+                } else {
+                    prt[0] = 4; prt[1] = 2; prt[2] = 3; prt[3] = 1;
+                }
+            } else {
+                if (dY > 0) {
+                    prt[0] = 1; prt[1] = 3; prt[2] = 2; prt[3] = 4;
+                } else {
+                    prt[0] = 1; prt[1] = 2; prt[2] = 3; prt[3] = 4;
+                }
+            }
+        } else {
+            if (dX > 0) {
+                if (dY > 0) {
+                    prt[0] = 3; prt[1] = 4; prt[2] = 2; prt[3] = 1;
+                } else {
+                    prt[0] = 3; prt[1] = 2; prt[2] = 4; prt[3] = 1;
+                }
+            } else {
+                if (dY > 0) {
+                    prt[0] = 1; prt[1] = 4; prt[2] = 2; prt[3] = 3;
+                } else {
+                    prt[0] = 1; prt[1] = 2; prt[2] = 4; prt[3] = 3;
+                }
+            }
         }
-        if (x2 >= 0 && x2 < HEIGHT && y2 - 1 >= 0 && y2 < WIDTH) {
-            doors.add(new Pair(x2, y2));
-            doors.add(new Pair(x2, y2 - 1));
+
+        ArrayList<Pair> prtDoors = new ArrayList<>();
+        for (int i = 4; i > 0; --i) {
+            for (int j = 0; j < 4; ++j) {
+                if (prt[j] == i) {
+                    Pair temp = doors.get(j * 2 + 1);
+                    int x = temp.first, y = temp.second;
+                    if (x >= 0 && y >= 0 && x < HEIGHT && y < WIDTH) {
+                        prtDoors.add(doors.get(j * 2));
+                        prtDoors.add(doors.get(j * 2 + 1));
+                        break;
+                    }
+                }
+            }
         }
-        if (x3 >= 0 && x3 < HEIGHT && y3 >= 0 && y3 + 1 < WIDTH) {
-            doors.add(new Pair(x3, y3));
-            doors.add(new Pair(x3, y3 + 1));
-        }
-        if (x4 >= 0 && x4 + 1 < HEIGHT && y4 >= 0 && y4 < WIDTH) {
-            doors.add(new Pair(x4, y4));
-            doors.add(new Pair(x4 + 1, y4));
-        }
-        return doors;
+        return prtDoors;
     }
 
-    private void connectTwoRooms(int[][] gameMap, Room a, Room b) {
-        //Pair s = a.getRandomPointInRoom();
-        //Pair s = a.getCenterPointInRoom();
-        //Pair f = b.getRandomPointInRoom();
-        //Pair f = b.getCenterPointInRoom();
+    private void connectTwoRoomsByWayPriority(int[][] gameMap, Room a, Room b) {
+        ArrayList<Pair> fromS = getCenteredEntersToRoom(a, b);
+        ArrayList<Pair> fromF = getCenteredEntersToRoom(b, a);
 
-        ArrayList<Pair> fromS = getCenteredEntersToRoom(a);
-        ArrayList<Pair> fromF = getCenteredEntersToRoom(b);
+        for (int alpha = 0; alpha < Math.max(fromF.size(), fromS.size()); alpha += 2) {
+            for (int i = 0; i < fromS.size() && i < alpha; i += 2) {
+                for (int j = 0; j < fromF.size() && j < alpha; j += 2) {
+                    ArrayList<Pair> path = connectToPoints(gameMap, fromS.get(i + 1), fromF.get(j + 1));
+                    if (path.size() == 0) {
+                        continue;
+                    }
+                    if (path.get(path.size() - 1).first == fromF.get(j + 1).first && path.get(path.size() - 1).second == fromF.get(j + 1).second &&
+                            path.get(0).second == fromS.get(i + 1).second && path.get(0).second == fromS.get(i + 1).second) {
+                        path.add(0, fromS.get(i));
+                        path.add(fromF.get(j));
+                        a.addWay(path);
+                        Collections.reverse(path);
+                        b.addWay(path);
+                        for (int k = 0; k < path.size(); ++k) {
+                            Pair temp = path.get(k);
+                            gameMap[temp.first][temp.second] = 1;
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+    }
 
-        int bestCnt = 100000;
+    private void connectTwoRoomsByMinDist(int[][] gameMap, Room a, Room b) {
+        ArrayList<Pair> fromS = getCenteredEntersToRoom(a, b);
+        ArrayList<Pair> fromF = getCenteredEntersToRoom(b, a);
+
+        int minDist = 100000;
         for (int i = 0; i < fromS.size(); i += 2) {
             for (int j = 0; j < fromF.size(); j += 2) {
                 ArrayList<Pair> path = connectToPoints(gameMap, fromS.get(i + 1), fromF.get(j + 1));
-                if (path.size() <= 3) {
+                if (path.size() == 0) {
                     continue;
                 }
-                if (path.get(path.size() - 1).first == fromF.get(j + 1).first &&
-                        path.get(path.size() - 1).second == fromF.get(j + 1).second &&
-                        path.get(0).second == fromS.get(i + 1).second &&
-                        path.get(0).second == fromS.get(i + 1).second) {
-//                    if (path.size() == 1) {
-//                        System.out.println(fromF.get(j + 1).first + " " + fromF.get(j + 1).second);
-//                        System.out.println(fromS.get(i + 1).first + " " + fromS.get(i + 1).second);
-//                        System.out.println();
-//                    }
+                if (path.get(path.size() - 1).first == fromF.get(j + 1).first && path.get(path.size() - 1).second == fromF.get(j + 1).second &&
+                        path.get(0).second == fromS.get(i + 1).second && path.get(0).second == fromS.get(i + 1).second) {
+                    if (minDist > path.size()) {
+                        minDist = path.size();
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < fromS.size(); i += 2) {
+            for (int j = 0; j < fromF.size(); j += 2) {
+                ArrayList<Pair> path = connectToPoints(gameMap, fromS.get(i + 1), fromF.get(j + 1));
+                if (path.size() != minDist) {
+                    continue;
+                }
+
+                if (path.get(path.size() - 1).first == fromF.get(j + 1).first && path.get(path.size() - 1).second == fromF.get(j + 1).second &&
+                        path.get(0).second == fromS.get(i + 1).second && path.get(0).second == fromS.get(i + 1).second) {
+
                     path.add(0, fromS.get(i));
                     path.add(fromF.get(j));
                     a.addWay(path);
@@ -361,26 +418,15 @@ public class GameMapGenerator {
                 }
             }
         }
-        System.out.println("cheburek");
     }
 
     private void connectRooms(int[][] gameMap, ArrayList<Room> rooms) {
-//        for (int i = 0; i < HEIGHT; ++i) {
-//            for (int j = 0; j < WIDTH; ++j) {
-//                System.out.print(nodeGameMap[i][j] + "/");
-//            }
-//            System.out.print("\n");
-//        }
-//        System.out.print("\n");
-
-        boolean[][] used = new boolean[HEIGHT][WIDTH];
         HashMap<Node, HashSet<Node>> neighbor = new HashMap<>();
         HashMap<Integer, HashSet<Integer>> intNeighbor = new HashMap<>();
         int[] cordsX = {0, 0, 1, -1}, cordsY = {1, -1, 0, 0};
 
         for (int i = 0; i < HEIGHT; ++i) {
             for (int j = 0; j < WIDTH; ++j) {
-                //System.out.println(nodeGameMap[i][j]);
                 for (int k = 0; k < 4; ++k) {
                     int newX = i + cordsX[k], newY = j + cordsY[k];
                     if (newX >= 0 && newX < HEIGHT && newY >= 0 && newY < WIDTH) {
@@ -389,7 +435,6 @@ public class GameMapGenerator {
                                 neighbor.put(pointToNode(i, j), new HashSet<Node>());
                                 intNeighbor.put(nodeGameMap[i][j], new HashSet<Integer>());
                             }
-                            //System.out.println(nodeGameMap[i][j] + " -> " + nodeGameMap[newX][newY]);
                             neighbor.get(pointToNode(i, j)).add(pointToNode(newX, newY));
                             intNeighbor.get(nodeGameMap[i][j]).add(nodeGameMap[newX][newY]);
                         }
@@ -398,7 +443,6 @@ public class GameMapGenerator {
             }
         }
 
-        int cnt = 0;
         HashSet<Pair> connect = new HashSet<>();
         for (Map.Entry<Integer, HashSet<Integer>> it : intNeighbor.entrySet()) {
             int key = it.getKey();
@@ -416,23 +460,11 @@ public class GameMapGenerator {
                     if (flag) {
                         continue;
                     }
-                    connectTwoRooms(gameMap, intToNode.get(key).room, intToNode.get(node).room);
-//                    for (int i = 0; i < HEIGHT; ++i) {
-//                        for (int j = 0; j < WIDTH; ++j) {
-//                            System.out.print(gameMap[i][j] + " ");
-//                        }
-//                        System.out.println();
-//                    }
-//                    System.out.println();
+                    connectTwoRoomsByWayPriority(gameMap, intToNode.get(key).room, intToNode.get(node).room);
                     connect.add(new Pair(key, node));
                     connect.add(new Pair(node, key));
                 }
             }
-            ++cnt;
-            if (cnt == 2) {
-                //return;
-            }
-            //printWaysToMap(gameMap, intToRoom.get(key));
         }
     }
 

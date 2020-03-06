@@ -38,7 +38,7 @@ public class Slime extends Mob {
 
     private void shoot(Vector3 vec) {
         if (timer == 0) {
-            new FirstBullet(Helper.norm(vec), x + sizeX / 2 + 20 * vec.x, y + sizeY / 2 + 20 * vec.y);
+            //new FirstBullet(Helper.norm(vec), x + sizeX / 2 + 20 * vec.x, y + sizeY / 2 + 20 * vec.y);
             timer = 20;
         } else {
             --timer;
