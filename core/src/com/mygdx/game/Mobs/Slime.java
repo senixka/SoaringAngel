@@ -3,6 +3,8 @@ package com.mygdx.game.Mobs;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.Bullet;
+import com.mygdx.game.Bullets.FirstBullet;
 import com.mygdx.game.Helper;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
 import com.mygdx.game.MapGenerator.Room;
@@ -12,6 +14,8 @@ import com.mygdx.game.World;
 
 public class Slime extends Mob {
 
+    public int timer = 0;
+
     public Slime(float x, float y, Room room) {
         super(x, y, 50, 50, 20, room, new Texture(Gdx.files.internal("Zombie.psd")));
     }
@@ -20,14 +24,25 @@ public class Slime extends Mob {
     public void move(Vector3 vec) {
         Vector3 newVec = GameMapGenerator.gameCordsToMap(
                 new Vector3(vec.x + x + (float) sizeX / 2, vec.y + y + (float) sizeY / 2, 0));
-        if (!Helper.intersectWall(new Rectangle(x + vec.x, y + vec.y, sizeX, sizeY / 2))) {
-            x += vec.x;
-            y += vec.y;
-        }
-//        if (room.isPointAccessible(this, (int) newVec.x, (int) newVec.y)) {
+//        if (!Helper.intersectWall(new Rectangle(x + vec.x, y + vec.y, sizeX, sizeY / 2))) {
 //            x += vec.x;
 //            y += vec.y;
 //        }
+        if (!Helper.intersectWall(new Rectangle(x + vec.x, y + vec.y, sizeX, sizeY / 2))) {
+            if (room.isPointAccessible((int) newVec.x, (int) newVec.y)) {
+                x += vec.x;
+                y += vec.y;
+            }
+        }
+    }
+
+    private void shoot(Vector3 vec) {
+        if (timer == 0) {
+            new FirstBullet(Helper.norm(vec), x + sizeX / 2 + 20 * vec.x, y + sizeY / 2 + 20 * vec.y);
+            timer = 20;
+        } else {
+            --timer;
+        }
     }
 
     @Override
@@ -38,5 +53,6 @@ public class Slime extends Mob {
         vec.x *= delta * speed;
         vec.y *= delta * speed;
         move(vec);
+        shoot(vec);
     }
 }
