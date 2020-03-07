@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Bullet;
 
 public class DNKBullet extends Bullet {
-    public static final Texture IMG = new Texture(Gdx.files.internal("red.png"));
+    public static final Texture IMG = new Texture(Gdx.files.internal("RedCircleBullet.psd"));
     Vector3 center;
     double alp;
     double angSpeed = 180;

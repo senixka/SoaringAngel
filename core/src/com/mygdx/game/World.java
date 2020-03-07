@@ -137,6 +137,8 @@ public class World {
         }
 
         pers.draw();
+
+        controller.draw();
     }
 
     public static Vector3 getFocus() {
