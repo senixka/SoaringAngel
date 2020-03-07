@@ -13,8 +13,10 @@ public class Room {
     public ArrayList<Mob> mobs;
     public Shelter shelter;
     public Node node;
+    public ArrayList<Room> connectedRooms;
+    private int[][] localGameMap;
 
-    public Room(Node node, int x, int y, int width, int height) {
+    public Room(Node node, int x, int y, int width, int height, int[][] localGameMap) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -24,6 +26,7 @@ public class Room {
         this.ways = new ArrayList<>();
         this.mobs = new ArrayList<>();
         this.shelter = new Shelter();
+        this.localGameMap = localGameMap;
     }
 
     public Pair getRandomPointInRoom() {
@@ -34,6 +37,10 @@ public class Room {
 
     public Pair getCenterPointInRoom() {
         return (new Pair(x + height / 2, y + width / 2));
+    }
+
+    public void addConnectedRoom(Room room) {
+        connectedRooms.add(room);
     }
 
     public void addWay(ArrayList<Pair> way) {
@@ -59,9 +66,13 @@ public class Room {
         return false;
     }
 
+    public void removeMob(Mob mob) {
+        mobs.remove(mob);
+    }
+
     public void createMob() {
         Pair cords = getRandomPointInRoom();
-        while (GameMapGenerator.localGameMap[cords.first][cords.second] != 1) {
+        while (localGameMap[cords.first][cords.second] != 1) {
             cords = getRandomPointInRoom();
         }
         addMob(cords.first * World.pixSize, cords.second * World.pixSize);

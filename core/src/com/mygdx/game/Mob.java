@@ -10,7 +10,7 @@ public class Mob {
     public int intX, intY, sizeX, sizeY, hp;
     public Texture texture, mark;
     public Room room;
-    public boolean target;
+    public boolean target, isDead;
 
     public Mob(float x, float y, int sizeX, int sizeY, int hp, Room room, Texture texture) {
         this.x = x;
@@ -20,6 +20,7 @@ public class Mob {
         this.texture = texture;
         this.room = room;
         this.hp = hp;
+        this.isDead = false;
         this.mark = new Texture(Gdx.files.internal("red.png"));
         intX = (int) (x / (float) World.pixSize);
         intY = (int) (y / (float) World.pixSize);
@@ -35,7 +36,11 @@ public class Mob {
     }
 
     public boolean isDead() {
-        return (hp <= 0);
+        if (hp <= 0 && !isDead) {
+            isDead = true;
+            room.removeMob(this);
+        }
+        return isDead;
     }
 
     public Vector3 getCenter() {

@@ -45,6 +45,8 @@ public class GameScreen implements Screen {
     }
 
     public void contin() {
+
+        camera.setToOrtho(false, 3 * 800, 3 * 480);
         controller = new GameController();
         Gdx.input.setInputProcessor(controller);
         MyGame.staticSetScreen(this);

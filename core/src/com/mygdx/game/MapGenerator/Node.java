@@ -1,13 +1,14 @@
 package com.mygdx.game.MapGenerator;
 
 public class Node {
-    public static int BORDER, MIN_HEIGHT, MIN_WIDTH;
+    public int BORDER, MIN_HEIGHT, MIN_WIDTH;
     public int y, x, width, height;
     public Node leftChild, rightChild;
     public Room room;
     public boolean isNodeVisible;
+    private int[][] localGameMap;
 
-    public Node(int x, int y, int height, int width, int BORDER, int MIN_HEIGHT, int MIN_WIDTH) {
+    public Node(int x, int y, int height, int width, int BORDER, int MIN_HEIGHT, int MIN_WIDTH, int[][] localGameMap) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -16,6 +17,7 @@ public class Node {
         this.BORDER = BORDER;
         this.MIN_HEIGHT = MIN_HEIGHT;
         this.MIN_WIDTH = MIN_WIDTH;
+        this.localGameMap = localGameMap;
     }
 
     public int isPossibleToSplit() {
@@ -45,6 +47,6 @@ public class Node {
         newY0 += Rand.AbsModInt(newW + 1);
         newX1 -= Rand.AbsModInt(newH + 1);
         newY1 -= Rand.AbsModInt(newW + 1);
-        room = new Room(this, newX0, newY0, newY1 - newY0, newX1 - newX0);
+        room = new Room(this, newX0, newY0, newY1 - newY0, newX1 - newX0, localGameMap);
     }
 }

@@ -12,7 +12,7 @@ public class DNKBullet extends Bullet {
     double angSpeed = 180;
 
     public DNKBullet(Vector3 vect, float x, float y, int num) {
-        super(IMG, 300, 20, 20, 5, vect, x, y);
+        super(IMG, 600, 20, 20, 5, vect, x, y);
         center = new Vector3(x, y, 0);
         if (num == 1) {
             alp = 0;

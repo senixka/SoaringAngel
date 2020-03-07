@@ -1,6 +1,5 @@
 package com.mygdx.game.MapGenerator;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.World;
 
@@ -11,8 +10,8 @@ public class GameMapGenerator {
      * 0 <= ROOM_EPS <= 1000
      * 0 <= WAY_EPS <= 10000
      */
-    public static int WIDTH, HEIGHT, ROOM_EPS, BORDER, MIN_HEIGHT, MIN_WIDTH, WAY_EPS;
-    public static int[][] localGameMap;
+    public int WIDTH, HEIGHT, ROOM_EPS, BORDER, MIN_HEIGHT, MIN_WIDTH, WAY_EPS;
+    public int[][] localGameMap;
     private int[][] nodeGameMap, roomGameMap;
     private HashMap<Integer, Room> intToRoom;
     private HashMap<Integer, Node> intToNode;
@@ -27,22 +26,28 @@ public class GameMapGenerator {
         this.MIN_HEIGHT = MIN_HEIGHT;
         this.MIN_WIDTH = MIN_WIDTH;
 
-        localGameMap = new int[HEIGHT][WIDTH];
-        nodeGameMap = new int[HEIGHT][WIDTH];
-        roomGameMap = new int[HEIGHT][WIDTH];
-        intToNode = new HashMap<>();
-        intToRoom = new HashMap<>();
-        this.root = new Node(0, 0, HEIGHT, WIDTH, BORDER, MIN_HEIGHT, MIN_WIDTH);
-        ArrayList<Room> rooms = new ArrayList<>();
+        while (true) {
+            localGameMap = new int[HEIGHT][WIDTH];
+            nodeGameMap = new int[HEIGHT][WIDTH];
+            roomGameMap = new int[HEIGHT][WIDTH];
+            intToNode = new HashMap<>();
+            intToRoom = new HashMap<>();
+            this.root = new Node(0, 0, HEIGHT, WIDTH, BORDER, MIN_HEIGHT, MIN_WIDTH, localGameMap);
+            ArrayList<Room> rooms = new ArrayList<>();
 
-        createTree(root);
-        createRooms(root);
-        initNodeGameMap(root);
-        initRoomGameMap(root);
-        getLeafsRoom(rooms, root);
-        sparseRooms(rooms);
-        initGameMap(localGameMap, rooms);
-        createMobs(rooms);
+            createTree(root);
+            createRooms(root);
+            initNodeGameMap(root);
+            initRoomGameMap(root);
+            getLeafsRoom(rooms, root);
+            sparseRooms(rooms);
+            initGameMap(localGameMap, rooms);
+
+            if (checkRoomsConnection(localGameMap)) {
+                createMobs(rooms);
+                break;
+            }
+        }
     }
 
     public int[][] getMap() {
@@ -55,6 +60,56 @@ public class GameMapGenerator {
         vec.x = (int) (vec.x / (float) World.pixSize);
         vec.y = (int) (vec.y / (float) World.pixSize);
         return vec;
+    }
+
+    private boolean checkRoomsConnection(int[][] gameMap) {
+        int x = 0, y = 0;
+        boolean flag = false;
+        for (int i = 0; i < HEIGHT; ++i) {
+            for (int j = 0; j < WIDTH; ++j) {
+                if (gameMap[i][j] != 0) {
+                    x = i;
+                    y = j;
+                    flag = true;
+                }
+            }
+            if (flag) {
+                break;
+            }
+        }
+
+        flag = true;
+        boolean[][] used = new boolean[HEIGHT][WIDTH];
+        for (boolean[] row : used) Arrays.fill(row, false);
+        int[] cordsX = {0, 0, 1, -1}, cordsY = {1, -1, 0, 0};
+        ArrayDeque<Pair> q = new ArrayDeque<>();
+        q.addLast(new Pair(x, y));
+        used[x][y] = true;
+
+        while (!q.isEmpty()) {
+            Pair temp = q.getFirst();
+            q.removeFirst();
+            x = temp.first;
+            y = temp.second;
+            for (int i = 0; i < 4; ++i) {
+                int newX = x + cordsX[i], newY = y + cordsY[i];
+                if (newX >= 0 && newY >= 0 && newX < HEIGHT && newY < WIDTH) {
+                    if (!used[newX][newY] && gameMap[newX][newY] != 0) {
+                        used[newX][newY] = true;
+                        q.addLast(new Pair(newX, newY));
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < HEIGHT; ++i) {
+            for (int j = 0; j < WIDTH; ++j) {
+                if (gameMap[i][j] != 0 && !used[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private void createMobs(ArrayList<Room> rooms) {
@@ -196,11 +251,11 @@ public class GameMapGenerator {
             }
 
             if (splittable == 0) {
-                v.leftChild = new Node(v.x, v.y, v.height / 2 - deltaH, v.width, BORDER, MIN_HEIGHT, MIN_WIDTH);
-                v.rightChild = new Node(v.x + v.height / 2 - deltaH, v.y, v.height - v.height / 2 + deltaH, v.width, BORDER, MIN_HEIGHT, MIN_WIDTH);
+                v.leftChild = new Node(v.x, v.y, v.height / 2 - deltaH, v.width, BORDER, MIN_HEIGHT, MIN_WIDTH, localGameMap);
+                v.rightChild = new Node(v.x + v.height / 2 - deltaH, v.y, v.height - v.height / 2 + deltaH, v.width, BORDER, MIN_HEIGHT, MIN_WIDTH, localGameMap);
             } else {
-                v.leftChild = new Node(v.x, v.y, v.height, v.width / 2 - deltaW, BORDER, MIN_HEIGHT, MIN_WIDTH);
-                v.rightChild = new Node(v.x, v.y + v.width / 2 - deltaW, v.height, v.width - v.width / 2 + deltaW, BORDER, MIN_HEIGHT, MIN_WIDTH);
+                v.leftChild = new Node(v.x, v.y, v.height, v.width / 2 - deltaW, BORDER, MIN_HEIGHT, MIN_WIDTH, localGameMap);
+                v.rightChild = new Node(v.x, v.y + v.width / 2 - deltaW, v.height, v.width - v.width / 2 + deltaW, BORDER, MIN_HEIGHT, MIN_WIDTH, localGameMap);
             }
             createTree(v.leftChild);
             createTree(v.rightChild);
