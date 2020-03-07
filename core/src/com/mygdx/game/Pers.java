@@ -90,4 +90,11 @@ public class Pers {
             weapon.attack();
         }
     }
+
+    public void hit(int dmg) {
+        hp -= dmg;
+        if (hp < 0) {
+            hp = 0;
+        }
+    }
 }

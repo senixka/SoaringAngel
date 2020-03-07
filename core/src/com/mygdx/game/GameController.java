@@ -78,6 +78,10 @@ public class GameController implements InputProcessor {
         if (character == 'j') {
             World.pers.x -= 50;
         }
+        if (character == '1') {
+            World.pers.hit(5);
+        }
+
         return false;
     }
 
