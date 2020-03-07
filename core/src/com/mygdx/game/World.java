@@ -19,8 +19,7 @@ public class World {
     public static List<Subject> subjects;
     public static int[][] map;
     public static final int pixSize = 50;
-    public static Texture pix;
-    public static Texture pix2;
+    public static Texture pix, pix2, pix3;
 
     public static void start(GameController controller2) {
         System.out.println((int) -51 / 100);
@@ -43,6 +42,7 @@ public class World {
 
         pix = new Texture(Gdx.files.internal("StonePix.psd"));
         pix2 = new Texture(Gdx.files.internal("StonePixDown.psd"));
+        pix3 = new Texture(Gdx.files.internal("DoorPix.png"));
 
         createMap();
         Inventory.create();
@@ -112,7 +112,7 @@ public class World {
 
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map.length; j++) {
-                if (map[i][j] == 0) {
+                if (map[i][j] == GameMapGenerator.wallCode) {
                     MyGame.batch.draw(pix2, i * pixSize, j * pixSize + pixSize / 2, pixSize, pixSize / 2);
                 }
             }
@@ -120,8 +120,17 @@ public class World {
 
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map.length; j++) {
-                if (map[i][j] == 0) {
+                if (map[i][j] == GameMapGenerator.wallCode) {
                     MyGame.batch.draw(pix, i * pixSize, j * pixSize, pixSize, pixSize);
+                }
+            }
+        }
+
+
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map.length; j++) {
+                if (map[i][j] == GameMapGenerator.doorCode) {
+                    MyGame.batch.draw(pix3, i * pixSize, j * pixSize, pixSize, pixSize);
                 }
             }
         }

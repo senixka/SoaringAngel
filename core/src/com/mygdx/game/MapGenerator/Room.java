@@ -14,6 +14,7 @@ public class Room {
     public Shelter shelter;
     public Node node;
     public ArrayList<Room> connectedRooms;
+    public ArrayList<Door> doors;
     private int[][] localGameMap;
 
     public Room(Node node, int x, int y, int width, int height, int[][] localGameMap) {
@@ -25,6 +26,7 @@ public class Room {
         this.node = node;
         this.ways = new ArrayList<>();
         this.mobs = new ArrayList<>();
+        this.doors = new ArrayList<>();
         this.shelter = new Shelter();
         this.localGameMap = localGameMap;
     }
@@ -45,6 +47,10 @@ public class Room {
 
     public void addWay(ArrayList<Pair> way) {
         ways.add(way);
+    }
+
+    public void addDoor(Door door) {
+        doors.add(door);
     }
 
     public void addMob(int mobX, int mobY) {
@@ -72,7 +78,7 @@ public class Room {
 
     public void createMob() {
         Pair cords = getRandomPointInRoom();
-        while (localGameMap[cords.first][cords.second] != 1) {
+        while (localGameMap[cords.first][cords.second] != GameMapGenerator.spaceCode) {
             cords = getRandomPointInRoom();
         }
         addMob(cords.first * World.pixSize, cords.second * World.pixSize);

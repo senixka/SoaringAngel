@@ -11,11 +11,15 @@ public class GameMapGenerator {
      * 0 <= WAY_EPS <= 10000
      */
     public int WIDTH, HEIGHT, ROOM_EPS, BORDER, MIN_HEIGHT, MIN_WIDTH, WAY_EPS;
+    public static final int wallCode = 0, spaceCode = 1, doorCode = 2;
     public int[][] localGameMap;
+
     private int[][] nodeGameMap, roomGameMap;
     private HashMap<Integer, Room> intToRoom;
     private HashMap<Integer, Node> intToNode;
     private Node root;
+
+    //######################### PUBLIC #########################
 
     public GameMapGenerator(int HEIGHT, int WIDTH, int BORDER, int MIN_HEIGHT, int MIN_WIDTH, int ROOM_EPS, int WAY_EPS) {
         this.HEIGHT = HEIGHT;
@@ -28,6 +32,7 @@ public class GameMapGenerator {
 
         while (true) {
             localGameMap = new int[HEIGHT][WIDTH];
+            fillMatrix(localGameMap, wallCode);
             nodeGameMap = new int[HEIGHT][WIDTH];
             roomGameMap = new int[HEIGHT][WIDTH];
             intToNode = new HashMap<>();
@@ -62,80 +67,15 @@ public class GameMapGenerator {
         return vec;
     }
 
-    private boolean checkRoomsConnection(int[][] gameMap) {
-        int x = 0, y = 0;
-        boolean flag = false;
-        for (int i = 0; i < HEIGHT; ++i) {
-            for (int j = 0; j < WIDTH; ++j) {
-                if (gameMap[i][j] != 0) {
-                    x = i;
-                    y = j;
-                    flag = true;
-                }
-            }
-            if (flag) {
-                break;
-            }
-        }
-
-        flag = true;
-        boolean[][] used = new boolean[HEIGHT][WIDTH];
-        for (boolean[] row : used) Arrays.fill(row, false);
-        int[] cordsX = {0, 0, 1, -1}, cordsY = {1, -1, 0, 0};
-        ArrayDeque<Pair> q = new ArrayDeque<>();
-        q.addLast(new Pair(x, y));
-        used[x][y] = true;
-
-        while (!q.isEmpty()) {
-            Pair temp = q.getFirst();
-            q.removeFirst();
-            x = temp.first;
-            y = temp.second;
-            for (int i = 0; i < 4; ++i) {
-                int newX = x + cordsX[i], newY = y + cordsY[i];
-                if (newX >= 0 && newY >= 0 && newX < HEIGHT && newY < WIDTH) {
-                    if (!used[newX][newY] && gameMap[newX][newY] != 0) {
-                        used[newX][newY] = true;
-                        q.addLast(new Pair(newX, newY));
-                    }
-                }
-            }
-        }
-
-        for (int i = 0; i < HEIGHT; ++i) {
-            for (int j = 0; j < WIDTH; ++j) {
-                if (gameMap[i][j] != 0 && !used[i][j]) {
-                    return false;
-                }
-            }
-        }
-        return true;
+    public boolean isWall(int x, int y) {
+        return localGameMap[x][y] == wallCode;
     }
 
-    private void createMobs(ArrayList<Room> rooms) {
-        for (int i = 0; i < rooms.size(); ++i) {
-            Room room = rooms.get(i);
-            for (int j = 0; j < 5; ++j) {
-                room.createMob();
-            }
-        }
+    public boolean isWall(int[][] gameMap, int x, int y) {
+        return gameMap[x][y] == wallCode;
     }
 
-    private Node pointToNode(int pointX, int pointY) {
-        return intToNode.get(nodeGameMap[pointX][pointY]);
-    }
-
-    private Room pointToRoom(int pointX, int pointY) {
-        return intToRoom.get(roomGameMap[pointX][pointY]);
-    }
-
-    private void copyMatrix(int[][] from, int[][] to) {
-        for (int i = 0; i < from.length; ++i) {
-            for (int j = 0; j < from[i].length; ++j) {
-                to[i][j] = from[i][j];
-            }
-        }
-    }
+    //######################### INIT #########################
 
     private void initGameMap(int[][] gameMap, ArrayList<Room> rooms) {
         for (int i = 0; i < rooms.size(); ++i) {
@@ -143,11 +83,7 @@ public class GameMapGenerator {
             printRoomToMap(gameMap, temp);
         }
         int[][] tempMap = new int[HEIGHT][WIDTH];
-        for (int i = 0; i < HEIGHT; ++i) {
-            for (int j = 0; j < WIDTH; ++j) {
-                tempMap[i][j] = gameMap[i][j];
-            }
-        }
+        copyMatrix(gameMap, tempMap);
 
         connectRooms(tempMap, rooms);
         for (int i = 0; i < rooms.size(); ++i) {
@@ -157,6 +93,7 @@ public class GameMapGenerator {
         for (int i = 0; i < rooms.size(); ++i) {
             Room temp = rooms.get(i);
             printRoomShelterToMap(gameMap, temp);
+            printDoorsToMap(gameMap, temp);
         }
     }
 
@@ -188,6 +125,8 @@ public class GameMapGenerator {
         }
     }
 
+    //######################### PRINT #########################
+
     private void printRoomShelterToMap(int[][] gameMap, Room room) {
         ArrayList<Instruction> temp = room.shelter.shelters.get(room.shelter.index).tmp;
         for (int i = 0; i < temp.size(); ++i) {
@@ -201,22 +140,22 @@ public class GameMapGenerator {
         int tempY = (int) ((float) room.y + inst.y * (float) room.width);
         Vector3 vec = inst.vec;
         if (vec.x == 0 && vec.y == 0) {
-            gameMap[tempX][tempY] = 0;
+            gameMap[tempX][tempY] = wallCode;
         } else if (vec.x == 0 && vec.y != 0) {
             int delta = (int) ((float) room.width * inst.len);
             for (int i = tempY; i >= room.y && i < room.y + room.width && Math.abs(i - tempY) <= delta; i += vec.y) {
-                gameMap[tempX][i] = 0;
+                gameMap[tempX][i] = wallCode;
             }
         } else if (vec.x != 0 && vec.y == 0) {
             int delta = (int) ((float) room.height * inst.len);
             for (int i = tempX; i >= room.x && i < room.x + room.height && Math.abs(i - tempX) <= delta; i += vec.x) {
-                gameMap[i][tempY] = 0;
+                gameMap[i][tempY] = wallCode;
             }
         } else {
             int delta = Math.min((int) ((float) room.height * inst.len), (int) ((float) room.width * inst.len));
             for (int i = tempX, j = tempY; i >= room.x && i < room.x + room.height && Math.abs(i - tempX) <= delta &&
                     j >= room.y && j < room.y + room.width && Math.abs(j - tempY) <= delta; i += vec.x, j += vec.y) {
-                gameMap[i][j] = 0;
+                gameMap[i][j] = wallCode;
             }
         }
     }
@@ -224,7 +163,7 @@ public class GameMapGenerator {
     private void printRoomToMap(int[][] gameMap, Room room) {
         for (int i = room.x; i < room.x + room.height; ++i) {
             for (int j = room.y; j < room.y + room.width; ++j) {
-                gameMap[i][j] = 1;
+                gameMap[i][j] = spaceCode;
             }
         }
     }
@@ -233,7 +172,25 @@ public class GameMapGenerator {
         for (int i = 0; i < room.ways.size(); ++i) {
             ArrayList<Pair> way = room.ways.get(i);
             for (int j = 0; j < way.size(); ++j) {
-                gameMap[way.get(j).first][way.get(j).second] = 1;
+                gameMap[way.get(j).first][way.get(j).second] = spaceCode;
+            }
+        }
+    }
+
+    private void printDoorsToMap(int[][] gameMap, Room room) {
+        for (int i = 0; i < room.doors.size(); ++i) {
+            Door door = room.doors.get(i);
+            gameMap[door.x][door.y] = doorCode;
+        }
+    }
+
+    //######################### CREATE #########################
+
+    private void createMobs(ArrayList<Room> rooms) {
+        for (int i = 0; i < rooms.size(); ++i) {
+            Room room = rooms.get(i);
+            for (int j = 0; j < 5; ++j) {
+                room.createMob();
             }
         }
     }
@@ -252,10 +209,12 @@ public class GameMapGenerator {
 
             if (splittable == 0) {
                 v.leftChild = new Node(v.x, v.y, v.height / 2 - deltaH, v.width, BORDER, MIN_HEIGHT, MIN_WIDTH, localGameMap);
-                v.rightChild = new Node(v.x + v.height / 2 - deltaH, v.y, v.height - v.height / 2 + deltaH, v.width, BORDER, MIN_HEIGHT, MIN_WIDTH, localGameMap);
+                v.rightChild = new Node(v.x + v.height / 2 - deltaH, v.y, v.height - v.height / 2 + deltaH, v.width,
+                        BORDER, MIN_HEIGHT, MIN_WIDTH, localGameMap);
             } else {
                 v.leftChild = new Node(v.x, v.y, v.height, v.width / 2 - deltaW, BORDER, MIN_HEIGHT, MIN_WIDTH, localGameMap);
-                v.rightChild = new Node(v.x, v.y + v.width / 2 - deltaW, v.height, v.width - v.width / 2 + deltaW, BORDER, MIN_HEIGHT, MIN_WIDTH, localGameMap);
+                v.rightChild = new Node(v.x, v.y + v.width / 2 - deltaW, v.height, v.width - v.width / 2 + deltaW,
+                        BORDER, MIN_HEIGHT, MIN_WIDTH, localGameMap);
             }
             createTree(v.leftChild);
             createTree(v.rightChild);
@@ -271,14 +230,16 @@ public class GameMapGenerator {
         }
     }
 
+    //######################### CONNECT #########################
+
     private ArrayList<Pair> connectToPoints(int[][] gameMap, Pair a, Pair b) {
         ArrayList<Pair> path = new ArrayList<>();
-        if (gameMap[a.first][a.second] == 1 || gameMap[b.first][b.second] == 1) {
+        if (gameMap[a.first][a.second] == spaceCode || gameMap[b.first][b.second] == spaceCode) {
             return path;
         }
 
         int[][] used = new int[HEIGHT][WIDTH];
-        for (int[] row : used) Arrays.fill(row, -1);
+        fillMatrix(used, -1);
 
         ArrayDeque<Pair> q = new ArrayDeque<>();
         q.addLast(a);
@@ -303,7 +264,7 @@ public class GameMapGenerator {
                             continue;
                         }
                         if (newNewX >= 0 && newNewX < HEIGHT && newNewY >= 0 && newNewY < WIDTH) {
-                            if (newNewX == 0 || newNewX == HEIGHT - 1 || newNewY == 0 || newNewY == WIDTH - 1 || gameMap[newNewX][newNewY] == 1) {
+                            if (newNewX == 0 || newNewX == HEIGHT - 1 || newNewY == 0 || newNewY == WIDTH - 1 || gameMap[newNewX][newNewY] == spaceCode) {
                                 flag = true;
                                 break;
                             }
@@ -448,11 +409,13 @@ public class GameMapGenerator {
                         path.add(0, fromS.get(i));
                         path.add(fromF.get(j));
                         a.addWay(path);
+                        a.addDoor(new Door(path.get(0).first, path.get(0).second, true, a));
                         Collections.reverse(path);
                         b.addWay(path);
+                        b.addDoor(new Door(path.get(0).first, path.get(0).second, true, b));
                         for (int k = 0; k < path.size(); ++k) {
                             Pair temp = path.get(k);
-                            gameMap[temp.first][temp.second] = 1;
+                            gameMap[temp.first][temp.second] = spaceCode;
                         }
                         return;
                     }
@@ -497,7 +460,7 @@ public class GameMapGenerator {
                     b.addWay(path);
                     for (int k = 0; k < path.size(); ++k) {
                         Pair temp = path.get(k);
-                        gameMap[temp.first][temp.second] = 1;
+                        gameMap[temp.first][temp.second] = spaceCode;
                     }
                     return;
                 }
@@ -553,6 +516,8 @@ public class GameMapGenerator {
         }
     }
 
+    //######################### HELPER #########################
+
     private void getLeafsRoom(ArrayList<Room> rooms, Node v) {
         if (v.leftChild == null) {
             rooms.add(v.room);
@@ -579,5 +544,87 @@ public class GameMapGenerator {
                 --i;
             }
         }
+    }
+
+    private void copyMatrix(int[][] from, int[][] to) {
+        for (int i = 0; i < from.length; ++i) {
+            for (int j = 0; j < from[i].length; ++j) {
+                to[i][j] = from[i][j];
+            }
+        }
+    }
+
+    private void fillMatrix(int[][] matrix, int val) {
+        for (int i = 0; i < matrix.length; ++i) {
+            for (int j = 0; j < matrix[i].length; ++j) {
+                matrix[i][j] = val;
+            }
+        }
+    }
+
+    private void fillMatrix(boolean[][] matrix, boolean val) {
+        for (int i = 0; i < matrix.length; ++i) {
+            for (int j = 0; j < matrix[i].length; ++j) {
+                matrix[i][j] = val;
+            }
+        }
+    }
+
+    private Node pointToNode(int pointX, int pointY) {
+        return intToNode.get(nodeGameMap[pointX][pointY]);
+    }
+
+    private Room pointToRoom(int pointX, int pointY) {
+        return intToRoom.get(roomGameMap[pointX][pointY]);
+    }
+
+    private boolean checkRoomsConnection(int[][] gameMap) {
+        int x = 0, y = 0;
+        boolean flag = false;
+        for (int i = 0; i < HEIGHT; ++i) {
+            for (int j = 0; j < WIDTH; ++j) {
+                if (gameMap[i][j] != wallCode) {
+                    x = i;
+                    y = j;
+                    flag = true;
+                }
+            }
+            if (flag) {
+                break;
+            }
+        }
+
+        flag = true;
+        boolean[][] used = new boolean[HEIGHT][WIDTH];
+        fillMatrix(used, false);
+        int[] cordsX = {0, 0, 1, -1}, cordsY = {1, -1, 0, 0};
+        ArrayDeque<Pair> q = new ArrayDeque<>();
+        q.addLast(new Pair(x, y));
+        used[x][y] = true;
+
+        while (!q.isEmpty()) {
+            Pair temp = q.getFirst();
+            q.removeFirst();
+            x = temp.first;
+            y = temp.second;
+            for (int i = 0; i < 4; ++i) {
+                int newX = x + cordsX[i], newY = y + cordsY[i];
+                if (newX >= 0 && newY >= 0 && newX < HEIGHT && newY < WIDTH) {
+                    if (!used[newX][newY] && gameMap[newX][newY] != wallCode) {
+                        used[newX][newY] = true;
+                        q.addLast(new Pair(newX, newY));
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < HEIGHT; ++i) {
+            for (int j = 0; j < WIDTH; ++j) {
+                if (gameMap[i][j] != wallCode && !used[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
