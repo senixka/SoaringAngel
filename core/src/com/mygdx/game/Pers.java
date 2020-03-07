@@ -14,11 +14,15 @@ public class Pers {
     public Weapon weapon;
     public Vector3 lastVect;
     public boolean flip = false;
+    int hp, energy;
+    int maxHp = 50, maxEnergy = 50;
 
     public Pers() {
         texture = new Texture(Gdx.files.internal("Human.psd"));
         lastVect = new Vector3(5, 0, 0);
         weapon = new Weapon(null, "");
+        hp = maxHp;
+        energy = maxEnergy;
     }
 
     public void setSpeedBoost(int speedBoost) {
@@ -84,6 +88,13 @@ public class Pers {
     public void attack() {
         if (weapon != null) {
             weapon.attack();
+        }
+    }
+
+    public void hit(int dmg) {
+        hp -= dmg;
+        if (hp < 0) {
+            hp = 0;
         }
     }
 }
