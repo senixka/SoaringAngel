@@ -28,7 +28,9 @@ public class GameController implements InputProcessor {
         }
 
         if (Input.Keys.SPACE == keycode) {
-            World.pers.attack();
+            if (World.pers.weapon != null) {
+                World.pers.weapon.attackDown();
+            }
         }
 
         if (Input.Keys.ESCAPE == keycode) {
@@ -56,6 +58,11 @@ public class GameController implements InputProcessor {
         }
         if (Input.Keys.SHIFT_LEFT == keycode) {
             World.pers.setSpeedBoost(0);
+        }
+        if (Input.Keys.SPACE == keycode) {
+            if (World.pers.weapon != null) {
+                World.pers.weapon.attackUp();
+            }
         }
         return false;
     }

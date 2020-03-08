@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
 import com.mygdx.game.Weapons.DNKgun;
 import com.mygdx.game.Weapons.FirstGun;
+import com.mygdx.game.Weapons.Relstron;
 import com.mygdx.game.Weapons.Shotgun;
 
 import java.util.LinkedList;
@@ -37,6 +38,9 @@ public class World {
         Subject s2 = new DNKgun();
         s2.setPosition(0, -300);
         subjects.add(s2);
+        s2 = new Relstron();
+        s2.setPosition(100, -300);
+        subjects.add(s2);
 
         bullets = new LinkedList<Bullet>();
 
@@ -61,6 +65,7 @@ public class World {
         delete();
 
         pers.move(controller.speedVector(), delta);
+        pers.update(delta);
         setTarget();
     }
 

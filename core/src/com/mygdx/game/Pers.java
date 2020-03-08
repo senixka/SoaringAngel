@@ -85,11 +85,17 @@ public class Pers {
         return y;
     }
 
-    public void attack() {
+    public void update(float delta) {
         if (weapon != null) {
-            weapon.attack();
+            weapon.update(delta);
         }
     }
+
+//    public void attack() {
+//        if (weapon != null) {
+//            weapon.attack();
+//        }
+//    }
 
     public void hit(int dmg) {
         hp -= dmg;

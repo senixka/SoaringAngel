@@ -12,7 +12,15 @@ public class Weapon extends Subject{
     public void draw() {
     }
 
-    public void attack() {
+    public void update(float delta) {
+
+    }
+
+    public void attackDown() {
+    }
+
+    public void attackUp() {
+
     }
 
     public Pers getPers() {
