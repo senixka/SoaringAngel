@@ -9,7 +9,7 @@ import com.mygdx.game.MyGame;
 import com.mygdx.game.Weapon;
 
 public class Relstron extends Weapon {
-    public static final Texture IMG = new Texture(Gdx.files.internal("FirstGun.png"));
+    public static final Texture IMG = new Texture(Gdx.files.internal("Relstron.psd"));
     public static final int rapid = 20;
     public static final int charging = 20;
     public float time = 0;
@@ -17,7 +17,7 @@ public class Relstron extends Weapon {
     public Bullet b;
 
     public Relstron() {
-        super(IMG, "relstron");
+        super(IMG, "relstron", 5);
     }
 
     @Override
@@ -52,6 +52,9 @@ public class Relstron extends Weapon {
 
     @Override
     public void attackDown() {
+        if (!energyEnough()) {
+            return;
+        }
         time = 0;
         isFire = true;
         b = new FirstBullet(getVector(), getPers().x, getPers().y);

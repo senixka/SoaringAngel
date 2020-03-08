@@ -8,14 +8,13 @@ import com.mygdx.game.MyGame;
 import com.mygdx.game.Weapon;
 
 public class DNKgun extends Weapon {
-    public Texture texture;
+    public static final Texture texture = new Texture(Gdx.files.internal("DNKgun.psd"));
     public static final int rapid = 100;
     public float time = 0;
     public boolean isFire = false;
 
     public DNKgun() {
-        super(new Texture(Gdx.files.internal("FirstGun.png")), "First gun");
-        texture = new Texture(Gdx.files.internal("FirstGun.png"));
+        super(texture, "First gun", 1);
     }
 
     @Override
@@ -36,6 +35,9 @@ public class DNKgun extends Weapon {
         time += rapid * delta;
         if (time > 10) {
             time = 0;
+            if (!energyEnough()) {
+                return;
+            }
             new DNKBullet(getVector(), getPers().getX(), getPers().getY(), 1);
             new DNKBullet(getVector(), getPers().getX(), getPers().getY(), 0);
         }
@@ -43,6 +45,7 @@ public class DNKgun extends Weapon {
 
     @Override
     public void attackDown() {
+
         isFire = true;
     }
 

@@ -4,13 +4,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 
 public class Weapon extends Subject{
+    public int energy = 0;
 
-    public Weapon(Texture texture, String name) {
+    public Weapon(Texture texture, String name, int energy) {
         super(texture, name);
+        this.energy = energy;
     }
 
     public void draw() {
     }
+
 
     public void update(float delta) {
 
@@ -39,5 +42,13 @@ public class Weapon extends Subject{
 
     public Subject getSubject() {
         return null;
+    }
+
+    public boolean energyEnough() {
+        if (getPers().energy >= energy) {
+            getPers().energy -= energy;
+            return true;
+        }
+        return false;
     }
 }

@@ -9,14 +9,13 @@ import com.mygdx.game.Subject;
 import com.mygdx.game.Weapon;
 
 public class Shotgun extends Weapon {
-    public Texture texture;
+    public static final Texture texture = new Texture(Gdx.files.internal("Shotgun.psd"));
     public static final int rapid = 20;
     public float time = 0;
     public boolean isFire = false;
 
     public Shotgun() {
-        super(new Texture(Gdx.files.internal("FirstGun.png")), "Shotgun");
-        texture = new Texture(Gdx.files.internal("FirstGun.png"));
+        super(texture, "Shotgun", 3);
     }
 
     @Override
@@ -40,11 +39,15 @@ public class Shotgun extends Weapon {
 
     @Override
     public void update(float delta) {
-        if (!isFire) {
-            return;
-        }
         time += rapid * delta;
         if (time > 10) {
+            if (!isFire) {
+                time = 10;
+                return;
+            }
+            if (!energyEnough()) {
+                return;
+            }
             time = 0;
             new FirstBullet(getVector(), getPers().getX(), getPers().getY());
             Vector3 v = getVector().cpy();

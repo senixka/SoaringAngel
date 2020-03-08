@@ -15,12 +15,12 @@ public class Pers {
     public Vector3 lastVect;
     public boolean flip = false;
     int hp, energy;
-    int maxHp = 50, maxEnergy = 50;
+    int maxHp = 50, maxEnergy = 250;
 
     public Pers() {
         texture = new Texture(Gdx.files.internal("Human.psd"));
         lastVect = new Vector3(5, 0, 0);
-        weapon = new Weapon(null, "");
+        weapon = new Weapon(null, "", 0);
         hp = maxHp;
         energy = maxEnergy;
     }
