@@ -88,6 +88,9 @@ public class GameController implements InputProcessor {
         if (character == '1') {
             World.pers.hit(5);
         }
+        if (character == '2') {
+            World.pers.energy = World.pers.maxEnergy;
+        }
 
         return false;
     }
