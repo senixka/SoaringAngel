@@ -63,6 +63,7 @@ public class Relstron extends Weapon {
 
     @Override
     public void attackUp() {
+        if (b == null) {return;}
         isFire = false;
         b.speed = 600;
         b.vect = getVector();
