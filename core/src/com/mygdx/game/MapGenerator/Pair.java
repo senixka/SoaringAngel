@@ -1,8 +1,8 @@
 package com.mygdx.game.MapGenerator;
 
-class Pair implements Comparable {
-    int first;
-    int second;
+public class Pair implements Comparable {
+    public int first;
+    public int second;
 
     public Pair(int first, int second) {
         this.first = first;

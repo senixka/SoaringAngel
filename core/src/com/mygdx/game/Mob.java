@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.MapGenerator.GameMapGenerator;
 import com.mygdx.game.MapGenerator.Room;
 
 public class Mob {
@@ -22,13 +23,8 @@ public class Mob {
         this.hp = hp;
         this.isDead = false;
         this.mark = new Texture(Gdx.files.internal("red.png"));
-        intX = (int) (x / (float) World.pixSize);
-        intY = (int) (y / (float) World.pixSize);
-    }
-
-    public void setPosition(float x, float y) {
-        this.x = x;
-        this.y = y;
+        this.intX = (int) GameMapGenerator.gameCordsToMap(new Vector3(x + (float) sizeX / 2f, y + (float) sizeY / 2f, 0)).x;
+        this.intY = (int) GameMapGenerator.gameCordsToMap(new Vector3(x + (float) sizeX / 2f, y + (float) sizeY / 2f, 0)).y;
     }
 
     public void hit(int damage) {
@@ -58,7 +54,7 @@ public class Mob {
         this.target = target;
     }
 
-    public void move(Vector3 vec) {
+    public void move(float delta) {
     }
 
     public void update(float delta) {

@@ -1,10 +1,13 @@
 package com.mygdx.game.MapGenerator;
 
+import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Mobs.Slime;
 import com.mygdx.game.Mob;
 import com.mygdx.game.World;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Room {
     public int x, y, width, height;
@@ -15,6 +18,8 @@ public class Room {
     public Node node;
     public ArrayList<Room> connectedRooms;
     public ArrayList<Door> doors;
+    private ArrayList<Integer> prt;
+    private int cnt = 0;
     private int[][] localGameMap;
 
     public Room(Node node, int x, int y, int width, int height, int[][] localGameMap) {
@@ -65,13 +70,6 @@ public class Room {
         return false;
     }
 
-    public boolean isPointAccessible(int pointX, int pointY) {
-        if (isPointInRoom(pointX, pointY)) {
-            return true;
-        }
-        return false;
-    }
-
     public void removeMob(Mob mob) {
         mobs.remove(mob);
     }
@@ -82,5 +80,102 @@ public class Room {
             cords = getRandomPointInRoom();
         }
         addMob(cords.first * World.pixSize, cords.second * World.pixSize);
+    }
+
+    public boolean isMobInRoom(Mob mob) {
+        return mobs.contains(mob);
+    }
+
+    public ArrayList<Pair> findMobPath(Mob mob, int targetX, int targetY) {
+        int intX = mob.intX;
+        int intY = mob.intY;
+
+        ArrayList<Pair> path = new ArrayList<>();
+        if (!isMobInRoom(mob) || !isPointInRoom(targetX, targetY)) {
+            return path;
+        }
+
+        int[][] used = new int[height][width];
+        GameMapGenerator.fillMatrix(used, -1);
+        ArrayDeque<Pair> q = new ArrayDeque<>();
+        int[] cordX = {0, 0, 1, -1}, cordY = {1, -1, 0, 0};
+
+        used[intX - x][intY - y] = 0;
+        q.addLast(new Pair(intX, intY));
+
+        while (!q.isEmpty()) {
+            Pair temp = q.getFirst();
+            q.removeFirst();
+            for (int i = 0; i < 4; ++i) {
+                int newX = temp.first + cordX[i];
+                int newY = temp.second + cordY[i];
+                if (!isPointInRoom(newX, newY)) {
+                    continue;
+                }
+                if (used[newX - x][newY - y] != -1) {
+                    continue;
+                }
+
+//                if (newX == targetX && newY == targetY) {
+//                    used[newX - x][newY - y] = used[temp.first - x][temp.second - y] + 1;
+//                    q.addLast(new Pair(newX, newY));
+//                }
+
+                if (isPointInRoom(newX, newY) && localGameMap[newX][newY] != GameMapGenerator.wallCode) {
+                    boolean flag = false;
+                    for (Mob it : mobs) {
+                        if (it == mob || (newX == targetX && newY == targetY)) {
+                            continue;
+                        }
+                        if (it.intX == newX && it.intY == newY) {
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if (!flag) {
+                        used[newX - x][newY - y] = used[temp.first - x][temp.second - y] + 1;
+                        q.addLast(new Pair(newX, newY));
+                    }
+                }
+            }
+        }
+
+        if (used[targetX - x][targetY - y] == -1) {
+            return path;
+        }
+
+        int dist = used[targetX - x][targetY - y];
+        path.add(new Pair(targetX, targetY));
+        int tmpX = targetX, tmpY = targetY;
+
+        if (cnt == 0) {
+            cnt = 70;
+            prt = new ArrayList<Integer>();
+            prt.add(0);
+            prt.add(1);
+            prt.add(2);
+            prt.add(3);
+            java.util.Collections.shuffle(prt);
+        } else {
+            --cnt;
+        }
+
+        while (dist > 0) {
+            for (int i = 0; i < 4; ++i) {
+                int newX = tmpX + cordX[prt.get(i)], newY = tmpY + cordY[prt.get(i)];
+                if (isPointInRoom(newX, newY)) {
+                    if (used[newX - x][newY - y] == dist - 1) {
+                        tmpX = newX;
+                        tmpY = newY;
+                        --dist;
+                        path.add(new Pair(tmpX, tmpY));
+                        break;
+                    }
+                }
+            }
+        }
+
+        Collections.reverse(path);
+        return path;
     }
 }
