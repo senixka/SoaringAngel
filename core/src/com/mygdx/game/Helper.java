@@ -20,7 +20,7 @@ public class Helper {
     }
 
     public static void rotate(Vector3 v, float degree) {
-        v.rotate(degree, 0, 0, 0);
+        v.rotate(degree, 0, 0, 1);
     }
 
     public static boolean globalCheck() {

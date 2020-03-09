@@ -8,6 +8,7 @@ import com.mygdx.game.Weapons.DNKgun;
 import com.mygdx.game.Weapons.FirstGun;
 import com.mygdx.game.Weapons.Relstron;
 import com.mygdx.game.Weapons.Shotgun;
+import com.mygdx.game.Weapons.Shotgun2;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,8 +24,7 @@ public class World {
     public static Texture pix, pix2, pix3;
 
     public static void start(GameController controller2) {
-        System.out.println((int) -51 / 100);
-        System.out.println((int) -1.34);
+        System.out.println("Yeeeee shit here we go");
         pers = new Pers();
         pers.setPosition(-100, -100);
         controller = controller2;
@@ -35,12 +35,18 @@ public class World {
         Subject s = new Shotgun();
         s.setPosition(-100, -300);
         subjects.add(s);
-        Subject s2 = new DNKgun();
-        s2.setPosition(0, -300);
-        subjects.add(s2);
-        s2 = new Relstron();
-        s2.setPosition(100, -300);
-        subjects.add(s2);
+        s = new DNKgun();
+        s.setPosition(0, -300);
+        subjects.add(s);
+        s = new Shotgun2();
+        s.setPosition(100, -300);
+        subjects.add(s);
+        s = new Relstron();
+        s.setPosition(-200, -300);
+        subjects.add(s);
+        s = new FirstGun();
+        s.setPosition(200, -300);
+        subjects.add(s);
 
         bullets = new LinkedList<Bullet>();
 
@@ -50,6 +56,7 @@ public class World {
 
         createMap();
         Inventory.create();
+
     }
 
     public static void update(float delta) {
@@ -59,8 +66,8 @@ public class World {
         for (Mob mob : mobs) {
             mob.update(delta);
         }
-        for (Bullet bullet : bullets) {
-            bullet.update(delta);
+        for (int i = 0; i < bullets.size(); i++) {
+            bullets.get(i).update(delta);
         }
         delete();
 
@@ -160,7 +167,7 @@ public class World {
     }
 
     public static void setTarget() {
-        float dist = 300;
+        float dist = 1000;
         Mob target = null;
         for (Mob mob : mobs) {
             if (Helper.dist(mob.getCenter(), pers.getCenter()) < dist) {
