@@ -1,6 +1,7 @@
 package com.mygdx.game.MapGenerator;
 
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.Mobs.Slime;
 import com.mygdx.game.World;
 
 import java.util.*;
@@ -10,7 +11,7 @@ public class GameMapGenerator {
      * 0 <= ROOM_EPS <= 1000
      * 0 <= WAY_EPS <= 10000
      */
-    public int WIDTH, HEIGHT, ROOM_EPS, BORDER, MIN_HEIGHT, MIN_WIDTH, WAY_EPS;
+    public final int WIDTH, HEIGHT, ROOM_EPS, BORDER, MIN_HEIGHT, MIN_WIDTH, WAY_EPS;
     public static final int wallCode = 0, spaceCode = 1, doorCode = 2;
     public int[][] localGameMap;
 
@@ -198,7 +199,7 @@ public class GameMapGenerator {
         for (int i = 0; i < rooms.size(); ++i) {
             Room room = rooms.get(i);
             for (int j = 0; j < 5; ++j) {
-                room.createMob();
+                room.createMob(new Slime());
             }
         }
     }

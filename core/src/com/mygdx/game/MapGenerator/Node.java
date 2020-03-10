@@ -40,7 +40,7 @@ public class Node {
     }
 
     public void createRoom() {
-        int newH = (height - 2 * BORDER - MIN_HEIGHT) / 2, newW = (width - 2 * BORDER - MIN_WIDTH) / 2;
+        int newH = Math.max(0, (height - 2 * BORDER - MIN_HEIGHT) / 2), newW = Math.max(0, (width - 2 * BORDER - MIN_WIDTH) / 2);
         int newX0 = x + BORDER, newY0 = y + BORDER;
         int newX1 = x + height - BORDER, newY1 = y + width - BORDER;
         newX0 += Rand.AbsModInt(newH + 1);

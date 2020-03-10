@@ -12,19 +12,17 @@ import com.mygdx.game.Rectangle;
 import com.mygdx.game.World;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
-public class Slime extends Mob {
-
+public class Boss extends Mob {
     public int timer = 0;
-    private static final Texture zombie = new Texture(Gdx.files.internal("Zombie.psd"));
+    private static final Texture boss = new Texture(Gdx.files.internal("Boss.png"));
 
-    public Slime() {
+    public Boss() {
 
     }
 
-    public Slime(float x, float y, Room room) {
-        super(x, y, 40, 40, 20, room, zombie);
+    public Boss(float x, float y, Room room) {
+        super(x, y, 150, 150, 1000, room, boss);
     }
 
     @Override

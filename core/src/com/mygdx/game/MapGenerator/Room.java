@@ -1,6 +1,7 @@
 package com.mygdx.game.MapGenerator;
 
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.Mobs.Boss;
 import com.mygdx.game.Mobs.Slime;
 import com.mygdx.game.Mob;
 import com.mygdx.game.World;
@@ -58,9 +59,14 @@ public class Room {
         doors.add(door);
     }
 
-    public void addMob(int mobX, int mobY) {
-        mobs.add(new Slime(mobX, mobY, this));
-        World.mobs.add(mobs.get(mobs.size() - 1));
+    public void addMob(Mob mob, int mobX, int mobY) {
+        if (mob instanceof Slime) {
+            mobs.add(new Slime(mobX, mobY, this));
+            World.mobs.add(mobs.get(mobs.size() - 1));
+        } else if (mob instanceof Boss) {
+            mobs.add(new Boss(mobX, mobY, this));
+            World.mobs.add(mobs.get(mobs.size() - 1));
+        }
     }
 
     public boolean isPointInRoom(int pointX, int pointY) {
@@ -74,12 +80,12 @@ public class Room {
         mobs.remove(mob);
     }
 
-    public void createMob() {
+    public void createMob(Mob mob) {
         Pair cords = getRandomPointInRoom();
         while (localGameMap[cords.first][cords.second] != GameMapGenerator.spaceCode) {
             cords = getRandomPointInRoom();
         }
-        addMob(cords.first * World.pixSize, cords.second * World.pixSize);
+        addMob(mob,cords.first * World.pixSize, cords.second * World.pixSize);
     }
 
     public boolean isMobInRoom(Mob mob) {
