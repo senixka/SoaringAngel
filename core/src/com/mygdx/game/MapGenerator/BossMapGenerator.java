@@ -1,6 +1,8 @@
 package com.mygdx.game.MapGenerator;
 
+import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Mobs.Boss;
+import com.mygdx.game.Mobs.Slime;
 import com.mygdx.game.World;
 
 import java.util.ArrayList;
@@ -34,8 +36,43 @@ public class BossMapGenerator {
     }
 
     private void initBossMap() {
+        bossRoom.shelter.index = 0;
         printRoomToMap(localGameMap, bossRoom);
+        printRoomShelterToMap(localGameMap, bossRoom);
         createBossMob();
+    }
+
+    private void printRoomShelterToMap(int[][] gameMap, Room room) {
+        ArrayList<Instruction> temp = room.shelter.shelters.get(room.shelter.index).tmp;
+        for (int i = 0; i < temp.size(); ++i) {
+            Instruction inst = temp.get(i);
+            printInstructionToMap(gameMap, room, inst);
+        }
+    }
+
+    private void printInstructionToMap(int[][] gameMap, Room room, Instruction inst) {
+        int tempX = (int) ((float) room.x + inst.x * (float) room.height);
+        int tempY = (int) ((float) room.y + inst.y * (float) room.width);
+        Vector3 vec = inst.vec;
+        if (vec.x == 0 && vec.y == 0) {
+            gameMap[tempX][tempY] = wallCode;
+        } else if (vec.x == 0 && vec.y != 0) {
+            int delta = (int) ((float) room.width * inst.len);
+            for (int i = tempY; i >= room.y && i < room.y + room.width && Math.abs(i - tempY) <= delta; i += vec.y) {
+                gameMap[tempX][i] = wallCode;
+            }
+        } else if (vec.x != 0 && vec.y == 0) {
+            int delta = (int) ((float) room.height * inst.len);
+            for (int i = tempX; i >= room.x && i < room.x + room.height && Math.abs(i - tempX) <= delta; i += vec.x) {
+                gameMap[i][tempY] = wallCode;
+            }
+        } else {
+            int delta = Math.min((int) ((float) room.height * inst.len), (int) ((float) room.width * inst.len));
+            for (int i = tempX, j = tempY; i >= room.x && i < room.x + room.height && Math.abs(i - tempX) <= delta &&
+                    j >= room.y && j < room.y + room.width && Math.abs(j - tempY) <= delta; i += vec.x, j += vec.y) {
+                gameMap[i][j] = wallCode;
+            }
+        }
     }
 
     private void printRoomToMap(int[][] gameMap, Room room) {

@@ -3,6 +3,8 @@ package com.mygdx.game.Mobs;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.Bullet;
+import com.mygdx.game.Bullets.FirstBullet;
 import com.mygdx.game.Helper;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
 import com.mygdx.game.MapGenerator.Pair;
@@ -14,7 +16,7 @@ import com.mygdx.game.World;
 import java.util.ArrayList;
 
 public class Boss extends Mob {
-    public int timer = 0;
+    public int timer = 0, mobTimer = 0;
     private static final Texture boss = new Texture(Gdx.files.internal("Boss.png"));
 
     public Boss() {
@@ -22,7 +24,7 @@ public class Boss extends Mob {
     }
 
     public Boss(float x, float y, Room room) {
-        super(x, y, 150, 150, 1000, room, boss);
+        super(x, y, 150, 150, 4000, room, boss);
     }
 
     @Override
@@ -68,19 +70,52 @@ public class Boss extends Mob {
     }
 
     private void shoot(Vector3 vec) {
-        if (timer == 0) {
-            //new FirstBullet(Helper.norm(vec), x + sizeX / 2 + 20 * vec.x, y + sizeY / 2 + 20 * vec.y);
-            timer = 20;
+        Vector3 newVec = new Vector3(World.pers.getCenter().x, World.pers.getCenter().y, 0);
+        int targetX = (int) GameMapGenerator.gameCordsToMap(newVec).x;
+        int targetY = (int) GameMapGenerator.gameCordsToMap(newVec).y;
+        if (!room.isPointInRoom(targetX, targetY)) {
+            return;
+        }
+
+        if (hp < maxHP / 2) {
+            if (timer == 0) {
+                timer = 20;
+                Vector3 tempVec;
+                for (int i = 0; i < 360; i += 20) {
+                    tempVec = new Vector3((float) Math.sin((double) System.currentTimeMillis() / 10d), (float) Math.cos((double) System.currentTimeMillis() / 10d), 0);
+                    FirstBullet b = new FirstBullet(tempVec.rotate(new Vector3(0, 0, 1), i), x + sizeX / 2, y + sizeY / 2);
+                    b.isEnemy = true;
+                }
+            } else {
+                --timer;
+            }
+            if (mobTimer == 0) {
+                mobTimer = 1000;
+                for (int i = 0; i < 5; ++i) {
+                    room.createMob(new Slime());
+                }
+            } else {
+                --mobTimer;
+            }
         } else {
-            --timer;
+            if (timer == 0) {
+                timer = 80;
+                Vector3 tempVec;
+                for (int i = -20; i <= 20; i += 3) {
+                    tempVec = vec.cpy().nor();
+                    FirstBullet b = new FirstBullet(tempVec.rotate(new Vector3(0, 0, 1), i), x + sizeX / 2, y + sizeY / 2);
+                    b.isEnemy = true;
+                }
+            } else {
+                --timer;
+            }
         }
     }
 
     @Override
     public void update(float delta) {
         float perX = World.pers.getCenter().x, perY = World.pers.getCenter().y;
-        Vector3 vec = new Vector3(perX - (x + (float) sizeX / 2),
-                perY - (y + (float) sizeY / 2), 0).nor();
+        Vector3 vec = new Vector3(perX - (x + (float) sizeX / 2), perY - (y + (float) sizeY / 2), 0).nor();
         vec.x *= delta * speed;
         vec.y *= delta * speed;
         move(delta);

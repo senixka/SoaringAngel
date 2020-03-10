@@ -64,7 +64,8 @@ public class World {
         if (!Helper.globalCheck()) {
             return;
         }
-        for (Mob mob : mobs) {
+        for (int i = 0; i < mobs.size(); i++) {
+            Mob mob = mobs.get(i);
             mob.update(delta);
         }
         for (int i = 0; i < bullets.size(); i++) {
@@ -192,10 +193,10 @@ public class World {
 
     public static void createMap() {
         long start = System.currentTimeMillis();
-        GameMapGenerator tempGenerator = new GameMapGenerator(300, 300, 3, 10, 10, 0, 0);
-        map = tempGenerator.getMap();
-        //BossMapGenerator tempGenerator = new BossMapGenerator(100, 100, 20);
+        //GameMapGenerator tempGenerator = new GameMapGenerator(300, 300, 3, 10, 10, 0, 0);
         //map = tempGenerator.getMap();
+        BossMapGenerator tempGenerator = new BossMapGenerator(100, 100, 20);
+        map = tempGenerator.getMap();
         System.out.println("Generation time: " + (double) (System.currentTimeMillis() - start) + " millis");
     }
 }

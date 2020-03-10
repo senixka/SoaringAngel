@@ -8,7 +8,7 @@ import com.mygdx.game.MapGenerator.Room;
 
 public class Mob {
     public float x, y, speed = 150;
-    public int intX, intY, sizeX, sizeY, hp;
+    public int intX, intY, sizeX, sizeY, hp, maxHP;
     public Texture texture, mark;
     public Room room;
     public boolean target, isDead;
@@ -25,6 +25,7 @@ public class Mob {
         this.texture = texture;
         this.room = room;
         this.hp = hp;
+        this.maxHP = hp;
         this.isDead = false;
         this.mark = new Texture(Gdx.files.internal("red.png"));
         this.intX = (int) GameMapGenerator.gameCordsToMap(new Vector3(x + (float) sizeX / 2f, y + (float) sizeY / 2f, 0)).x;
