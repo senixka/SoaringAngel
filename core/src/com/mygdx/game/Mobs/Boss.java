@@ -3,7 +3,6 @@ package com.mygdx.game.Mobs;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
-import com.mygdx.game.Bullet;
 import com.mygdx.game.Bullets.FirstBullet;
 import com.mygdx.game.Helper;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
@@ -101,7 +100,7 @@ public class Boss extends Mob {
             if (timer == 0) {
                 timer = 80;
                 Vector3 tempVec;
-                for (int i = -20; i <= 20; i += 3) {
+                for (int i = -20; i <= 20; i += 6) {
                     tempVec = vec.cpy().nor();
                     FirstBullet b = new FirstBullet(tempVec.rotate(new Vector3(0, 0, 1), i), x + sizeX / 2, y + sizeY / 2);
                     b.isEnemy = true;

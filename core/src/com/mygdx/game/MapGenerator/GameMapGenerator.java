@@ -12,13 +12,14 @@ public class GameMapGenerator {
      * 0 <= WAY_EPS <= 10000
      */
     public final int WIDTH, HEIGHT, ROOM_EPS, BORDER, MIN_HEIGHT, MIN_WIDTH, WAY_EPS;
-    public static final int wallCode = 0, spaceCode = 1, doorCode = 2;
+    public static final int wallCode = 0, spaceCode = 1, openDoorCode = 2, closeDoorCode = -2;
     public int[][] localGameMap;
 
-    private int[][] nodeGameMap, roomGameMap;
-    private HashMap<Integer, Room> intToRoom;
-    private HashMap<Integer, Node> intToNode;
-    private Node root;
+    public int[][] nodeGameMap, roomGameMap;
+    public HashMap<Integer, Room> intToRoom;
+    public HashMap<Integer, Node> intToNode;
+    public ArrayList<Room> localRooms;
+    public Node root;
 
     //######################### PUBLIC #########################
 
@@ -32,25 +33,26 @@ public class GameMapGenerator {
         this.MIN_WIDTH = MIN_WIDTH;
 
         while (true) {
-            localGameMap = new int[HEIGHT][WIDTH];
-            fillMatrix(localGameMap, wallCode);
-            nodeGameMap = new int[HEIGHT][WIDTH];
-            roomGameMap = new int[HEIGHT][WIDTH];
-            intToNode = new HashMap<>();
-            intToRoom = new HashMap<>();
+            this.localGameMap = new int[HEIGHT][WIDTH];
+            fillMatrix(this.localGameMap, wallCode);
+            this.nodeGameMap = new int[HEIGHT][WIDTH];
+            this.roomGameMap = new int[HEIGHT][WIDTH];
+            this.intToNode = new HashMap<>();
+            this.intToRoom = new HashMap<>();
             this.root = new Node(0, 0, HEIGHT, WIDTH, BORDER, MIN_HEIGHT, MIN_WIDTH, localGameMap);
             ArrayList<Room> rooms = new ArrayList<>();
 
             createTree(root);
             createRooms(root);
-            initNodeGameMap(root);
-            initRoomGameMap(root);
             getLeafsRoom(rooms, root);
             sparseRooms(rooms);
+            initRoomGameMap(rooms);
+            initNodeGameMap(rooms);
             initGameMap(localGameMap, rooms);
+            this.localRooms = rooms;
 
             if (checkRoomsConnection(localGameMap)) {
-                createMobs(rooms);
+                //createMobs(rooms);
                 break;
             }
         }
@@ -106,9 +108,7 @@ public class GameMapGenerator {
         }
     }
 
-    private void initRoomGameMap(Node v) {
-        ArrayList<Room> rooms = new ArrayList<>();
-        getLeafsRoom(rooms, v);
+    private void initRoomGameMap(ArrayList<Room> rooms) {
         for (int r = 0; r < rooms.size(); ++r) {
             Room room = rooms.get(r);
             for (int i = room.x; i < room.x + room.height; ++i) {
@@ -120,9 +120,10 @@ public class GameMapGenerator {
         }
     }
 
-    private void initNodeGameMap(Node v) {
+    private void initNodeGameMap(ArrayList<Room> rooms) {
         ArrayList<Node> nodes = new ArrayList<>();
-        getLeafsNode(nodes, v);
+        for (Room it : rooms) nodes.add(it.node);
+
         for (int r = 0; r < nodes.size(); ++r) {
             Node node = nodes.get(r);
             for (int i = node.x; i < node.x + node.height; ++i) {
@@ -189,20 +190,15 @@ public class GameMapGenerator {
     private void printDoorsToMap(int[][] gameMap, Room room) {
         for (int i = 0; i < room.doors.size(); ++i) {
             Door door = room.doors.get(i);
-            gameMap[door.x][door.y] = doorCode;
+            if (door.isOpen) {
+                gameMap[door.x][door.y] = openDoorCode;
+            } else {
+                gameMap[door.x][door.y] = closeDoorCode;
+            }
         }
     }
 
     //######################### CREATE #########################
-
-    private void createMobs(ArrayList<Room> rooms) {
-        for (int i = 0; i < rooms.size(); ++i) {
-            Room room = rooms.get(i);
-            for (int j = 0; j < 5; ++j) {
-                room.createMob(new Slime());
-            }
-        }
-    }
 
     private void createTree(Node v) {
         int splittable = v.isPossibleToSplit();

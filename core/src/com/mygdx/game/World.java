@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.MapGenerator.BossMapGenerator;
+import com.mygdx.game.MapGenerator.GameMapController;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
 import com.mygdx.game.Weapons.DNKgun;
 import com.mygdx.game.Weapons.FirstGun;
@@ -23,6 +24,7 @@ public class World {
     public static int[][] map;
     public static final int pixSize = 50;
     public static Texture pix, pix2, pix3;
+    public static GameMapController mapController;
 
     public static void start(GameController controller2) {
         System.out.println("Yeeeee shit here we go");
@@ -76,6 +78,8 @@ public class World {
         pers.move(controller.speedVector(), delta);
         pers.update(delta);
         setTarget();
+
+        mapController.update();
     }
 
     public static void delete() {
@@ -143,7 +147,7 @@ public class World {
 
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map.length; j++) {
-                if (map[i][j] == GameMapGenerator.doorCode) {
+                if (Math.abs(map[i][j]) == GameMapGenerator.openDoorCode) {
                     MyGame.batch.draw(pix3, i * pixSize, j * pixSize, pixSize, pixSize);
                 }
             }
@@ -193,10 +197,11 @@ public class World {
 
     public static void createMap() {
         long start = System.currentTimeMillis();
-        //GameMapGenerator tempGenerator = new GameMapGenerator(300, 300, 3, 10, 10, 0, 0);
-        //map = tempGenerator.getMap();
-        BossMapGenerator tempGenerator = new BossMapGenerator(100, 100, 20);
+        GameMapGenerator tempGenerator = new GameMapGenerator(300, 300, 3, 10, 10, 0, 0);
         map = tempGenerator.getMap();
+        mapController = new GameMapController(tempGenerator);
+        //BossMapGenerator tempGenerator = new BossMapGenerator(100, 100, 20);
+        //map = tempGenerator.getMap();
         System.out.println("Generation time: " + (double) (System.currentTimeMillis() - start) + " millis");
     }
 }
