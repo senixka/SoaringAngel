@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.MapGenerator.BossMapGenerator;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
 import com.mygdx.game.Weapons.DNKgun;
 import com.mygdx.game.Weapons.FirstGun;
@@ -193,6 +194,8 @@ public class World {
         long start = System.currentTimeMillis();
         GameMapGenerator tempGenerator = new GameMapGenerator(300, 300, 3, 10, 10, 0, 0);
         map = tempGenerator.getMap();
+        //BossMapGenerator tempGenerator = new BossMapGenerator(100, 100, 20);
+        //map = tempGenerator.getMap();
         System.out.println("Generation time: " + (double) (System.currentTimeMillis() - start) + " millis");
     }
 }

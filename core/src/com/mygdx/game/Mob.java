@@ -13,6 +13,10 @@ public class Mob {
     public Room room;
     public boolean target, isDead;
 
+    public Mob() {
+
+    }
+
     public Mob(float x, float y, int sizeX, int sizeY, int hp, Room room, Texture texture) {
         this.x = x;
         this.y = y;

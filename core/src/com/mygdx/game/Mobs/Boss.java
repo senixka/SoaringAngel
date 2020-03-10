@@ -3,8 +3,6 @@ package com.mygdx.game.Mobs;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
-import com.mygdx.game.Bullet;
-import com.mygdx.game.Bullets.FirstBullet;
 import com.mygdx.game.Helper;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
 import com.mygdx.game.MapGenerator.Pair;
@@ -14,19 +12,17 @@ import com.mygdx.game.Rectangle;
 import com.mygdx.game.World;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
-public class Slime extends Mob {
-
+public class Boss extends Mob {
     public int timer = 0;
-    private static final Texture zombie = new Texture(Gdx.files.internal("Zombie.psd"));
+    private static final Texture boss = new Texture(Gdx.files.internal("Boss.png"));
 
-    public Slime() {
+    public Boss() {
 
     }
 
-    public Slime(float x, float y, Room room) {
-        super(x, y, 40, 40, 20, room, zombie);
+    public Boss(float x, float y, Room room) {
+        super(x, y, 150, 150, 1000, room, boss);
     }
 
     @Override
@@ -72,15 +68,8 @@ public class Slime extends Mob {
     }
 
     private void shoot(Vector3 vec) {
-        Vector3 newVec = new Vector3(World.pers.getCenter().x, World.pers.getCenter().y, 0);
-        int targetX = (int) GameMapGenerator.gameCordsToMap(newVec).x;
-        int targetY = (int) GameMapGenerator.gameCordsToMap(newVec).y;
-        if (!room.isPointInRoom(targetX, targetY)) {
-            return;
-        }
         if (timer == 0) {
-            Bullet b = new FirstBullet(Helper.norm(vec), x + sizeX / 2, y + sizeY / 2);
-            b.isEnemy = true;
+            //new FirstBullet(Helper.norm(vec), x + sizeX / 2 + 20 * vec.x, y + sizeY / 2 + 20 * vec.y);
             timer = 20;
         } else {
             --timer;
