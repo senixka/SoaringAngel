@@ -51,7 +51,7 @@ public class Mob {
     public void draw() {
         MyGame.batch.draw(texture, x, y, sizeX, sizeY);
         if (target) {
-            MyGame.batch.draw(mark, x, y - 10, sizeX, 10);
+            MyGame.batch.draw(mark, x + (sizeX - ((float) sizeX / maxHP * hp)) / 2, y - 10, (float) sizeX / maxHP * hp, 10);
         }
     }
 
