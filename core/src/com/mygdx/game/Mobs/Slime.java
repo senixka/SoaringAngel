@@ -3,6 +3,8 @@ package com.mygdx.game.Mobs;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.Bullet;
+import com.mygdx.game.Bullets.FirstBullet;
 import com.mygdx.game.Helper;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
 import com.mygdx.game.MapGenerator.Pair;
@@ -65,8 +67,15 @@ public class Slime extends Mob {
     }
 
     private void shoot(Vector3 vec) {
+        Vector3 newVec = new Vector3(World.pers.getCenter().x, World.pers.getCenter().y, 0);
+        int targetX = (int) GameMapGenerator.gameCordsToMap(newVec).x;
+        int targetY = (int) GameMapGenerator.gameCordsToMap(newVec).y;
+        if (!room.isPointInRoom(targetX, targetY)) {
+            return;
+        }
         if (timer == 0) {
-            //new FirstBullet(Helper.norm(vec), x + sizeX / 2 + 20 * vec.x, y + sizeY / 2 + 20 * vec.y);
+            Bullet b = new FirstBullet(Helper.norm(vec), x + sizeX / 2, y + sizeY / 2);
+            b.isEnemy = true;
             timer = 20;
         } else {
             --timer;

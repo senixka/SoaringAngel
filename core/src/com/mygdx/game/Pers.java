@@ -91,6 +91,10 @@ public class Pers {
         }
     }
 
+    public Rectangle getBody() {
+        return new Rectangle(x, y, sizeX, sizeY);
+    }
+
 //    public void attack() {
 //        if (weapon != null) {
 //            weapon.attack();

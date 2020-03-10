@@ -8,6 +8,7 @@ public class Bullet {
     public int speed, damage, dead = 500;
     public Texture texture;
     public Vector3 vect;
+    public boolean isEnemy = false;
 
     public Bullet(Texture texture, int speed, float sizeX, float sizeY, int damage, Vector3 vect, float x, float y) {
         this.texture = texture;
@@ -29,9 +30,16 @@ public class Bullet {
     }
 
     public boolean isDead() {
-        for (Mob mob : World.mobs) {
-            if (Helper.intersect(mob.x, mob.y, mob.sizeX, mob.sizeY, x, y, sizeX, sizeY)) {
-                mob.hit(damage);
+        if (!isEnemy) {
+            for (Mob mob : World.mobs) {
+                if (Helper.intersect(mob.x, mob.y, mob.sizeX, mob.sizeY, x, y, sizeX, sizeY)) {
+                    mob.hit(damage);
+                    return true;
+                }
+            }
+        } else {
+            if (Helper.intersect(World.pers.getBody(), new Rectangle(x, y, sizeX, sizeY))) {
+                World.pers.hit(damage);
                 return true;
             }
         }
