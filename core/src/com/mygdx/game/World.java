@@ -10,6 +10,7 @@ import com.mygdx.game.Weapons.FirstGun;
 import com.mygdx.game.Weapons.Relstron;
 import com.mygdx.game.Weapons.Shotgun;
 import com.mygdx.game.Weapons.Shotgun2;
+import com.mygdx.game.Weapons.WeaponGun;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -47,6 +48,9 @@ public class World {
         subjects.add(s);
         s = new FirstGun();
         s.setPosition(200, -300);
+        subjects.add(s);
+        s = new WeaponGun();
+        s.setPosition(300, -300);
         subjects.add(s);
 
         bullets = new LinkedList<Bullet>();
