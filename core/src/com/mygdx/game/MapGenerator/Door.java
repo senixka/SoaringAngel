@@ -11,4 +11,12 @@ public class Door {
         this.y = y;
         this.isOpen = isOpen;
     }
+
+    public void close() {
+        isOpen = false;
+    }
+
+    public void open() {
+        isOpen = true;
+    }
 }

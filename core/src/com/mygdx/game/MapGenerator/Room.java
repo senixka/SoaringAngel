@@ -12,13 +12,14 @@ import java.util.Collections;
 
 public class Room {
     public int x, y, width, height;
-    public boolean isRoomVisible;
+    public boolean isRoomVisible, isPassed, isActivated;
     public ArrayList<ArrayList<Pair>> ways;
     public ArrayList<Mob> mobs;
     public Shelter shelter;
     public Node node;
     public ArrayList<Room> connectedRooms;
     public ArrayList<Door> doors;
+
     private ArrayList<Integer> prt;
     private int cnt = 0;
     private int[][] localGameMap;
@@ -29,6 +30,8 @@ public class Room {
         this.width = width;
         this.height = height;
         this.isRoomVisible = true;
+        this.isPassed = false;
+        this.isActivated = false;
         this.node = node;
         this.ways = new ArrayList<>();
         this.mobs = new ArrayList<>();
