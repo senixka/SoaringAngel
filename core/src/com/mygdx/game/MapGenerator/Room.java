@@ -4,6 +4,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Mobs.Boss;
 import com.mygdx.game.Mobs.Slime;
 import com.mygdx.game.Mob;
+import com.mygdx.game.Subject;
+import com.mygdx.game.Weapons.DNKgun;
 import com.mygdx.game.World;
 
 import java.util.ArrayDeque;
@@ -12,7 +14,7 @@ import java.util.Collections;
 
 public class Room {
     public int x, y, width, height;
-    public boolean isRoomVisible, isPassed, isActivated;
+    public boolean isRoomVisible, isPassed, isActivated, isBonus;
     public ArrayList<ArrayList<Pair>> ways;
     public ArrayList<Mob> mobs;
     public Shelter shelter;
@@ -32,12 +34,24 @@ public class Room {
         this.isRoomVisible = true;
         this.isPassed = false;
         this.isActivated = false;
+        this.isBonus = false;
         this.node = node;
         this.ways = new ArrayList<>();
         this.mobs = new ArrayList<>();
         this.doors = new ArrayList<>();
         this.shelter = new Shelter();
         this.localGameMap = localGameMap;
+    }
+
+    public void configureBonusEnvironment() {
+        isBonus = true;
+        shelter.index = shelter.shelters.indexOf(shelter.tmpEmpty);
+        Subject s = new DNKgun();
+        Pair point = getCenterPointInRoom();
+        Vector3 temp = GameMapController.mapCordsToGame(new Vector3(point.first, point.second, 0));
+        s.setPosition(temp.x, temp.y);
+        World.subjects.add(s);
+        System.out.println("lol: " + this.hashCode());
     }
 
     public Pair getRandomPointInRoom() {

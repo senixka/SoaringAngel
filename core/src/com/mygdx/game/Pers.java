@@ -29,7 +29,7 @@ public class Pers {
         this.speedBoost = speedBoost;
     }
 
-    public void setPosition(int x, int y) {
+    public void setPosition(float x, float y) {
         this.x = x;
         this.y = y;
     }

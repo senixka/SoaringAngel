@@ -6,6 +6,8 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.MapGenerator.GameMapController;
+import com.mygdx.game.MapGenerator.GameMapGenerator;
+import com.mygdx.game.MapGenerator.Pair;
 
 public class GameController implements InputProcessor {
     public boolean flagA, flagS, flagD, flagW;
@@ -108,7 +110,11 @@ public class GameController implements InputProcessor {
         if (character == '2') {
             World.pers.energy = World.pers.maxEnergy;
         }
-
+        if (character == '0') {
+            Pair temp = World.mapController.teleportPersInMaze();
+            Vector3 tmp = GameMapController.mapCordsToGame(new Vector3(temp.first, temp.second, 0));
+            World.pers.setPosition(tmp.x, tmp.y);
+        }
         return false;
     }
 
