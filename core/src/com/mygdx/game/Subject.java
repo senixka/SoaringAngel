@@ -26,7 +26,7 @@ public class Subject {
     }
 
     public boolean take() {
-        System.out.println("take " + x + " " + y);
+        //System.out.println("take " + x + " " + y);
         if (Helper.dist(World.pers.getCenter(), new Vector3(x, y, 0)) > 50) {
             return false;
         }

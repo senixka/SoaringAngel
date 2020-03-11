@@ -220,7 +220,7 @@ public class World {
 
     public static void createMap() {
         long start = System.currentTimeMillis();
-        GameMapGenerator tempGenerator = new GameMapGenerator(300, 300, 15, 10, 10, 10);
+        GameMapGenerator tempGenerator = new GameMapGenerator(300, 300, 15, 10, 10, 30, "prt");
         map = tempGenerator.getMap();
         miniMap = tempGenerator.getMiniMap();
         mapController = new GameMapController(tempGenerator);

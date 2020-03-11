@@ -8,11 +8,10 @@ import java.util.*;
 
 public class GameMapGenerator {
     /**
-     *  0 <= BONUS_ROOM_EPS <= 100
-     * 0 <= ROOM_EPS <= 1000
-     * 0 <= WAY_EPS <= 10000
+     * 0 <= BONUS_ROOM_EPS <= 100
      */
     public final int WIDTH, HEIGHT, BORDER, MIN_HEIGHT, MIN_WIDTH, BONUS_ROOM_EPS;
+    public String connectRoomsFunction;
     public static final int wallCode = 0, spaceCode = 1, openDoorCode = 2, closeDoorCode = -2;
     public int[][] localGameMap, localGameMiniMap;
 
@@ -24,13 +23,14 @@ public class GameMapGenerator {
 
     //######################### PUBLIC #########################
 
-    public GameMapGenerator(int HEIGHT, int WIDTH, int BORDER, int MIN_HEIGHT, int MIN_WIDTH, int BONUS_ROOM_EPS) {
+    public GameMapGenerator(int HEIGHT, int WIDTH, int BORDER, int MIN_HEIGHT, int MIN_WIDTH, int BONUS_ROOM_EPS, String connectRoomsFunction) {
         this.HEIGHT = HEIGHT;
         this.WIDTH = WIDTH;
         this.BORDER = BORDER;
         this.MIN_HEIGHT = MIN_HEIGHT;
         this.MIN_WIDTH = MIN_WIDTH;
         this.BONUS_ROOM_EPS = BONUS_ROOM_EPS;
+        this.connectRoomsFunction = connectRoomsFunction;
 
         while (true) {
             this.localGameMap = new int[HEIGHT][WIDTH];
@@ -104,6 +104,7 @@ public class GameMapGenerator {
         }
 
         configureRooms(rooms);
+        createDoors(rooms);
 
         for (int i = 0; i < rooms.size(); ++i) {
             Room temp = rooms.get(i);
@@ -153,6 +154,7 @@ public class GameMapGenerator {
             intToNode.put(r + 1, node);
         }
     }
+
     //######################### PRINT #########################
 
     private void printRoomShelterToMap(int[][] gameMap, Room room) {
@@ -259,6 +261,13 @@ public class GameMapGenerator {
             if (Rand.AbsModInt(100) < BONUS_ROOM_EPS) {
                 room.isBonus = true;
             }
+        }
+    }
+
+    private void createDoors(ArrayList<Room> rooms) {
+        for (int i = 0; i < rooms.size(); ++i) {
+            Room room = rooms.get(i);
+            room.extractDoorsFromWays();
         }
     }
 
@@ -441,10 +450,10 @@ public class GameMapGenerator {
                         path.add(0, fromS.get(i));
                         path.add(fromF.get(j));
                         a.addWay(path);
-                        a.addDoor(new Door(path.get(0).first, path.get(0).second, true, a));
-                        Collections.reverse(path);
-                        b.addWay(path);
-                        b.addDoor(new Door(path.get(0).first, path.get(0).second, true, b));
+                        ArrayList<Pair> path2 = new ArrayList<>();
+                        for (Pair it : path) path2.add(it);
+                        Collections.reverse(path2);
+                        b.addWay(path2);
                         for (int k = 0; k < path.size(); ++k) {
                             Pair temp = path.get(k);
                             gameMap[temp.first][temp.second] = spaceCode;
@@ -460,7 +469,7 @@ public class GameMapGenerator {
         ArrayList<Pair> fromS = getCenteredEntersToRoom(a, b);
         ArrayList<Pair> fromF = getCenteredEntersToRoom(b, a);
 
-        int minDist = 100000;
+        int minDist = 1000000;
         for (int i = 0; i < fromS.size(); i += 2) {
             for (int j = 0; j < fromF.size(); j += 2) {
                 ArrayList<Pair> path = connectToPoints(gameMap, fromS.get(i + 1), fromF.get(j + 1));
@@ -488,8 +497,10 @@ public class GameMapGenerator {
                     path.add(0, fromS.get(i));
                     path.add(fromF.get(j));
                     a.addWay(path);
-                    Collections.reverse(path);
-                    b.addWay(path);
+                    ArrayList<Pair> path2 = new ArrayList<>();
+                    for (Pair it : path) path2.add(it);
+                    Collections.reverse(path2);
+                    b.addWay(path2);
                     for (int k = 0; k < path.size(); ++k) {
                         Pair temp = path.get(k);
                         gameMap[temp.first][temp.second] = spaceCode;
@@ -546,7 +557,11 @@ public class GameMapGenerator {
                     if (flag) {
                         continue;
                     }
-                    connectTwoRoomsByWayPriority(gameMap, intToNode.get(key).room, intToNode.get(node).room);
+                    if (connectRoomsFunction == "prt") {
+                        connectTwoRoomsByWayPriority(gameMap, intToNode.get(key).room, intToNode.get(node).room);
+                    } else {
+                        connectTwoRoomsByMinDist(gameMap, intToNode.get(key).room, intToNode.get(node).room);
+                    }
                     connect.add(new Pair(key, node));
                     connect.add(new Pair(node, key));
                 }
@@ -556,64 +571,8 @@ public class GameMapGenerator {
 
     //######################### HELPER #########################
 
-    private void configureRooms(ArrayList<Room> rooms) {
-        for (int i = 0; i < rooms.size(); ++i) {
-            Room room = rooms.get(i);
-            if (room.isBonus) {
-                room.configureBonusEnvironment();
-            }
-        }
-        //System.out.println(rooms.size());
-    }
-
-    private void getLeafsRoom(ArrayList<Room> rooms, Node v) {
-        if (v.leftChild == null) {
-            rooms.add(v.room);
-        } else {
-            getLeafsRoom(rooms, v.leftChild);
-            getLeafsRoom(rooms, v.rightChild);
-        }
-    }
-
-    private void getLeafsNode(ArrayList<Node> nodes, Node v) {
-        if (v.leftChild == null) {
-            nodes.add(v);
-        } else {
-            getLeafsNode(nodes, v.leftChild);
-            getLeafsNode(nodes, v.rightChild);
-        }
-    }
-
-    public static void copyMatrix(int[][] from, int[][] to) {
-        for (int i = 0; i < from.length; ++i) {
-            for (int j = 0; j < from[i].length; ++j) {
-                to[i][j] = from[i][j];
-            }
-        }
-    }
-
-    public static void fillMatrix(int[][] matrix, int val) {
-        for (int i = 0; i < matrix.length; ++i) {
-            for (int j = 0; j < matrix[i].length; ++j) {
-                matrix[i][j] = val;
-            }
-        }
-    }
-
-    public static void fillMatrix(boolean[][] matrix, boolean val) {
-        for (int i = 0; i < matrix.length; ++i) {
-            for (int j = 0; j < matrix[i].length; ++j) {
-                matrix[i][j] = val;
-            }
-        }
-    }
-
     private Node pointToNode(int pointX, int pointY) {
         return intToNode.get(nodeGameMap[pointX][pointY]);
-    }
-
-    private Room pointToRoom(int pointX, int pointY) {
-        return intToRoom.get(roomGameMap[pointX][pointY]);
     }
 
     private boolean checkRoomsConnection(int[][] gameMap) {
@@ -665,4 +624,47 @@ public class GameMapGenerator {
         }
         return true;
     }
+
+    private void configureRooms(ArrayList<Room> rooms) {
+        for (int i = 0; i < rooms.size(); ++i) {
+            Room room = rooms.get(i);
+            if (room.isBonus) {
+                room.configureBonusEnvironment();
+            }
+        }
+    }
+
+    private void getLeafsRoom(ArrayList<Room> rooms, Node v) {
+        if (v.leftChild == null) {
+            rooms.add(v.room);
+        } else {
+            getLeafsRoom(rooms, v.leftChild);
+            getLeafsRoom(rooms, v.rightChild);
+        }
+    }
+
+    private static void copyMatrix(int[][] from, int[][] to) {
+        for (int i = 0; i < from.length; ++i) {
+            for (int j = 0; j < from[i].length; ++j) {
+                to[i][j] = from[i][j];
+            }
+        }
+    }
+
+    private static void fillMatrix(int[][] matrix, int val) {
+        for (int i = 0; i < matrix.length; ++i) {
+            for (int j = 0; j < matrix[i].length; ++j) {
+                matrix[i][j] = val;
+            }
+        }
+    }
+
+    private static void fillMatrix(boolean[][] matrix, boolean val) {
+        for (int i = 0; i < matrix.length; ++i) {
+            for (int j = 0; j < matrix[i].length; ++j) {
+                matrix[i][j] = val;
+            }
+        }
+    }
+
 }
