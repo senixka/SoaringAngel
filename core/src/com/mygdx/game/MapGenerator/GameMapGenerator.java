@@ -13,7 +13,7 @@ public class GameMapGenerator {
      */
     public final int WIDTH, HEIGHT, ROOM_EPS, BORDER, MIN_HEIGHT, MIN_WIDTH, WAY_EPS;
     public static final int wallCode = 0, spaceCode = 1, openDoorCode = 2, closeDoorCode = -2;
-    public int[][] localGameMap;
+    public int[][] localGameMap, localGameMiniMap;
 
     public int[][] nodeGameMap, roomGameMap;
     public HashMap<Integer, Room> intToRoom;
@@ -34,7 +34,9 @@ public class GameMapGenerator {
 
         while (true) {
             this.localGameMap = new int[HEIGHT][WIDTH];
+            this.localGameMiniMap = new int[HEIGHT][WIDTH];
             fillMatrix(this.localGameMap, wallCode);
+            fillMatrix(this.localGameMiniMap, wallCode);
             this.nodeGameMap = new int[HEIGHT][WIDTH];
             this.roomGameMap = new int[HEIGHT][WIDTH];
             this.intToNode = new HashMap<>();
@@ -49,6 +51,7 @@ public class GameMapGenerator {
             initRoomGameMap(rooms);
             initNodeGameMap(rooms);
             initGameMap(localGameMap, rooms);
+            initGameMiniMap(localGameMiniMap, rooms);
             this.localRooms = rooms;
 
             if (checkRoomsConnection(localGameMap)) {
@@ -64,6 +67,12 @@ public class GameMapGenerator {
         return gameMap;
     }
 
+    public int[][] getMiniMap() {
+        int[][] gameMiniMap = new int[HEIGHT][WIDTH];
+        copyMatrix(localGameMiniMap, gameMiniMap);
+        return gameMiniMap;
+    }
+
     public static Vector3 gameCordsToMap(Vector3 vec) {
         Vector3 tmp = new Vector3();
         tmp.x = (int) (vec.x / (float) World.pixSize);
@@ -76,14 +85,6 @@ public class GameMapGenerator {
         tmp.x = (float) ((int) vec.x * World.pixSize) + (float) World.pixSize / (float) 2;
         tmp.y = (float) ((int) vec.y * World.pixSize) + (float) World.pixSize / (float) 2;
         return tmp;
-    }
-
-    public boolean isWall(int x, int y) {
-        return localGameMap[x][y] == wallCode;
-    }
-
-    public boolean isWall(int[][] gameMap, int x, int y) {
-        return gameMap[x][y] == wallCode;
     }
 
     //######################### INIT #########################
@@ -105,6 +106,21 @@ public class GameMapGenerator {
             Room temp = rooms.get(i);
             printRoomShelterToMap(gameMap, temp);
             printDoorsToMap(gameMap, temp);
+        }
+    }
+
+    private void initGameMiniMap(int[][] gameMiniMap, ArrayList<Room> rooms) {
+        for (int i = 0; i < rooms.size(); ++i) {
+            Room temp = rooms.get(i);
+            printRoomToMap(gameMiniMap, temp);
+        }
+        int[][] tempMap = new int[HEIGHT][WIDTH];
+        copyMatrix(gameMiniMap, tempMap);
+
+        connectRooms(tempMap, rooms);
+        for (int i = 0; i < rooms.size(); ++i) {
+            Room temp = rooms.get(i);
+            printWaysToMap(gameMiniMap, temp);
         }
     }
 

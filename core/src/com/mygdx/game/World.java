@@ -22,7 +22,7 @@ public class World {
     public static List<Mob> mobs;
     public static List<Bullet> bullets;
     public static List<Subject> subjects;
-    public static int[][] map;
+    public static int[][] map, miniMap;
     public static final int pixSize = 50;
     public static Texture pix, pix2, pix3;
     public static GameMapController mapController;
@@ -203,6 +203,7 @@ public class World {
         long start = System.currentTimeMillis();
         GameMapGenerator tempGenerator = new GameMapGenerator(300, 300, 3, 10, 10, 0, 0);
         map = tempGenerator.getMap();
+        miniMap = tempGenerator.getMiniMap();
         mapController = new GameMapController(tempGenerator);
         //BossMapGenerator tempGenerator = new BossMapGenerator(100, 100, 20);
         //map = tempGenerator.getMap();

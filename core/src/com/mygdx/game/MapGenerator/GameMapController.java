@@ -12,8 +12,8 @@ import java.util.HashMap;
 public class GameMapController {
 
     public final int WIDTH, HEIGHT;
-    public static final int wallCode = 0, spaceCode = 1, openDoorCode = 2, closeDoorCode = -2;
-    public int[][] localGameMap;
+    public static final int wallCode = 0, spaceCode = 1, openDoorCode = 2, closeDoorCode = -2, roomPassedCode = 3;
+    public int[][] localGameMap, localGameMiniMap;
     public int roomPassed, roomQuantity;
 
     public GameMapGenerator mapGenerator;
@@ -31,9 +31,11 @@ public class GameMapController {
         this.roomPassed = 0;
 
         this.localGameMap = new int[HEIGHT][WIDTH];
+        this.localGameMiniMap = new int[HEIGHT][WIDTH];
         this.nodeGameMap = new int[HEIGHT][WIDTH];
         this.roomGameMap = new int[HEIGHT][WIDTH];
         copyMatrix(generator.localGameMap, this.localGameMap);
+        copyMatrix(generator.localGameMiniMap, this.localGameMiniMap);
         copyMatrix(generator.nodeGameMap, this.nodeGameMap);
         copyMatrix(generator.roomGameMap, this.roomGameMap);
 
@@ -77,9 +79,19 @@ public class GameMapController {
             createMobs(room);
         } else if (room.mobs.size() <= 0) {
             room.isPassed = true;
+            ++roomPassed;
             openAllDoors(room);
             breakAllDoors(room);
-            ++roomPassed;
+            markRoomInMiniMap(localGameMiniMap, room);
+            markRoomInMiniMap(World.miniMap, room);
+        }
+    }
+
+    private void markRoomInMiniMap(int[][] gameMiniMap, Room room) {
+        for (int i = room.x; i < room.x + room.height; ++i) {
+            for (int j = room.y; j < room.y + room.width; ++j) {
+                gameMiniMap[i][j] = roomPassedCode;
+            }
         }
     }
 

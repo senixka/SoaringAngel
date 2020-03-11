@@ -19,6 +19,7 @@ public class Shelter {
         shelters.add(template2());
         shelters.add(template3());
         shelters.add(template4());
+        shelters.add(templateEmpty());
     }
 
     public ShelterTemplate template1() {
@@ -91,6 +92,21 @@ public class Shelter {
         tmp.addInst(new Instruction(0.20f, 0.20f, 0.40f, new Vector3(1, 0, 0)));
         tmp.addInst(new Instruction(0.20f, 0.70f, 0.50f, new Vector3(0, 1, 0)));
         tmp.addInst(new Instruction(0.60f, 0.70f, 0.40f, new Vector3(1, 0, 0)));
+        return tmp;
+    }
+
+    public ShelterTemplate templateEmpty() {
+        /**
+         * # # # # # # # # # #
+         * #                 #
+         * #                 #
+         * #                 #
+         * #                 #
+         * #                 #
+         * #                 #
+         * # # # # # # # # # #
+         */
+        ShelterTemplate tmp = new ShelterTemplate();
         return tmp;
     }
 }
