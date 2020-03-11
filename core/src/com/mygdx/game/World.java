@@ -177,9 +177,24 @@ public class World {
     }
 
     public static void setTarget() {
-        float dist = 1000;
+        float dist = 100000;
         Mob target = null;
         for (Mob mob : mobs) {
+            Vector3 tempV = new Vector3(mob.getCenter().x - pers.getCenter().x, mob.getCenter().y - pers.getCenter().y, 0).nor();
+            float delt = 10;
+            float tempX = pers.getCenter().x, tempY = pers.getCenter().y;
+            boolean ret = false;
+            while (Helper.dist(mob.getCenter(), pers.getCenter()) > Helper.dist(pers.getCenter(), new Vector3(tempX, tempY, 0))) {
+                tempX += tempV.x * delt;
+                tempY += tempV.y * delt;
+                if (Helper.intersectWall(new Rectangle(tempX, tempY, 1, 1))) {
+                    ret = true;
+                    break;
+                }
+            }
+            if (ret) {
+                continue;
+            }
             if (Helper.dist(mob.getCenter(), pers.getCenter()) < dist) {
                 dist = Helper.dist(mob.getCenter(), pers.getCenter());
                 target = mob;
