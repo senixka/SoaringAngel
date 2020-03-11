@@ -8,10 +8,11 @@ import java.util.*;
 
 public class GameMapGenerator {
     /**
+     *  0 <= BONUS_ROOM_EPS <= 100
      * 0 <= ROOM_EPS <= 1000
      * 0 <= WAY_EPS <= 10000
      */
-    public final int WIDTH, HEIGHT, ROOM_EPS, BORDER, MIN_HEIGHT, MIN_WIDTH, WAY_EPS;
+    public final int WIDTH, HEIGHT, ROOM_EPS, BORDER, MIN_HEIGHT, MIN_WIDTH, WAY_EPS, BONUS_ROOM_EPS;
     public static final int wallCode = 0, spaceCode = 1, openDoorCode = 2, closeDoorCode = -2;
     public int[][] localGameMap, localGameMiniMap;
 
@@ -23,7 +24,7 @@ public class GameMapGenerator {
 
     //######################### PUBLIC #########################
 
-    public GameMapGenerator(int HEIGHT, int WIDTH, int BORDER, int MIN_HEIGHT, int MIN_WIDTH, int ROOM_EPS, int WAY_EPS) {
+    public GameMapGenerator(int HEIGHT, int WIDTH, int BORDER, int MIN_HEIGHT, int MIN_WIDTH, int ROOM_EPS, int WAY_EPS, int BONUS_ROOM_EPS) {
         this.HEIGHT = HEIGHT;
         this.WIDTH = WIDTH;
         this.ROOM_EPS = ROOM_EPS;
@@ -31,6 +32,7 @@ public class GameMapGenerator {
         this.BORDER = BORDER;
         this.MIN_HEIGHT = MIN_HEIGHT;
         this.MIN_WIDTH = MIN_WIDTH;
+        this.BONUS_ROOM_EPS = BONUS_ROOM_EPS;
 
         while (true) {
             this.localGameMap = new int[HEIGHT][WIDTH];
@@ -48,6 +50,8 @@ public class GameMapGenerator {
             createRooms(root);
             getLeafsRoom(rooms, root);
             sparseRooms(rooms);
+            createBonusRooms(rooms);
+
             initRoomGameMap(rooms);
             initNodeGameMap(rooms);
             initGameMap(localGameMap, rooms);
@@ -55,9 +59,9 @@ public class GameMapGenerator {
             this.localRooms = rooms;
 
             if (checkRoomsConnection(localGameMap)) {
-                //createMobs(rooms);
                 break;
             }
+            break;
         }
     }
 
@@ -94,14 +98,17 @@ public class GameMapGenerator {
             Room temp = rooms.get(i);
             printRoomToMap(gameMap, temp);
         }
+
         int[][] tempMap = new int[HEIGHT][WIDTH];
         copyMatrix(gameMap, tempMap);
-
         connectRooms(tempMap, rooms);
         for (int i = 0; i < rooms.size(); ++i) {
             Room temp = rooms.get(i);
             printWaysToMap(gameMap, temp);
         }
+
+        configureRooms(rooms);
+
         for (int i = 0; i < rooms.size(); ++i) {
             Room temp = rooms.get(i);
             printRoomShelterToMap(gameMap, temp);
@@ -150,7 +157,6 @@ public class GameMapGenerator {
             intToNode.put(r + 1, node);
         }
     }
-
     //######################### PRINT #########################
 
     private void printRoomShelterToMap(int[][] gameMap, Room room) {
@@ -248,6 +254,15 @@ public class GameMapGenerator {
             createRooms(v.rightChild);
         } else {
             v.createRoom();
+        }
+    }
+
+    private void createBonusRooms(ArrayList<Room> rooms) {
+        for (int i = 0; i < rooms.size(); ++i) {
+            Room room = rooms.get(i);
+            if (Rand.AbsModInt(100) < BONUS_ROOM_EPS) {
+                room.isBonus = true;
+            }
         }
     }
 
@@ -496,9 +511,15 @@ public class GameMapGenerator {
 
         for (int i = 0; i < HEIGHT; ++i) {
             for (int j = 0; j < WIDTH; ++j) {
+                if (nodeGameMap[i][j] == 0) {
+                    continue;
+                }
                 for (int k = 0; k < 4; ++k) {
                     int newX = i + cordsX[k], newY = j + cordsY[k];
                     if (newX >= 0 && newX < HEIGHT && newY >= 0 && newY < WIDTH) {
+                        if (nodeGameMap[newX][newY] == 0) {
+                            continue;
+                        }
                         if (nodeGameMap[i][j] != nodeGameMap[newX][newY]) {
                             if (!neighbor.containsKey(pointToNode(i, j))) {
                                 neighbor.put(pointToNode(i, j), new HashSet<Node>());
@@ -538,6 +559,16 @@ public class GameMapGenerator {
     }
 
     //######################### HELPER #########################
+
+    private void configureRooms(ArrayList<Room> rooms) {
+        for (int i = 0; i < rooms.size(); ++i) {
+            Room room = rooms.get(i);
+            if (room.isBonus) {
+                room.configureBonusEnvironment();
+            }
+        }
+        //System.out.println(rooms.size());
+    }
 
     private void getLeafsRoom(ArrayList<Room> rooms, Node v) {
         if (v.leftChild == null) {

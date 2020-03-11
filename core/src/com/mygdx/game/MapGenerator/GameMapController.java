@@ -62,6 +62,16 @@ public class GameMapController {
             return;
         }
 
+        if (room.isBonus) {
+            room.isPassed = true;
+            ++roomPassed;
+            openAllDoors(room);
+            breakAllDoors(room);
+            markRoomInMiniMap(localGameMiniMap, room);
+            markRoomInMiniMap(World.miniMap, room);
+            return;
+        }
+
         //!!!ЭТО СРАШНЫЙ КОСТЫЛЬ, ЕГО НУЖНО ИСПРАВИТЬ!!!
         //>>>>>>>>>>>>>>>>
         if (!room.isActivated) {
@@ -85,6 +95,18 @@ public class GameMapController {
             markRoomInMiniMap(localGameMiniMap, room);
             markRoomInMiniMap(World.miniMap, room);
         }
+    }
+
+    public Pair teleportPersInMaze() {
+        for (int i = 0; i < HEIGHT; ++i) {
+            for (int j = 0; j < WIDTH; ++j) {
+                if (localGameMap[i][j] == spaceCode && pointToRoom(i, j) == null &&
+                        localGameMap[i][j] != openDoorCode && localGameMap[i][j] != closeDoorCode) {
+                    return (new Pair(i, j));
+                }
+            }
+        }
+        return (new Pair(0, 0));
     }
 
     private void markRoomInMiniMap(int[][] gameMiniMap, Room room) {
