@@ -123,6 +123,8 @@ public class Room {
         ArrayDeque<Pair> q = new ArrayDeque<>();
         int[] cordX = {0, 0, 1, -1}, cordY = {1, -1, 0, 0};
 
+        System.out.println(intX + " - " + x + "     " + intY + " - " + y);
+        System.out.println(height + " " + width);
         used[intX - x][intY - y] = 0;
         q.addLast(new Pair(intX, intY));
 

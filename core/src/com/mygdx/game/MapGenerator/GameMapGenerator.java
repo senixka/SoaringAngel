@@ -12,7 +12,7 @@ public class GameMapGenerator {
      * 0 <= ROOM_EPS <= 1000
      * 0 <= WAY_EPS <= 10000
      */
-    public final int WIDTH, HEIGHT, ROOM_EPS, BORDER, MIN_HEIGHT, MIN_WIDTH, WAY_EPS, BONUS_ROOM_EPS;
+    public final int WIDTH, HEIGHT, BORDER, MIN_HEIGHT, MIN_WIDTH, BONUS_ROOM_EPS;
     public static final int wallCode = 0, spaceCode = 1, openDoorCode = 2, closeDoorCode = -2;
     public int[][] localGameMap, localGameMiniMap;
 
@@ -24,11 +24,9 @@ public class GameMapGenerator {
 
     //######################### PUBLIC #########################
 
-    public GameMapGenerator(int HEIGHT, int WIDTH, int BORDER, int MIN_HEIGHT, int MIN_WIDTH, int ROOM_EPS, int WAY_EPS, int BONUS_ROOM_EPS) {
+    public GameMapGenerator(int HEIGHT, int WIDTH, int BORDER, int MIN_HEIGHT, int MIN_WIDTH, int BONUS_ROOM_EPS) {
         this.HEIGHT = HEIGHT;
         this.WIDTH = WIDTH;
-        this.ROOM_EPS = ROOM_EPS;
-        this.WAY_EPS = WAY_EPS;
         this.BORDER = BORDER;
         this.MIN_HEIGHT = MIN_HEIGHT;
         this.MIN_WIDTH = MIN_WIDTH;
@@ -49,7 +47,6 @@ public class GameMapGenerator {
             createTree(root);
             createRooms(root);
             getLeafsRoom(rooms, root);
-            sparseRooms(rooms);
             createBonusRooms(rooms);
 
             initRoomGameMap(rooms);
@@ -61,7 +58,6 @@ public class GameMapGenerator {
             if (checkRoomsConnection(localGameMap)) {
                 break;
             }
-            break;
         }
     }
 
@@ -585,16 +581,6 @@ public class GameMapGenerator {
         } else {
             getLeafsNode(nodes, v.leftChild);
             getLeafsNode(nodes, v.rightChild);
-        }
-    }
-
-    private void sparseRooms(ArrayList<Room> rooms) {
-        for (int i = 0; i < rooms.size(); ++i) {
-            if (Rand.AbsModInt(1000) < ROOM_EPS) {
-                rooms.get(i).isRoomVisible = false;
-                rooms.remove(i);
-                --i;
-            }
         }
     }
 
