@@ -207,7 +207,7 @@ public class GameController implements InputProcessor {
                 if (World.miniMap[i][j] == GameMapController.wallCode) {
                     MyGame.batch.draw(energy, x + sizeX - World.miniMap[j].length * zoom + i * zoom, y - World.miniMap.length * zoom + j * zoom, zoom, zoom);
                 }
-                if (World.miniMap[i][j] == GameMapController.openDoorCode) {
+                if (World.miniMap[i][j] == GameMapController.roomPassedCode) {
                     MyGame.batch.draw(desert, x + sizeX - World.miniMap[j].length * zoom + i * zoom, y - World.miniMap.length * zoom + j * zoom, zoom, zoom);
                 }
             }
