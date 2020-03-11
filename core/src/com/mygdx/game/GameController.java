@@ -14,7 +14,21 @@ public class GameController implements InputProcessor {
     public static Texture energy = new Texture(Gdx.files.internal("blue.png"));
     public static Texture desert = new Texture(Gdx.files.internal("desert.png"));
     public static Texture persColor = new Texture(Gdx.files.internal("RedCircleBullet.psd"));
+    public static Texture contr1 = new Texture(Gdx.files.internal("Controller1.psd"));
+    public static Texture contr2 = new Texture(Gdx.files.internal("Controller2.psd"));
+    public static Texture attackButton1 = new Texture(Gdx.files.internal("AttackButton1.psd"));
+    public static Texture attackButton2 = new Texture(Gdx.files.internal("AttackButton2.psd"));
     public static final float zoom = 1.5f;
+    public static final int contrSize = 100;
+    public Vector3 speedVector;
+
+
+    public int contrFinger = -1;
+    public Vector3 contrStart;
+
+    public int attackFinger = -1;
+    public static final Vector3 attackButton = new Vector3(650, 50, 0);
+    public static final int attackSize = 100;
 
     @Override
     public boolean keyDown(int keycode) {
@@ -36,7 +50,6 @@ public class GameController implements InputProcessor {
                 World.pers.weapon.attackDown();
             }
         }
-
         if (Input.Keys.ESCAPE == keycode) {
             MyGame.staticSetScreen(new PauseMenuScreen());
         }
@@ -101,16 +114,52 @@ public class GameController implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        float sizeX = MyGame.camera.viewportWidth;
+        float sizeY = MyGame.camera.viewportHeight;
+        Vector3 touch = new Vector3(screenX, screenY, 0);
+        MyGame.camera.unproject(touch);
+        float x = MyGame.camera.position.x - MyGame.camera.viewportWidth / 2;
+        float y = MyGame.camera.position.y - MyGame.camera.viewportHeight / 2;
+        if (touch.x < x + 400 && contrFinger == -1) {
+            contrFinger = pointer;
+            contrStart = new Vector3(touch.x - x, touch.y - y, 0);
+        }
+
+        if (Helper.dist(new Vector3(touch.x - x, touch.y - y, 0), new Vector3((attackButton.x + attackSize / 2) * sizeX / 800, (attackButton.y + attackSize / 2) * sizeY / 480, 0)) < attackSize * sizeX / 800) {
+            attackFinger = pointer;
+            World.take();
+            if (World.pers.weapon != null) {
+                World.pers.weapon.attackDown();
+            }
+        }
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if (pointer == contrFinger) {
+            contrFinger = -1;
+            speedVector = null;
+            contrStart = null;
+        }
+        if (pointer == attackFinger) {
+            attackFinger = -1;
+            if (World.pers.weapon != null) {
+                World.pers.weapon.attackUp();
+            }
+        }
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        Vector3 drag = new Vector3(screenX, screenY, 0);
+        MyGame.camera.unproject(drag);
+        float x = MyGame.camera.position.x - MyGame.camera.viewportWidth / 2;
+        float y = MyGame.camera.position.y - MyGame.camera.viewportHeight / 2;
+        if (pointer == contrFinger) {
+            speedVector = new Vector3(drag.x - x - contrStart.x, drag.y - y - contrStart.y, 0);
+        }
         return false;
     }
 
@@ -125,6 +174,9 @@ public class GameController implements InputProcessor {
     }
 
     public Vector3 speedVector() {
+        if (speedVector != null) {
+            return speedVector.cpy().nor();
+        }
         Vector3 v = new Vector3(0, 0, 0);
         if (flagA) {
             v.x = -5;
@@ -150,18 +202,29 @@ public class GameController implements InputProcessor {
         MyGame.batch.draw(hp, x + sizeX / 800 * 40, y - sizeY / 480 * 20, sizeX / 800 * 100 * ((float) World.pers.hp / World.pers.maxHp), sizeY / 480 * 10);
         MyGame.batch.draw(energy, x + sizeX / 800 * 40, y - sizeY / 480 * 40, sizeX / 800 * 100 * ((float) World.pers.energy / World.pers.maxEnergy), sizeY / 480 * 10);
         MyGame.batch.draw(hp, x + sizeX - World.map.length * zoom, y - World.map.length * zoom, World.map.length * zoom, World.map.length * zoom);
-        for (int i = 0; i < World.map.length; i++) {
-            for (int j = 0; j < World.map[i].length; j++) {
-                if (World.map[i][j] == GameMapController.wallCode) {
-                    MyGame.batch.draw(energy, x + sizeX - World.map[j].length * zoom + i * zoom, y - World.map.length * zoom + j * zoom, zoom, zoom);
+        for (int i = 0; i < World.miniMap.length; i++) {
+            for (int j = 0; j < World.miniMap[i].length; j++) {
+                if (World.miniMap[i][j] == GameMapController.wallCode) {
+                    MyGame.batch.draw(energy, x + sizeX - World.miniMap[j].length * zoom + i * zoom, y - World.miniMap.length * zoom + j * zoom, zoom, zoom);
                 }
-                if (false) {
-                    MyGame.batch.draw(desert, x + sizeX - World.map[j].length * zoom + i * zoom, y - World.map.length * zoom + j * zoom, zoom, zoom);
+                if (World.miniMap[i][j] == GameMapController.openDoorCode) {
+                    MyGame.batch.draw(desert, x + sizeX - World.miniMap[j].length * zoom + i * zoom, y - World.miniMap.length * zoom + j * zoom, zoom, zoom);
                 }
             }
         }
         Vector3 p = GameMapController.gameCordsToMap(World.pers.getCenter());
         MyGame.batch.draw(persColor, x + sizeX - World.map.length * zoom + p.x * zoom, y - World.map.length * zoom + p.y * zoom, 15 * zoom, 15 * zoom);
 
+        y -= sizeY;
+        if (contrStart != null) {
+            MyGame.batch.draw(contr1, contrStart.x + x - contrSize * sizeX / 800 / 2, contrStart.y - contrSize * sizeY / 480 / 2 + y, contrSize * sizeX / 800, contrSize * sizeY / 480);
+            Vector3 v = speedVector.cpy().nor();
+            MyGame.batch.draw(contr2, contrStart.x - contrSize * sizeX / 800 / 2 + x + (v.x * 50) * sizeX / 800, contrStart.y - contrSize * sizeY / 480 / 2 + y + v.y * 50 * sizeY / 480, contrSize * sizeX / 800, contrSize * sizeY / 480);
+        }
+        if (attackFinger == -1) {
+            MyGame.batch.draw(attackButton1, attackButton.x * sizeX / 800 + x, attackButton.y * sizeY / 480 + y, attackSize * sizeX / 800, attackSize * sizeY / 480);
+        } else {
+            MyGame.batch.draw(attackButton2, attackButton.x * sizeX / 800 + x, attackButton.y * sizeY / 480 + y, attackSize * sizeX / 800, attackSize * sizeY / 480);
+        }
     }
 }
