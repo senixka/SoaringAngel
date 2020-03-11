@@ -213,7 +213,7 @@ public class GameController implements InputProcessor {
             }
         }
         Vector3 p = GameMapController.gameCordsToMap(World.pers.getCenter());
-        MyGame.batch.draw(persColor, x + sizeX - World.map.length * zoom + p.x * zoom, y - World.map.length * zoom + p.y * zoom, 15 * zoom, 15 * zoom);
+        MyGame.batch.draw(persColor, x + sizeX - World.map.length * zoom + p.x * zoom - 15 * zoom / 2, y - World.map.length * zoom + p.y * zoom - 15 * zoom / 2, 15 * zoom, 15 * zoom);
 
         y -= sizeY;
         if (contrStart != null) {

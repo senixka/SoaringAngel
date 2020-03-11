@@ -29,11 +29,12 @@ public class FirstGun extends Weapon {
 
     @Override
     public void update(float delta) {
-        if (!isFire) {
-            return;
-        }
         time += rapid * delta;
         if (time > 10) {
+            if (!isFire) {
+                time = 10;
+                return;
+            }
             time = 0;
             if (!energyEnough()) {
                 return;
