@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class GameMapController {
 
     public final int WIDTH, HEIGHT;
-    public static final int wallCode = 0, spaceCode = 1, openDoorCode = 2, closeDoorCode = -2, roomPassedCode = 3;
+    public static final int wallCode = 0, spaceCode = 1, openDoorCode = 2, closeDoorCode = -2, roomPassedCode = 3, wayPassedCode = 3;
     public int[][] localGameMap, localGameMiniMap;
     public int roomPassed, roomQuantity;
 
@@ -59,6 +59,12 @@ public class GameMapController {
 
         Room room = pointToRoom(persX, persY);
         if (room == null || room.isPassed) {
+            if (room == null) {
+                if (localGameMap[persX][persY] != wallCode) {
+                    localGameMiniMap[persX][persY] = wayPassedCode;
+                    World.miniMap[persX][persY] = wayPassedCode;
+                }
+            }
             return;
         }
 

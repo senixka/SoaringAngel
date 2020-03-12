@@ -47,6 +47,7 @@ public class GameMapGenerator {
             createTree(root);
             createRooms(root);
             getLeafsRoom(rooms, root);
+            java.util.Collections.shuffle(rooms);
             createBonusRooms(rooms);
 
             initRoomGameMap(rooms);

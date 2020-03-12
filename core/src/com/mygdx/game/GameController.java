@@ -126,7 +126,7 @@ public class GameController implements InputProcessor {
         MyGame.camera.unproject(touch);
         float x = MyGame.camera.position.x - MyGame.camera.viewportWidth / 2;
         float y = MyGame.camera.position.y - MyGame.camera.viewportHeight / 2;
-        if (touch.x < x + 400 && contrFinger == -1) {
+        if (touch.x < x + 400 * sizeX / 800 && contrFinger == -1) {
             contrFinger = pointer;
             contrStart = new Vector3(touch.x - x, touch.y - y, 0);
         }
