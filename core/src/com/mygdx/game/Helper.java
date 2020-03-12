@@ -46,17 +46,28 @@ public class Helper {
             if (World.map[tempX][tempY] == 0 && r1.contains(r.x, r.y)) {
                 return true;
             }
-            r1.x += World.pixSize;
-            if (World.map[tempX + 1][tempY] == 0 && r1.contains(r.x + r.width, r.y)) {
+            //r1.x += World.pixSize;
+            tempX = (int) (r.x + r.width) / World.pixSize;
+            tempY = (int) (r.y) / World.pixSize;
+            r1 = new Rectangle(tempX * World.pixSize, tempY * World.pixSize, World.pixSize, World.pixSize);
+
+            if (World.map[tempX][tempY] == 0 && r1.contains(r.x + r.width, r.y)) {
                 return true;
             }
-            r1.x -= World.pixSize;
-            r1.y += World.pixSize;
-            if (World.map[tempX][tempY + 1] == 0 && r1.contains(r.x, r.y + r.height)) {
+
+            tempX = (int) (r.x) / World.pixSize;
+            tempY = (int) (r.y + r.height) / World.pixSize;
+            r1 = new Rectangle(tempX * World.pixSize, tempY * World.pixSize, World.pixSize, World.pixSize);
+
+            if (World.map[tempX][tempY] == 0 && r1.contains(r.x, r.y + r.height)) {
                 return true;
             }
-            r1.x += World.pixSize;
-            if (World.map[tempX + 1][tempY + 1] == 0 && r1.contains(r.x + r.width, r.y + r.height)) {
+
+            tempX = (int) (r.x + r.width) / World.pixSize;
+            tempY = (int) (r.y + r.height) / World.pixSize;
+            r1 = new Rectangle(tempX * World.pixSize, tempY * World.pixSize, World.pixSize, World.pixSize);
+
+            if (World.map[tempX][tempY] == 0 && r1.contains(r.x + r.width, r.y + r.height)) {
                 return true;
             }
 

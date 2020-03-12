@@ -17,6 +17,7 @@ public class Shelter {
             initShelters();
         }
         this.index = Rand.AbsModInt(shelters.size());
+        this.index = 1;
     }
 
     public void initShelters() {
@@ -24,12 +25,12 @@ public class Shelter {
         shelters.add(tmpEmpty);
         template1();
         shelters.add(tmp1);
-        template2();
-        shelters.add(tmp2);
-        template3();
-        shelters.add(tmp3);
-        template4();
-        shelters.add(tmp3);
+//        template2();
+//        shelters.add(tmp2);
+//        template3();
+//        shelters.add(tmp3);
+//        template4();
+//        shelters.add(tmp3);
     }
 
     public void templateEmpty() {

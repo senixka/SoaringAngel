@@ -50,7 +50,6 @@ public class Room {
         Vector3 temp = GameMapController.mapCordsToGame(new Vector3(point.first, point.second, 0));
         s.setPosition(temp.x, temp.y);
         World.subjects.add(s);
-        //System.out.println("lol: " + this.hashCode());
     }
 
     //######################### HELPER #########################

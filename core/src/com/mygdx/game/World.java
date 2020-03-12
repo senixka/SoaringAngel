@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.MapGenerator.BossMapGenerator;
 import com.mygdx.game.MapGenerator.GameMapController;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
+import com.mygdx.game.MapGenerator.Pair;
 import com.mygdx.game.Weapons.DNKgun;
 import com.mygdx.game.Weapons.FirstGun;
 import com.mygdx.game.Weapons.Relstron;
@@ -67,6 +68,12 @@ public class World {
 
         createMap();
         Inventory.create();
+
+        Inventory.add(new FirstGun());
+
+        Pair temp = World.mapController.teleportPersInMaze();
+        Vector3 tmp = GameMapController.mapCordsToGame(new Vector3(temp.first, temp.second, 0));
+        World.pers.setPosition(tmp.x, tmp.y);
 
     }
 
@@ -139,7 +146,7 @@ public class World {
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map.length; j++) {
                 if (map[i][j] == GameMapGenerator.wallCode) {
-                    MyGame.batch.draw(pix2, i * pixSize, j * pixSize + pixSize / 2, pixSize, pixSize / 2);
+                    MyGame.batch.draw(pix2, i * pixSize, j * pixSize - pixSize / 2, pixSize, pixSize / 2);
                 }
             }
         }
@@ -220,7 +227,7 @@ public class World {
 
     public static void createMap() {
         long start = System.currentTimeMillis();
-        GameMapGenerator tempGenerator = new GameMapGenerator(300, 300, 15, 10, 10, 30, "prt");
+        GameMapGenerator tempGenerator = new GameMapGenerator(300, 300, 12, 10, 10, 30, "prt");
         map = tempGenerator.getMap();
         miniMap = tempGenerator.getMiniMap();
         mapController = new GameMapController(tempGenerator);

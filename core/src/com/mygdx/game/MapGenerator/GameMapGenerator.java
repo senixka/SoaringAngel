@@ -103,13 +103,15 @@ public class GameMapGenerator {
             printWaysToMap(gameMap, temp);
         }
 
-        configureRooms(rooms);
-        createDoors(rooms);
+        if (checkRoomsConnection(localGameMap)) {
+            configureRooms(rooms);
+            createDoors(rooms);
 
-        for (int i = 0; i < rooms.size(); ++i) {
-            Room temp = rooms.get(i);
-            printRoomShelterToMap(gameMap, temp);
-            printDoorsToMap(gameMap, temp);
+            for (int i = 0; i < rooms.size(); ++i) {
+                Room temp = rooms.get(i);
+                printRoomShelterToMap(gameMap, temp);
+                printDoorsToMap(gameMap, temp);
+            }
         }
     }
 

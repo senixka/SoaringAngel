@@ -56,7 +56,7 @@ public class GameController implements InputProcessor {
             MyGame.staticSetScreen(new PauseMenuScreen());
         }
         if (Input.Keys.SHIFT_LEFT == keycode) {
-            World.pers.setSpeedBoost(200);
+            World.pers.setSpeedBoost(600);
         }
         return false;
     }
@@ -224,7 +224,10 @@ public class GameController implements InputProcessor {
         y -= sizeY;
         if (contrStart != null) {
             MyGame.batch.draw(contr1, contrStart.x + x - contrSize * sizeX / 800 / 2, contrStart.y - contrSize * sizeY / 480 / 2 + y, contrSize * sizeX / 800, contrSize * sizeY / 480);
-            Vector3 v = speedVector.cpy().nor();
+            Vector3 v = Vector3.Zero;
+            if (speedVector != null) {
+                v = speedVector.cpy().nor();
+            }
             MyGame.batch.draw(contr2, contrStart.x - contrSize * sizeX / 800 / 2 + x + (v.x * 50) * sizeX / 800, contrStart.y - contrSize * sizeY / 480 / 2 + y + v.y * 50 * sizeY / 480, contrSize * sizeX / 800, contrSize * sizeY / 480);
         }
         if (attackFinger == -1) {
