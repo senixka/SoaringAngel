@@ -19,9 +19,6 @@ public class FirstGun extends Weapon {
 
     @Override
     public void draw() {
-        if (getPers() == null) {
-            System.out.println("AAAAAAAAA");
-        }
         float x = getPers().getX();
         float y = getPers().getY();
         MyGame.batch.draw(texture, x - 5, y + 5, 10 * 5, 25, 0, 0, texture.getWidth(), texture.getHeight(), getPers().getFlip(), false);
