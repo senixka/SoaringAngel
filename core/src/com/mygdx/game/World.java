@@ -3,10 +3,12 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.Animations.Explosion;
 import com.mygdx.game.MapGenerator.BossMapGenerator;
 import com.mygdx.game.MapGenerator.GameMapController;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
 import com.mygdx.game.MapGenerator.Pair;
+import com.mygdx.game.Weapons.Bazook;
 import com.mygdx.game.Weapons.DNKgun;
 import com.mygdx.game.Weapons.FirstGun;
 import com.mygdx.game.Weapons.Relstron;
@@ -24,6 +26,7 @@ public class World {
     public static List<Mob> mobs;
     public static List<Bullet> bullets;
     public static List<Subject> subjects;
+    public static List<MyAnimation> myAnimations;
     public static int[][] map, miniMap;
     public static final int pixSize = 50;
     public static Texture pix, pix2, pix3;
@@ -36,6 +39,8 @@ public class World {
         controller = controller2;
 
         mobs = new LinkedList<Mob>();
+
+        myAnimations = new LinkedList<>();
 
         subjects = new LinkedList<>();
         Subject s = new Shotgun();
@@ -70,6 +75,7 @@ public class World {
         Inventory.create();
 
         Inventory.add(new FirstGun());
+        Inventory.add(new Bazook());
 
         Pair temp = World.mapController.teleportPersInMaze();
         Vector3 tmp = GameMapController.mapCordsToGame(new Vector3(temp.first, temp.second, 0));
@@ -80,6 +86,9 @@ public class World {
     public static void update(float delta) {
         if (!Helper.globalCheck()) {
             return;
+        }
+        for (MyAnimation animation : myAnimations) {
+            animation.update(delta);
         }
         for (int i = 0; i < mobs.size(); i++) {
             Mob mob = mobs.get(i);
@@ -113,6 +122,14 @@ public class World {
             }
         }
         bullets = temp2;
+
+        List<MyAnimation> temp3 = new LinkedList<>();
+        for (MyAnimation animation : myAnimations) {
+            if (!animation.isDead()) {
+                temp3.add(animation);
+            }
+        }
+        myAnimations = temp3;
 
 
     }
@@ -176,6 +193,9 @@ public class World {
         }
         for (Subject subject : subjects) {
             subject.drawSubject();
+        }
+        for (MyAnimation animation : myAnimations) {
+            animation.draw();
         }
 
         pers.draw();
