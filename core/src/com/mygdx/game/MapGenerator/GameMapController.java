@@ -20,7 +20,7 @@ public class GameMapController {
     public int[][] nodeGameMap, roomGameMap;
     public HashMap<Integer, Room> intToRoom;
     public HashMap<Integer, Node> intToNode;
-    public Node root;
+    public Node root, mazeEnter;
     public ArrayList<Room> localRooms;
 
     public GameMapController(GameMapGenerator generator) {
@@ -29,6 +29,7 @@ public class GameMapController {
         this.WIDTH = generator.WIDTH;
         this.root = generator.root;
         this.roomPassed = 0;
+        this.mazeEnter = generator.mazeEnter;
 
         this.localGameMap = new int[HEIGHT][WIDTH];
         this.localGameMiniMap = new int[HEIGHT][WIDTH];
@@ -78,6 +79,16 @@ public class GameMapController {
             return;
         }
 
+        if (room.isEnter) {
+            room.isPassed = true;
+            ++roomPassed;
+            openAllDoors(room);
+            breakAllDoors(room);
+            markRoomInMiniMap(localGameMiniMap, room);
+            markRoomInMiniMap(World.miniMap, room);
+            return;
+        }
+
         //!!!ЭТО СРАШНЫЙ КОСТЫЛЬ, ЕГО НУЖНО ИСПРАВИТЬ!!!
         //>>>>>>>>>>>>>>>>
         if (!room.isActivated) {
@@ -104,6 +115,9 @@ public class GameMapController {
     }
 
     public Pair teleportPersInMaze() {
+        if (mazeEnter != null) {
+            return mazeEnter.room.getCenterPointInRoom();
+        }
         for (int i = 0; i < HEIGHT; ++i) {
             for (int j = 0; j < WIDTH; ++j) {
                 if (localGameMap[i][j] == spaceCode && pointToRoom(i, j) == null &&

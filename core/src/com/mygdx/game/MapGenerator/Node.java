@@ -39,6 +39,17 @@ public class Node {
         return 1;
     }
 
+    public void createEnterRoom(int roomHeight, int roomWidth) {
+        int newX0 = x + BORDER, newY0 = y + BORDER;
+        int newX1 = x + height - BORDER, newY1 = y + width - BORDER;
+        int newH = (newX1 - newX0 - roomHeight) / 2, newW = (newY1 - newY0 - roomWidth) / 2;
+        newX0 += newH;
+        newY0 += newW;
+        newX1 -= newH;
+        newY1 -= newW;
+        room = new Room(this, newX0, newY0, newY1 - newY0, newX1 - newX0, localGameMap);
+    }
+
     public void createRoom() {
         int newH = Math.max(0, (height - 2 * BORDER - MIN_HEIGHT) / 2), newW = Math.max(0, (width - 2 * BORDER - MIN_WIDTH) / 2);
         int newX0 = x + BORDER, newY0 = y + BORDER;
