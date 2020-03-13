@@ -32,6 +32,10 @@ public class GameController implements InputProcessor {
     public static final Vector3 attackButton = new Vector3(650, 50, 0);
     public static final int attackSize = 100;
 
+    public static final Vector3 menuButton = new Vector3(750, 450, 0);
+    public static final int menuSize = 30;
+
+
     @Override
     public boolean keyDown(int keycode) {
         if (Input.Keys.W == keycode) {
@@ -131,12 +135,17 @@ public class GameController implements InputProcessor {
             contrStart = new Vector3(touch.x - x, touch.y - y, 0);
         }
 
+
         if (Helper.dist(new Vector3(touch.x - x, touch.y - y, 0), new Vector3((attackButton.x + attackSize / 2) * sizeX / 800, (attackButton.y + attackSize / 2) * sizeY / 480, 0)) < attackSize * sizeX / 800) {
             attackFinger = pointer;
             World.take();
             if (World.pers.weapon != null) {
                 World.pers.weapon.attackDown();
             }
+        }
+
+        if (Helper.dist(new Vector3(touch.x - x, touch.y - y, 0), new Vector3((menuButton.x + menuSize / 2) * sizeX / 800, (menuButton.y + menuSize / 2) * sizeY / 480, 0)) < menuSize * sizeX / 800) {
+            MyGame.staticSetScreen(new PauseMenuScreen());
         }
         return false;
     }
@@ -221,6 +230,7 @@ public class GameController implements InputProcessor {
         Vector3 p = GameMapController.gameCordsToMap(World.pers.getCenter());
         MyGame.batch.draw(persColor, x + sizeX - World.map.length * zoom + p.x * zoom - 15 * zoom / 2, y - World.map.length * zoom + p.y * zoom - 15 * zoom / 2, 15 * zoom, 15 * zoom);
 
+
         y -= sizeY;
         if (contrStart != null) {
             MyGame.batch.draw(contr1, contrStart.x + x - contrSize * sizeX / 800 / 2, contrStart.y - contrSize * sizeY / 480 / 2 + y, contrSize * sizeX / 800, contrSize * sizeY / 480);
@@ -235,5 +245,7 @@ public class GameController implements InputProcessor {
         } else {
             MyGame.batch.draw(attackButton2, attackButton.x * sizeX / 800 + x, attackButton.y * sizeY / 480 + y, attackSize * sizeX / 800, attackSize * sizeY / 480);
         }
+        MyGame.batch.draw(attackButton1, menuButton.x * sizeX / 800 + x, menuButton.y * sizeY / 480 + y, menuSize * sizeX / 800, menuSize * sizeY / 480);
+
     }
 }

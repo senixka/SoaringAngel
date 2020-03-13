@@ -15,6 +15,7 @@ import com.mygdx.game.Weapons.Relstron;
 import com.mygdx.game.Weapons.Shotgun;
 import com.mygdx.game.Weapons.Shotgun2;
 import com.mygdx.game.Weapons.SpeedGun;
+import com.mygdx.game.Weapons.TNTGun;
 import com.mygdx.game.Weapons.WeaponGun;
 
 import java.util.LinkedList;
@@ -43,27 +44,27 @@ public class World {
         myAnimations = new LinkedList<>();
 
         subjects = new LinkedList<>();
-        Subject s = new Shotgun();
-        s.setPosition(-100, -300);
-        subjects.add(s);
-        s = new DNKgun();
-        s.setPosition(0, -300);
-        subjects.add(s);
-        s = new Shotgun2();
-        s.setPosition(100, -300);
-        subjects.add(s);
-        s = new Relstron();
-        s.setPosition(-200, -300);
-        subjects.add(s);
-        s = new FirstGun();
-        s.setPosition(200, -300);
-        subjects.add(s);
-        s = new WeaponGun();
-        s.setPosition(300, -300);
-        subjects.add(s);
-        s = new SpeedGun();
-        s.setPosition(400, -300);
-        subjects.add(s);
+//        Subject s = new Shotgun();
+//        s.setPosition(-100, -300);
+//        subjects.add(s);
+//        s = new DNKgun();
+//        s.setPosition(0, -300);
+//        subjects.add(s);
+//        s = new Shotgun2();
+//        s.setPosition(100, -300);
+//        subjects.add(s);
+//        s = new Relstron();
+//        s.setPosition(-200, -300);
+//        subjects.add(s);
+//        s = new FirstGun();
+//        s.setPosition(200, -300);
+//        subjects.add(s);
+//        s = new WeaponGun();
+//        s.setPosition(300, -300);
+//        subjects.add(s);
+//        s = new SpeedGun();
+//        s.setPosition(400, -300);
+//        subjects.add(s);
 
         bullets = new LinkedList<Bullet>();
 
@@ -76,6 +77,13 @@ public class World {
 
         Inventory.add(new FirstGun());
         Inventory.add(new Bazook());
+        Inventory.add(new TNTGun());
+        Inventory.add(new Shotgun2());
+        Inventory.add(new Shotgun());
+        Inventory.add(new DNKgun());
+        Inventory.add(new Relstron());
+        Inventory.add(new SpeedGun());
+        Inventory.add(new WeaponGun());
 
         Pair temp = World.mapController.teleportPersInMaze();
         Vector3 tmp = GameMapController.mapCordsToGame(new Vector3(temp.first, temp.second, 0));
