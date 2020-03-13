@@ -3,7 +3,10 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.MapGenerator.GameMapController;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
@@ -20,8 +23,10 @@ public class GameController implements InputProcessor {
     public static Texture contr2 = new Texture(Gdx.files.internal("Controller2.psd"));
     public static Texture attackButton1 = new Texture(Gdx.files.internal("AttackButton1.psd"));
     public static Texture attackButton2 = new Texture(Gdx.files.internal("AttackButton2.psd"));
-    public static final float zoom = 1.5f;
+    public static Texture miniPix;
+    public static final float zoom = 2f;
     public static final int contrSize = 100;
+    public static boolean flag = true;
     public Vector3 speedVector;
 
 
@@ -217,6 +222,39 @@ public class GameController implements InputProcessor {
         MyGame.batch.draw(hp, x + sizeX / 800 * 40, y - sizeY / 480 * 20, sizeX / 800 * 100 * ((float) World.pers.hp / World.pers.maxHp), sizeY / 480 * 10);
         MyGame.batch.draw(energy, x + sizeX / 800 * 40, y - sizeY / 480 * 40, sizeX / 800 * 100 * ((float) World.pers.energy / World.pers.maxEnergy), sizeY / 480 * 10);
 
+        if (flag) {
+            flag = false;
+
+            Pixmap pixmap;
+            pixmap = new Pixmap(2 * World.miniMap[0].length, 2 * World.miniMap.length, Pixmap.Format.RGBA8888);
+            pixmap.setColor(Color.RED);
+            pixmap.fill();
+            for (int i = 0; i < World.miniMap.length; i++) {
+                for (int j = 0; j < World.miniMap[i].length; j++) {
+                    if (World.miniMap[i][j] == GameMapController.wallCode) {
+                        pixmap.setColor(Color.BLUE);
+                        pixmap.drawRectangle(2 * i, 2 * (World.miniMap.length - j), 2, 2);
+                        //pixmap.drawPixel(i, World.miniMap.length - j);
+                    }
+                    if (World.miniMap[i][j] == GameMapController.roomPassedCode) {
+                        pixmap.setColor(Color.YELLOW);
+                        pixmap.drawRectangle(2 * i, 2 * (World.miniMap.length - j), 2, 2);
+                        //pixmap.drawPixel(i, World.miniMap.length - j);
+                    }
+                }
+            }
+            miniPix = new Texture(pixmap);
+            pixmap.dispose();
+        }
+        MyGame.batch.draw(miniPix,x + sizeX - World.map.length * zoom + 3, y - World.map[0].length * zoom + 3, World.map.length * zoom, World.map[0].length * zoom);
+
+
+        Vector3 p = GameMapController.gameCordsToMap(World.pers.getCenter());
+        MyGame.batch.draw(persColor, x + sizeX - World.map.length * zoom + p.x * zoom - 15 * zoom / 2, y - World.map[0].length * zoom + p.y * zoom - 15 * zoom / 2, 15 * zoom, 15 * zoom);
+
+
+
+
 //        MyGame.batch.draw(hp, x + sizeX - World.map.length * zoom, y - World.map[0].length * zoom, World.map.length * zoom, World.map[0].length * zoom);
 //        for (int i = 0; i < World.miniMap.length; i++) {
 //            for (int j = 0; j < World.miniMap[i].length; j++) {
@@ -230,6 +268,9 @@ public class GameController implements InputProcessor {
 //        }
 //        Vector3 p = GameMapController.gameCordsToMap(World.pers.getCenter());
 //        MyGame.batch.draw(persColor, x + sizeX - World.map.length * zoom + p.x * zoom - 15 * zoom / 2, y - World.map[0].length * zoom + p.y * zoom - 15 * zoom / 2, 15 * zoom, 15 * zoom);
+
+
+
 
 
         y -= sizeY;
