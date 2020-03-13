@@ -8,7 +8,7 @@ import com.mygdx.game.Weapons.Shotgun;
 public class Pers {
     public float x = 0, y = 0;
     public int sizeX = 8 * 5, sizeY = 11 * 5;
-    public int speed = 800, speedBoost = 0;
+    public int speed = 500, speedBoost = 0;
     public Texture texture;
     public Mob target;
     public Weapon weapon;

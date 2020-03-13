@@ -18,16 +18,18 @@ import com.mygdx.game.Weapons.SpeedGun;
 import com.mygdx.game.Weapons.TNTGun;
 import com.mygdx.game.Weapons.WeaponGun;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 
 public class World {
     public static Pers pers;
     public static GameController controller;
-    public static List<Mob> mobs;
-    public static List<Bullet> bullets;
-    public static List<Subject> subjects;
-    public static List<MyAnimation> myAnimations;
+    public static ArrayList<Mob> mobs;
+    public static ArrayList<Bullet> bullets;
+    public static ArrayList<Subject> subjects;
+    public static ArrayList<MyAnimation> myAnimations;
     public static int[][] map, miniMap;
     public static final int pixSize = 50;
     public static Texture pix, pix2, pix3;
@@ -39,11 +41,11 @@ public class World {
         pers.setPosition(-100, -100);
         controller = controller2;
 
-        mobs = new LinkedList<Mob>();
+        mobs = new ArrayList<Mob>();
 
-        myAnimations = new LinkedList<>();
+        myAnimations = new ArrayList<>();
 
-        subjects = new LinkedList<>();
+        subjects = new ArrayList<>();
 //        Subject s = new Shotgun();
 //        s.setPosition(-100, -300);
 //        subjects.add(s);
@@ -66,7 +68,7 @@ public class World {
 //        s.setPosition(400, -300);
 //        subjects.add(s);
 
-        bullets = new LinkedList<Bullet>();
+        bullets = new ArrayList<Bullet>();
 
         pix = new Texture(Gdx.files.internal("StonePix.psd"));
         pix2 = new Texture(Gdx.files.internal("StonePixDown.psd"));
@@ -115,46 +117,39 @@ public class World {
     }
 
     public static void delete() {
-        List<Mob> temp = new LinkedList<>();
-        for (Mob mob : mobs) {
-            if (!mob.isDead()) {
-                temp.add(mob);
+        for (int i = 0; i < mobs.size(); ++i) {
+            if (mobs.get(i).isDead()) {
+                mobs.remove(i);
+                --i;
             }
         }
-        mobs = temp;
 
-        List<Bullet> temp2 = new LinkedList<>();
-        for (Bullet bullet : bullets) {
-            if (!bullet.isDead()) {
-                temp2.add(bullet);
+        for (int i = 0; i < bullets.size(); ++i) {
+            if (bullets.get(i).isDead()) {
+                bullets.remove(i);
+                --i;
             }
         }
-        bullets = temp2;
 
-        List<MyAnimation> temp3 = new LinkedList<>();
-        for (MyAnimation animation : myAnimations) {
-            if (!animation.isDead()) {
-                temp3.add(animation);
+        for (int i = 0; i < myAnimations.size(); ++i) {
+            if (myAnimations.get(i).isDead()) {
+                myAnimations.remove(i);
+                --i;
             }
         }
-        myAnimations = temp3;
-
-
     }
 
     public static void take() {
         if (Inventory.isFull()) {
             return;
         }
-        List<Subject> temp3 = new LinkedList<>();
-        for (Subject subject : subjects) {
-            if (!subject.take()) {
-                temp3.add(subject);
-            } else {
-                Inventory.add(subject);
+        for (int i = 0; i < subjects.size(); ++i) {
+            if (subjects.get(i).take()) {
+                Inventory.add(subjects.get(i));
+                subjects.remove(i);
+                --i;
             }
         }
-        subjects = temp3;
     }
 
     public static void draw() {
@@ -167,11 +162,15 @@ public class World {
             return;
         }
 
+        Vector3 temp = GameMapController.gameCordsToMap(pers.getCenter());
+        int persX = (int) temp.x, persY = (int) temp.y, drawDist = 40;
 
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[0].length; j++) {
                 if (map[i][j] == GameMapGenerator.wallCode) {
-                    MyGame.batch.draw(pix2, i * pixSize, j * pixSize - pixSize / 2, pixSize, pixSize / 2);
+                    if (Math.abs(persX - i) < drawDist && Math.abs(persY - j) < drawDist) {
+                        MyGame.batch.draw(pix2, i * pixSize, j * pixSize - pixSize / 2, pixSize, pixSize / 2);
+                    }
                 }
             }
         }
@@ -179,16 +178,19 @@ public class World {
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[0].length; j++) {
                 if (map[i][j] == GameMapGenerator.wallCode) {
-                    MyGame.batch.draw(pix, i * pixSize, j * pixSize, pixSize, pixSize);
+                    if (Math.abs(persX - i) < drawDist && Math.abs(persY - j) < drawDist) {
+                        MyGame.batch.draw(pix, i * pixSize, j * pixSize, pixSize, pixSize);
+                    }
                 }
             }
         }
-
 
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[0].length; j++) {
                 if (Math.abs(map[i][j]) == GameMapGenerator.openDoorCode) {
-                    MyGame.batch.draw(pix3, i * pixSize, j * pixSize, pixSize, pixSize);
+                    if (Math.abs(persX - i) < drawDist && Math.abs(persY - j) < drawDist) {
+                        MyGame.batch.draw(pix3, i * pixSize, j * pixSize, pixSize, pixSize);
+                    }
                 }
             }
         }
