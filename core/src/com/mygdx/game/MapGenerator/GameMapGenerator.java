@@ -10,7 +10,7 @@ public class GameMapGenerator {
     /**
      * 0 <= BONUS_ROOM_EPS <= 100
      */
-    public final int WIDTH, HEIGHT, BORDER, MIN_HEIGHT, MIN_WIDTH, BONUS_ROOM_EPS;
+    public final int WIDTH, HEIGHT, BORDER, MIN_HEIGHT, MIN_WIDTH, BONUS_ROOM_EPS, ENTER_ROOM_HEIGHT, ENTER_ROOM_WIDTH;
     public String connectRoomsFunction;
     public static final int wallCode = 0, spaceCode = 1, openDoorCode = 2, closeDoorCode = -2;
     public int[][] localGameMap, localGameMiniMap;
@@ -19,11 +19,11 @@ public class GameMapGenerator {
     public HashMap<Integer, Room> intToRoom;
     public HashMap<Integer, Node> intToNode;
     public ArrayList<Room> localRooms;
-    public Node root;
+    public Node root, mazeEnter;
 
     //######################### PUBLIC #########################
 
-    public GameMapGenerator(int HEIGHT, int WIDTH, int BORDER, int MIN_HEIGHT, int MIN_WIDTH, int BONUS_ROOM_EPS, String connectRoomsFunction) {
+    public GameMapGenerator(int HEIGHT, int WIDTH, int BORDER, int MIN_HEIGHT, int MIN_WIDTH, int BONUS_ROOM_EPS, String connectRoomsFunction, int ENTER_ROOM_HEIGHT, int ENTER_ROOM_WIDTH) {
         this.HEIGHT = HEIGHT;
         this.WIDTH = WIDTH;
         this.BORDER = BORDER;
@@ -31,6 +31,9 @@ public class GameMapGenerator {
         this.MIN_WIDTH = MIN_WIDTH;
         this.BONUS_ROOM_EPS = BONUS_ROOM_EPS;
         this.connectRoomsFunction = connectRoomsFunction;
+        this.ENTER_ROOM_HEIGHT = ENTER_ROOM_HEIGHT;
+        this.ENTER_ROOM_WIDTH = ENTER_ROOM_WIDTH;
+
 
         while (true) {
             this.localGameMap = new int[HEIGHT][WIDTH];
@@ -42,10 +45,12 @@ public class GameMapGenerator {
             this.intToNode = new HashMap<>();
             this.intToRoom = new HashMap<>();
             this.root = new Node(0, 0, HEIGHT, WIDTH, BORDER, MIN_HEIGHT, MIN_WIDTH, localGameMap);
+            createEnterRoom(root, ENTER_ROOM_HEIGHT, ENTER_ROOM_WIDTH);
+
             ArrayList<Room> rooms = new ArrayList<>();
 
-            createTree(root);
-            createRooms(root);
+            createTree(root.rightChild);
+            createRooms(root.rightChild);
             getLeafsRoom(rooms, root);
             java.util.Collections.shuffle(rooms);
             createBonusRooms(rooms);
@@ -223,6 +228,21 @@ public class GameMapGenerator {
 
     //######################### CREATE #########################
 
+    private void createEnterRoom(Node v, int height, int width) {
+        int deltaW = 2 * BORDER + width;
+        v.leftChild = new Node(v.x, v.y, v.height, deltaW, BORDER, MIN_HEIGHT, MIN_WIDTH, localGameMap);
+        v.rightChild = new Node(v.x, v.y + deltaW, v.height, v.width - deltaW,
+                BORDER, MIN_HEIGHT, MIN_WIDTH, localGameMap);
+        createTree(v.leftChild);
+        createTree(v.rightChild);
+        v.leftChild.createEnterRoom(height, width);
+        v.leftChild.room.markRoomEnter();
+        v.leftChild.room.configureEnterEnvironment();
+        v.leftChild.leftChild = null;
+        v.leftChild.rightChild = null;
+        this.mazeEnter = v.leftChild;
+    }
+
     private void createTree(Node v) {
         int splittable = v.isPossibleToSplit();
         if (splittable != -1) {
@@ -262,7 +282,7 @@ public class GameMapGenerator {
         for (int i = 0; i < rooms.size(); ++i) {
             Room room = rooms.get(i);
             if (Rand.AbsModInt(100) < BONUS_ROOM_EPS) {
-                room.isBonus = true;
+                room.markRoomBonus();
             }
         }
     }

@@ -14,7 +14,7 @@ import java.util.Collections;
 
 public class Room {
     public int x, y, width, height;
-    public boolean isRoomVisible, isPassed, isActivated, isBonus;
+    public boolean isRoomVisible, isPassed, isActivated, isBonus, isEnter;
     public ArrayList<ArrayList<Pair>> ways;
     public ArrayList<Mob> mobs;
     public ArrayList<Door> doors;
@@ -44,12 +44,30 @@ public class Room {
 
     public void configureBonusEnvironment() {
         isBonus = true;
+        isEnter = false;
         shelter.index = shelter.shelters.indexOf(shelter.tmpEmpty);
         Subject s = new DNKgun();
         Pair point = getCenterPointInRoom();
         Vector3 temp = GameMapController.mapCordsToGame(new Vector3(point.first, point.second, 0));
         s.setPosition(temp.x, temp.y);
         World.subjects.add(s);
+    }
+
+    public void configureEnterEnvironment() {
+        isEnter = true;
+        isBonus = false;
+        shelter.index = shelter.shelters.indexOf(shelter.tmpEmpty);
+    }
+
+    public void markRoomBonus() {
+        if (!isEnter) {
+            isBonus = true;
+        }
+    }
+
+    public void markRoomEnter() {
+        isEnter = true;
+        isBonus = false;
     }
 
     //######################### HELPER #########################
