@@ -216,19 +216,20 @@ public class GameController implements InputProcessor {
         MyGame.batch.draw(hpAndEnergy, x, y - sizeY / 480 * 50, sizeX / 800 * 150, sizeY / 480 * 50);
         MyGame.batch.draw(hp, x + sizeX / 800 * 40, y - sizeY / 480 * 20, sizeX / 800 * 100 * ((float) World.pers.hp / World.pers.maxHp), sizeY / 480 * 10);
         MyGame.batch.draw(energy, x + sizeX / 800 * 40, y - sizeY / 480 * 40, sizeX / 800 * 100 * ((float) World.pers.energy / World.pers.maxEnergy), sizeY / 480 * 10);
-        MyGame.batch.draw(hp, x + sizeX - World.map.length * zoom, y - World.map.length * zoom, World.map.length * zoom, World.map.length * zoom);
+
+        MyGame.batch.draw(hp, x + sizeX - World.map.length * zoom, y - World.map[0].length * zoom, World.map.length * zoom, World.map[0].length * zoom);
         for (int i = 0; i < World.miniMap.length; i++) {
             for (int j = 0; j < World.miniMap[i].length; j++) {
                 if (World.miniMap[i][j] == GameMapController.wallCode) {
-                    MyGame.batch.draw(energy, x + sizeX - World.miniMap[j].length * zoom + i * zoom, y - World.miniMap.length * zoom + j * zoom, zoom, zoom);
+                    MyGame.batch.draw(energy, x + sizeX - World.miniMap.length * zoom + i * zoom, y - World.miniMap[i].length * zoom + j * zoom, zoom, zoom);
                 }
                 if (World.miniMap[i][j] == GameMapController.roomPassedCode) {
-                    MyGame.batch.draw(desert, x + sizeX - World.miniMap[j].length * zoom + i * zoom, y - World.miniMap.length * zoom + j * zoom, zoom, zoom);
+                    MyGame.batch.draw(desert, x + sizeX - World.miniMap.length * zoom + i * zoom, y - World.miniMap[i].length * zoom + j * zoom, zoom, zoom);
                 }
             }
         }
         Vector3 p = GameMapController.gameCordsToMap(World.pers.getCenter());
-        MyGame.batch.draw(persColor, x + sizeX - World.map.length * zoom + p.x * zoom - 15 * zoom / 2, y - World.map.length * zoom + p.y * zoom - 15 * zoom / 2, 15 * zoom, 15 * zoom);
+        MyGame.batch.draw(persColor, x + sizeX - World.map.length * zoom + p.x * zoom - 15 * zoom / 2, y - World.map[0].length * zoom + p.y * zoom - 15 * zoom / 2, 15 * zoom, 15 * zoom);
 
 
         y -= sizeY;

@@ -169,7 +169,7 @@ public class World {
 
 
         for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map.length; j++) {
+            for (int j = 0; j < map[0].length; j++) {
                 if (map[i][j] == GameMapGenerator.wallCode) {
                     MyGame.batch.draw(pix2, i * pixSize, j * pixSize - pixSize / 2, pixSize, pixSize / 2);
                 }
@@ -177,7 +177,7 @@ public class World {
         }
 
         for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map.length; j++) {
+            for (int j = 0; j < map[0].length; j++) {
                 if (map[i][j] == GameMapGenerator.wallCode) {
                     MyGame.batch.draw(pix, i * pixSize, j * pixSize, pixSize, pixSize);
                 }
@@ -186,7 +186,7 @@ public class World {
 
 
         for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map.length; j++) {
+            for (int j = 0; j < map[0].length; j++) {
                 if (Math.abs(map[i][j]) == GameMapGenerator.openDoorCode) {
                     MyGame.batch.draw(pix3, i * pixSize, j * pixSize, pixSize, pixSize);
                 }
