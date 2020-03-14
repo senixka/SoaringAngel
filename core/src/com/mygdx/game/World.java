@@ -24,6 +24,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import javax.xml.soap.Text;
+
 import javafx.animation.Animation;
 
 public class World {
@@ -33,7 +35,8 @@ public class World {
     public static ArrayList<Bullet> bullets;
     public static ArrayList<Subject> subjects;
     public static ArrayList<MyAnimation> myAnimations;
-    public static int[][] map, miniMap;
+    public static int[][] map;
+    public static Texture miniMap;
     public static final int pixSize = 50;
     public static Texture pix, pix2, pix3;
     public static GameMapController mapController;

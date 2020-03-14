@@ -1,5 +1,8 @@
 package com.mygdx.game.MapGenerator;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Mobs.Slime;
 import com.mygdx.game.World;
@@ -20,6 +23,8 @@ public class GameMapGenerator {
     public HashMap<Integer, Node> intToNode;
     public ArrayList<Room> localRooms;
     public Node root, mazeEnter;
+    public Pixmap localPixMiniMap;
+    public Texture miniMapTexture;
 
     //######################### PUBLIC #########################
 
@@ -40,6 +45,9 @@ public class GameMapGenerator {
             this.localGameMiniMap = new int[HEIGHT][WIDTH];
             fillMatrix(this.localGameMap, wallCode);
             fillMatrix(this.localGameMiniMap, wallCode);
+
+            this.localPixMiniMap = new Pixmap(HEIGHT, WIDTH, Pixmap.Format.RGBA8888);
+
             this.nodeGameMap = new int[HEIGHT][WIDTH];
             this.roomGameMap = new int[HEIGHT][WIDTH];
             this.intToNode = new HashMap<>();
@@ -59,11 +67,15 @@ public class GameMapGenerator {
             initNodeGameMap(rooms);
             initGameMap(localGameMap, rooms);
             initGameMiniMap(localGameMiniMap, rooms);
+            initPixelMiniMap(localGameMiniMap, localPixMiniMap);
+            this.miniMapTexture = new Texture(localPixMiniMap);
             this.localRooms = rooms;
 
             if (checkRoomsConnection(localGameMap)) {
                 break;
             }
+            localPixMiniMap.dispose();
+            miniMapTexture.dispose();
         }
     }
 
@@ -73,10 +85,9 @@ public class GameMapGenerator {
         return gameMap;
     }
 
-    public int[][] getMiniMap() {
-        int[][] gameMiniMap = new int[HEIGHT][WIDTH];
-        copyMatrix(localGameMiniMap, gameMiniMap);
-        return gameMiniMap;
+    public Texture getMiniMap() {
+        Texture temp = new Texture(localPixMiniMap);
+        return temp;
     }
 
     public static Vector3 gameCordsToMap(Vector3 vec) {
@@ -133,6 +144,19 @@ public class GameMapGenerator {
         for (int i = 0; i < rooms.size(); ++i) {
             Room temp = rooms.get(i);
             printWaysToMap(gameMiniMap, temp);
+        }
+    }
+
+    private void initPixelMiniMap(int[][] gameMiniMap, Pixmap pixmap) {
+        pixmap.setColor(Color.BLUE);
+        pixmap.fill();
+        pixmap.setColor(Color.RED);
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                if (gameMiniMap[i][j] != wallCode) {
+                    pixmap.drawPixel(i, WIDTH - 1 - j);
+                }
+            }
         }
     }
 

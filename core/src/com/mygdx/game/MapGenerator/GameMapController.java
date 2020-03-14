@@ -1,5 +1,8 @@
 package com.mygdx.game.MapGenerator;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Helper;
 import com.mygdx.game.Mobs.Slime;
@@ -22,6 +25,9 @@ public class GameMapController {
     public HashMap<Integer, Node> intToNode;
     public Node root, mazeEnter;
     public ArrayList<Room> localRooms;
+    public Pixmap localPixMiniMap;
+    public Texture miniMapTexture;
+    public boolean wasUpdateMiniMap;
 
     public GameMapController(GameMapGenerator generator) {
         this.mapGenerator = generator;
@@ -29,7 +35,10 @@ public class GameMapController {
         this.WIDTH = generator.WIDTH;
         this.root = generator.root;
         this.roomPassed = 0;
+        this.wasUpdateMiniMap = true;
         this.mazeEnter = generator.mazeEnter;
+        this.miniMapTexture = generator.miniMapTexture;
+        this.localPixMiniMap = mapGenerator.localPixMiniMap;
 
         this.localGameMap = new int[HEIGHT][WIDTH];
         this.localGameMiniMap = new int[HEIGHT][WIDTH];
@@ -40,10 +49,8 @@ public class GameMapController {
         copyMatrix(generator.nodeGameMap, this.nodeGameMap);
         copyMatrix(generator.roomGameMap, this.roomGameMap);
 
-        this.intToRoom = new HashMap<>();
-        this.intToNode = new HashMap<>();
-        this.intToRoom = (HashMap<Integer, Room>) generator.intToRoom.clone();
-        this.intToNode = (HashMap<Integer, Node>) generator.intToNode.clone();
+        this.intToRoom = generator.intToRoom;
+        this.intToNode = generator.intToNode;
 
         this.localRooms = new ArrayList<>();
         copyList(generator.localRooms, this.localRooms);
@@ -63,8 +70,10 @@ public class GameMapController {
             if (room == null) {
                 if (localGameMap[persX][persY] != wallCode) {
                     localGameMiniMap[persX][persY] = wayPassedCode;
-                    World.miniMap[persX][persY] = wayPassedCode;
+                    wasUpdateMiniMap = true;
                 }
+            } else {
+                updatePixelMiniMap(localGameMiniMap, localPixMiniMap);
             }
             return;
         }
@@ -75,7 +84,7 @@ public class GameMapController {
             openAllDoors(room);
             breakAllDoors(room);
             markRoomInMiniMap(localGameMiniMap, room);
-            markRoomInMiniMap(World.miniMap, room);
+            updatePixelMiniMap(localGameMiniMap, localPixMiniMap);
             return;
         }
 
@@ -85,7 +94,7 @@ public class GameMapController {
             openAllDoors(room);
             breakAllDoors(room);
             markRoomInMiniMap(localGameMiniMap, room);
-            markRoomInMiniMap(World.miniMap, room);
+            updatePixelMiniMap(localGameMiniMap, localPixMiniMap);
             return;
         }
 
@@ -110,7 +119,7 @@ public class GameMapController {
             openAllDoors(room);
             breakAllDoors(room);
             markRoomInMiniMap(localGameMiniMap, room);
-            markRoomInMiniMap(World.miniMap, room);
+            updatePixelMiniMap(localGameMiniMap, localPixMiniMap);
         }
     }
 
@@ -134,6 +143,25 @@ public class GameMapController {
             for (int j = room.y; j < room.y + room.width; ++j) {
                 gameMiniMap[i][j] = roomPassedCode;
             }
+        }
+        wasUpdateMiniMap = true;
+    }
+
+    private void updatePixelMiniMap(int[][] gameMiniMap, Pixmap pixmap) {
+        if (wasUpdateMiniMap) {
+            wasUpdateMiniMap = false;
+            pixmap.setColor(Color.YELLOW);
+            for (int i = 0; i < HEIGHT; i++) {
+                for (int j = 0; j < WIDTH; j++) {
+                    if (gameMiniMap[i][j] == roomPassedCode || gameMiniMap[i][j] == wayPassedCode) {
+                        pixmap.drawPixel(i, WIDTH - 1 - j);
+                    }
+                }
+            }
+            miniMapTexture.dispose();
+            miniMapTexture = new Texture(pixmap);
+            World.miniMap.dispose();
+            World.miniMap = new Texture(pixmap);
         }
     }
 
