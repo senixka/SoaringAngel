@@ -1,9 +1,9 @@
 package com.mygdx.game.MapGenerator;
 
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.Mob;
 import com.mygdx.game.Mobs.Boss;
 import com.mygdx.game.Mobs.Slime;
-import com.mygdx.game.Mob;
 import com.mygdx.game.Subject;
 import com.mygdx.game.Weapons.DNKgun;
 import com.mygdx.game.World;
@@ -113,7 +113,7 @@ public class Room {
         while (localGameMap[cords.first][cords.second] != GameMapGenerator.spaceCode) {
             cords = getRandomPointInRoom();
         }
-        addMob(mob,cords.first * World.pixSize, cords.second * World.pixSize);
+        addMob(mob, cords.first * World.pixSize, cords.second * World.pixSize);
     }
 
     public void removeMob(Mob mob) {

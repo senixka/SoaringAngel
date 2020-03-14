@@ -3,7 +3,6 @@ package com.mygdx.game.Weapons;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.game.Bullet;
-import com.mygdx.game.Bullets.DNKBullet;
 import com.mygdx.game.Bullets.FirstBullet;
 import com.mygdx.game.MyGame;
 import com.mygdx.game.Weapon;
@@ -63,7 +62,9 @@ public class Relstron extends Weapon {
 
     @Override
     public void attackUp() {
-        if (b == null) {return;}
+        if (b == null) {
+            return;
+        }
         isFire = false;
         b.speed = 600;
         b.vect = getVector();

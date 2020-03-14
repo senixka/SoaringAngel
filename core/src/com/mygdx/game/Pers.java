@@ -3,7 +3,6 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
-import com.mygdx.game.Weapons.Shotgun;
 
 public class Pers {
     public float x = 0, y = 0;

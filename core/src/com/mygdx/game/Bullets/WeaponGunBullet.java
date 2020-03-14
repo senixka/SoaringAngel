@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Bullet;
 import com.mygdx.game.Helper;
 import com.mygdx.game.Mob;
-import com.mygdx.game.Weapons.WeaponGun;
 import com.mygdx.game.World;
 
 public class WeaponGunBullet extends Bullet {

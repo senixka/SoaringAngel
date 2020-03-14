@@ -2,8 +2,6 @@ package com.mygdx.game.MapGenerator;
 
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Mobs.Boss;
-import com.mygdx.game.Mobs.Slime;
-import com.mygdx.game.World;
 
 import java.util.ArrayList;
 

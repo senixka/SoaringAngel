@@ -14,7 +14,6 @@ import com.mygdx.game.Rectangle;
 import com.mygdx.game.World;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
 public class Slime extends Mob {
 

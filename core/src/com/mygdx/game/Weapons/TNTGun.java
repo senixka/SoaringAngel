@@ -2,10 +2,8 @@ package com.mygdx.game.Weapons;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.mygdx.game.Bullets.FirstBullet;
 import com.mygdx.game.Bullets.TNTBullet;
 import com.mygdx.game.MyGame;
-import com.mygdx.game.Pers;
 import com.mygdx.game.Weapon;
 import com.mygdx.game.World;
 

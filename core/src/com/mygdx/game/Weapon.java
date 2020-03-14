@@ -3,7 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 
-public class Weapon extends Subject{
+public class Weapon extends Subject {
     public int energy = 0;
 
     public Weapon(Texture texture, String name, int energy) {

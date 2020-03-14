@@ -3,8 +3,6 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
-import com.mygdx.game.Animations.Explosion;
-import com.mygdx.game.MapGenerator.BossMapGenerator;
 import com.mygdx.game.MapGenerator.GameMapController;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
 import com.mygdx.game.MapGenerator.Pair;
@@ -20,13 +18,6 @@ import com.mygdx.game.Weapons.WeaponGun;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Vector;
-
-import javax.xml.soap.Text;
-
-import javafx.animation.Animation;
 
 public class World {
     public static Pers pers;

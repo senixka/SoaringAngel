@@ -3,13 +3,9 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.MapGenerator.GameMapController;
-import com.mygdx.game.MapGenerator.GameMapGenerator;
 import com.mygdx.game.MapGenerator.Pair;
 
 public class GameController implements InputProcessor {
@@ -219,7 +215,7 @@ public class GameController implements InputProcessor {
         MyGame.batch.draw(hp, x + sizeX / 800 * 40, y - sizeY / 480 * 20, sizeX / 800 * 100 * ((float) World.pers.hp / World.pers.maxHp), sizeY / 480 * 10);
         MyGame.batch.draw(energy, x + sizeX / 800 * 40, y - sizeY / 480 * 40, sizeX / 800 * 100 * ((float) World.pers.energy / World.pers.maxEnergy), sizeY / 480 * 10);
 
-        MyGame.batch.draw(World.miniMap,x + sizeX - World.map.length * zoom, y - World.map[0].length * zoom, World.map.length * zoom, World.map[0].length * zoom);
+        MyGame.batch.draw(World.miniMap, x + sizeX - World.map.length * zoom, y - World.map[0].length * zoom, World.map.length * zoom, World.map[0].length * zoom);
 
         Vector3 p = GameMapController.gameCordsToMap(World.pers.getCenter());
         MyGame.batch.draw(persColor, x + sizeX - World.map.length * zoom + p.x * zoom - 15 * zoom / 2, y - World.map[0].length * zoom + p.y * zoom - 15 * zoom / 2, 15 * zoom, 15 * zoom);
