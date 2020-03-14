@@ -18,6 +18,10 @@ public class Shotgun extends Weapon {
         super(texture, "Shotgun", 3);
     }
 
+    public static Subject getSub() {
+        return new Subject(new Texture(Gdx.files.internal("FirstGun.png")), "Shotgun");
+    }
+
     @Override
     public void draw() {
         if (getPers() == null) {
@@ -31,10 +35,6 @@ public class Shotgun extends Weapon {
     @Override
     public Subject getSubject() {
         return super.getSubject();
-    }
-
-    public static Subject getSub() {
-        return new Subject(new Texture(Gdx.files.internal("FirstGun.png")), "Shotgun");
     }
 
     @Override

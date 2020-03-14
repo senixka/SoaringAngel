@@ -28,15 +28,11 @@ public class Rectangle {
             return true;
         }
 
-        if (rect.contains(x, y) || rect.contains(x + width, y) || rect.contains(x, y + height) ||
-                rect.contains(x + width, y + height)) {
-            return true;
-        }
+        return rect.contains(x, y) || rect.contains(x + width, y) || rect.contains(x, y + height) ||
+                rect.contains(x + width, y + height);
 
 //        if (x < rect.x && rect.x + rect.width < x + width && rect.y < y && y + height < rect.y + rect.height) {
 //            return true;
 //        }
-
-        return false;
     }
 }

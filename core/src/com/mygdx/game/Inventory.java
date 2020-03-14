@@ -8,10 +8,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Inventory {
+    public static final Texture frame = new Texture(Gdx.files.internal("red.png"));
     public static List<Subject> subjects;
     public static Subject usingSubject;
     public static Rectangle[] icons;
-    public static final Texture frame = new Texture(Gdx.files.internal("red.png"));
     public static Button take;
     public static int aim = -1;
 

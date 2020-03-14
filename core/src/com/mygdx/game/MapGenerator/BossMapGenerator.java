@@ -6,8 +6,8 @@ import com.mygdx.game.Mobs.Boss;
 import java.util.ArrayList;
 
 public class BossMapGenerator {
-    public int WIDTH, HEIGHT, BORDER;
     public static final int wallCode = 0, spaceCode = 1;
+    public int WIDTH, HEIGHT, BORDER;
     public int[][] localGameMap;
 
     private Node bossNode;
@@ -27,6 +27,30 @@ public class BossMapGenerator {
 
     }
 
+    public static void copyMatrix(int[][] from, int[][] to) {
+        for (int i = 0; i < from.length; ++i) {
+            for (int j = 0; j < from[i].length; ++j) {
+                to[i][j] = from[i][j];
+            }
+        }
+    }
+
+    public static void fillMatrix(int[][] matrix, int val) {
+        for (int i = 0; i < matrix.length; ++i) {
+            for (int j = 0; j < matrix[i].length; ++j) {
+                matrix[i][j] = val;
+            }
+        }
+    }
+
+    public static void fillMatrix(boolean[][] matrix, boolean val) {
+        for (int i = 0; i < matrix.length; ++i) {
+            for (int j = 0; j < matrix[i].length; ++j) {
+                matrix[i][j] = val;
+            }
+        }
+    }
+
     public int[][] getMap() {
         int[][] bossMap = new int[HEIGHT][WIDTH];
         copyMatrix(localGameMap, bossMap);
@@ -41,7 +65,7 @@ public class BossMapGenerator {
     }
 
     private void printRoomShelterToMap(int[][] gameMap, Room room) {
-        ArrayList<Instruction> temp = room.shelter.shelters.get(room.shelter.index).tmp;
+        ArrayList<Instruction> temp = Shelter.shelters.get(room.shelter.index).tmp;
         for (int i = 0; i < temp.size(); ++i) {
             Instruction inst = temp.get(i);
             printInstructionToMap(gameMap, room, inst);
@@ -83,29 +107,5 @@ public class BossMapGenerator {
 
     private void createBossMob() {
         bossRoom.createMob(new Boss());
-    }
-
-    public static void copyMatrix(int[][] from, int[][] to) {
-        for (int i = 0; i < from.length; ++i) {
-            for (int j = 0; j < from[i].length; ++j) {
-                to[i][j] = from[i][j];
-            }
-        }
-    }
-
-    public static void fillMatrix(int[][] matrix, int val) {
-        for (int i = 0; i < matrix.length; ++i) {
-            for (int j = 0; j < matrix[i].length; ++j) {
-                matrix[i][j] = val;
-            }
-        }
-    }
-
-    public static void fillMatrix(boolean[][] matrix, boolean val) {
-        for (int i = 0; i < matrix.length; ++i) {
-            for (int j = 0; j < matrix[i].length; ++j) {
-                matrix[i][j] = val;
-            }
-        }
     }
 }

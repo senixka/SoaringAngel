@@ -7,13 +7,13 @@ import java.util.ArrayList;
 public class Shelter {
     public static ArrayList<ShelterTemplate> shelters;
     public static ShelterTemplate tmpEmpty, tmp1, tmp2, tmp3, tmp4;
-    public int index;
     private static boolean wasInit = false;
+    public int index;
 
     public Shelter() {
         if (!wasInit) {
             wasInit = true;
-            this.shelters = new ArrayList<>();
+            shelters = new ArrayList<>();
             initShelters();
         }
         this.index = Rand.AbsModInt(shelters.size());

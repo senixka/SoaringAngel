@@ -17,8 +17,8 @@ import java.util.ArrayList;
 
 public class Slime extends Mob {
 
-    public int timer = 0;
     private static final Texture zombie = new Texture(Gdx.files.internal("Zombie.psd"));
+    public int timer = 0;
 
     public Slime() {
 

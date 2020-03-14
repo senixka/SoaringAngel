@@ -9,7 +9,12 @@ import com.mygdx.game.MapGenerator.GameMapController;
 import com.mygdx.game.MapGenerator.Pair;
 
 public class GameController implements InputProcessor {
-    public boolean flagA, flagS, flagD, flagW;
+    public static final float zoom = 2.0f;
+    public static final int contrSize = 100;
+    public static final Vector3 attackButton = new Vector3(650, 50, 0);
+    public static final int attackSize = 100;
+    public static final Vector3 menuButton = new Vector3(750, 450, 0);
+    public static final int menuSize = 30;
     public static Texture hpAndEnergy = new Texture(Gdx.files.internal("HpAndEnergy.psd"));
     public static Texture hp = new Texture(Gdx.files.internal("red.png"));
     public static Texture energy = new Texture(Gdx.files.internal("blue.png"));
@@ -19,20 +24,12 @@ public class GameController implements InputProcessor {
     public static Texture contr2 = new Texture(Gdx.files.internal("Controller2.psd"));
     public static Texture attackButton1 = new Texture(Gdx.files.internal("AttackButton1.psd"));
     public static Texture attackButton2 = new Texture(Gdx.files.internal("AttackButton2.psd"));
-    public static final float zoom = 2.0f;
-    public static final int contrSize = 100;
     public static boolean flag = true;
+    public boolean flagA, flagS, flagD, flagW;
     public Vector3 speedVector;
-
     public int contrFinger = -1;
     public Vector3 contrStart;
-
     public int attackFinger = -1;
-    public static final Vector3 attackButton = new Vector3(650, 50, 0);
-    public static final int attackSize = 100;
-
-    public static final Vector3 menuButton = new Vector3(750, 450, 0);
-    public static final int menuSize = 30;
 
     @Override
     public boolean keyDown(int keycode) {

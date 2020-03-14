@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class World {
+    public static final int pixSize = 50;
     public static Pers pers;
     public static GameController controller;
     public static ArrayList<Mob> mobs;
@@ -28,7 +29,6 @@ public class World {
     public static ArrayList<MyAnimation> myAnimations;
     public static int[][] map;
     public static Texture miniMap;
-    public static final int pixSize = 50;
     public static Texture pix, pix2, pix3;
     public static GameMapController mapController;
 

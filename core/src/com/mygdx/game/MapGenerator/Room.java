@@ -45,7 +45,7 @@ public class Room {
     public void configureBonusEnvironment() {
         isBonus = true;
         isEnter = false;
-        shelter.index = shelter.shelters.indexOf(shelter.tmpEmpty);
+        shelter.index = Shelter.shelters.indexOf(Shelter.tmpEmpty);
         Subject s = new DNKgun();
         Pair point = getCenterPointInRoom();
         Vector3 temp = GameMapController.mapCordsToGame(new Vector3(point.first, point.second, 0));
@@ -56,7 +56,7 @@ public class Room {
     public void configureEnterEnvironment() {
         isEnter = true;
         isBonus = false;
-        shelter.index = shelter.shelters.indexOf(shelter.tmpEmpty);
+        shelter.index = Shelter.shelters.indexOf(Shelter.tmpEmpty);
     }
 
     public void markRoomBonus() {
@@ -84,10 +84,7 @@ public class Room {
     }
 
     public boolean isPointInRoom(int pointX, int pointY) {
-        if (x <= pointX && pointX < x + height && y <= pointY && pointY < y + width) {
-            return true;
-        }
-        return false;
+        return x <= pointX && pointX < x + height && y <= pointY && pointY < y + width;
     }
 
     //######################### WAY & DOOR #########################
