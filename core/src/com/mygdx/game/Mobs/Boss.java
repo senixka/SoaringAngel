@@ -23,7 +23,7 @@ public class Boss extends Mob {
     }
 
     public Boss(float x, float y, Room room) {
-        super(x, y, 150, 150, 4000, room, boss);
+        super(x, y, 150, 150, 2000, room, boss);
     }
 
     @Override

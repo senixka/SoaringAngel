@@ -1,5 +1,8 @@
 package com.mygdx.game.MapGenerator;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Mobs.Boss;
 
@@ -8,31 +11,29 @@ import java.util.ArrayList;
 public class BossMapGenerator {
     public static final int wallCode = 0, spaceCode = 1;
     public int WIDTH, HEIGHT, BORDER;
-    public int[][] localGameMap;
-
-    private Node bossNode;
-    private Room bossRoom;
+    public int[][] localGameMap, localGameMiniMap;
+    public Node bossNode;
+    public Room bossRoom;
+    public Pixmap localPixMiniMap;
+    public Texture miniMapTexture;
 
     public BossMapGenerator(int HEIGHT, int WIDTH, int BORDER) {
         this.HEIGHT = HEIGHT;
         this.WIDTH = WIDTH;
         this.BORDER = BORDER;
         this.localGameMap = new int[HEIGHT][WIDTH];
+        this.localGameMiniMap = new int[HEIGHT][WIDTH];
         fillMatrix(localGameMap, wallCode);
+        fillMatrix(localGameMiniMap, wallCode);
         this.bossNode = new Node(0, 0, HEIGHT, WIDTH, BORDER, HEIGHT, WIDTH, localGameMap);
         bossNode.createRoom();
         this.bossRoom = bossNode.room;
+        this.localPixMiniMap = new Pixmap(HEIGHT, WIDTH, Pixmap.Format.RGBA8888);
 
         initBossMap();
-
-    }
-
-    public static void copyMatrix(int[][] from, int[][] to) {
-        for (int i = 0; i < from.length; ++i) {
-            for (int j = 0; j < from[i].length; ++j) {
-                to[i][j] = from[i][j];
-            }
-        }
+        initGameMiniMap(localGameMiniMap);
+        initPixelMiniMap(localGameMiniMap, localPixMiniMap);
+        this.miniMapTexture = new Texture(localPixMiniMap);
     }
 
     public static void fillMatrix(int[][] matrix, int val) {
@@ -43,25 +44,32 @@ public class BossMapGenerator {
         }
     }
 
-    public static void fillMatrix(boolean[][] matrix, boolean val) {
-        for (int i = 0; i < matrix.length; ++i) {
-            for (int j = 0; j < matrix[i].length; ++j) {
-                matrix[i][j] = val;
-            }
-        }
-    }
-
-    public int[][] getMap() {
-        int[][] bossMap = new int[HEIGHT][WIDTH];
-        copyMatrix(localGameMap, bossMap);
-        return bossMap;
-    }
-
     private void initBossMap() {
         bossRoom.shelter.index = 0;
         printRoomToMap(localGameMap, bossRoom);
         printRoomShelterToMap(localGameMap, bossRoom);
         createBossMob();
+    }
+
+    private void initPixelMiniMap(int[][] gameMiniMap, Pixmap pixmap) {
+        pixmap.setColor(Color.BLUE);
+        pixmap.fill();
+        pixmap.setColor(Color.RED);
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                if (gameMiniMap[i][j] != wallCode) {
+                    pixmap.drawPixel(i, WIDTH - 1 - j);
+                }
+            }
+        }
+    }
+
+    private void initGameMiniMap(int[][] gameMiniMap) {
+        for (int i = 0; i < HEIGHT; ++i) {
+            for (int j = 0; j < WIDTH; ++j) {
+                gameMiniMap[i][j] = localGameMap[i][j];
+            }
+        }
     }
 
     private void printRoomShelterToMap(int[][] gameMap, Room room) {

@@ -7,6 +7,7 @@ import com.mygdx.game.Mobs.Slime;
 import com.mygdx.game.NPC;
 import com.mygdx.game.NPCs.Seller;
 import com.mygdx.game.Subject;
+import com.mygdx.game.Weapon;
 import com.mygdx.game.Weapons.DNKgun;
 import com.mygdx.game.World;
 
@@ -22,6 +23,7 @@ public class Room {
     public ArrayList<Door> doors;
     public Shelter shelter;
     public Node node;
+    public ArrayList<Subject> subjects;
 
     private ArrayList<Integer> prt;
     private int cnt = 0;
@@ -40,6 +42,7 @@ public class Room {
         this.ways = new ArrayList<>();
         this.mobs = new ArrayList<>();
         this.doors = new ArrayList<>();
+        this.subjects = new ArrayList<>();
         this.shelter = new Shelter();
         this.localGameMap = localGameMap;
     }
@@ -53,6 +56,7 @@ public class Room {
         Vector3 temp = GameMapController.mapCordsToGame(new Vector3(point.first, point.second, 0));
         //s.setPosition(temp.x, temp.y);
         //World.subjects.add(s);
+        //subjects.add(s);
         Seller seller = new Seller(temp.x, temp.y);
         World.npcs.add(seller);
     }
