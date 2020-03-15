@@ -14,12 +14,11 @@ import com.mygdx.game.Rectangle;
 import com.mygdx.game.World;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
 public class Slime extends Mob {
 
-    public int timer = 0;
     private static final Texture zombie = new Texture(Gdx.files.internal("Zombie.psd"));
+    public int timer = 0;
 
     public Slime() {
 

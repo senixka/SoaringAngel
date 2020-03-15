@@ -40,20 +40,14 @@ public class Button {
     }
 
     public boolean isPressed(float x, float y) {
-        if (sprite.getX() < x && sprite.getY() < y && sprite.getX() + sprite.getWidth() > x
-                && sprite.getY() + sprite.getHeight() > y) {
-            return true;
-        }
-        return false;
+        return sprite.getX() < x && sprite.getY() < y && sprite.getX() + sprite.getWidth() > x
+                && sprite.getY() + sprite.getHeight() > y;
     }
 
     public boolean isPressed(Vector3 vector3) {
         float x = vector3.x;
         float y = vector3.y;
-        if (sprite.getX() < x && sprite.getY() < y && sprite.getX() + sprite.getWidth() > x
-                && sprite.getY() + sprite.getHeight() > y) {
-            return true;
-        }
-        return false;
+        return sprite.getX() < x && sprite.getY() < y && sprite.getX() + sprite.getWidth() > x
+                && sprite.getY() + sprite.getHeight() > y;
     }
 }

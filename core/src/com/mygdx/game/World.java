@@ -3,8 +3,6 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
-import com.mygdx.game.Animations.Explosion;
-import com.mygdx.game.MapGenerator.BossMapGenerator;
 import com.mygdx.game.MapGenerator.GameMapController;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
 import com.mygdx.game.MapGenerator.Pair;
@@ -21,55 +19,29 @@ import com.mygdx.game.Weapons.TNTGun;
 import com.mygdx.game.Weapons.WeaponGun;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Vector;
+import java.util.Iterator;
 
 public class World {
+    public static final int pixSize = 50;
     public static Pers pers;
     public static GameController controller;
     public static ArrayList<Mob> mobs;
     public static ArrayList<Bullet> bullets;
     public static ArrayList<Subject> subjects;
     public static ArrayList<MyAnimation> myAnimations;
-    public static int[][] map, miniMap;
-    public static final int pixSize = 50;
+    public static int[][] map;
+    public static Texture miniMap;
     public static Texture pix, pix2, pix3;
     public static GameMapController mapController;
 
     public static void start(GameController controller2) {
-        System.out.println("Yeeeee shit here we go");
         pers = new Pers();
         pers.setPosition(-100, -100);
         controller = controller2;
 
         mobs = new ArrayList<Mob>();
-
         myAnimations = new ArrayList<>();
-
         subjects = new ArrayList<>();
-//        Subject s = new Shotgun();
-//        s.setPosition(-100, -300);
-//        subjects.add(s);
-//        s = new DNKgun();
-//        s.setPosition(0, -300);
-//        subjects.add(s);
-//        s = new Shotgun2();
-//        s.setPosition(100, -300);
-//        subjects.add(s);
-//        s = new Relstron();
-//        s.setPosition(-200, -300);
-//        subjects.add(s);
-//        s = new FirstGun();
-//        s.setPosition(200, -300);
-//        subjects.add(s);
-//        s = new WeaponGun();
-//        s.setPosition(300, -300);
-//        subjects.add(s);
-//        s = new SpeedGun();
-//        s.setPosition(400, -300);
-//        subjects.add(s);
-
         bullets = new ArrayList<Bullet>();
 
         pix = new Texture(Gdx.files.internal("StonePix.psd"));
@@ -104,13 +76,18 @@ public class World {
         for (MyAnimation animation : myAnimations) {
             animation.update(delta);
         }
+
+        // Надо думать как ускорить этот кусок кода,
+        // Осимптотика тут O(n^2)
+        //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         for (int i = 0; i < mobs.size(); i++) {
-            Mob mob = mobs.get(i);
-            mob.update(delta);
+            mobs.get(i).update(delta);
         }
         for (int i = 0; i < bullets.size(); i++) {
             bullets.get(i).update(delta);
         }
+        //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
         delete();
 
         pers.move(controller.speedVector(), delta);
@@ -121,39 +98,71 @@ public class World {
     }
 
     public static void delete() {
-        for (int i = 0; i < mobs.size(); ++i) {
-            if (mobs.get(i).isDead()) {
-                mobs.remove(i);
-                --i;
+        Iterator<Mob> itMob = mobs.iterator();
+        while (itMob.hasNext()) {
+            Mob mob = itMob.next();
+            if (mob.isDead()) {
+                itMob.remove();
+            }
+        }
+//        for (int i = 0; i < mobs.size(); ++i) {
+//            if (mobs.get(i).isDead()) {
+//                mobs.remove(i);
+//                --i;
+//            }
+//        }
+
+        Iterator<Bullet> itBullet = bullets.iterator();
+        while (itBullet.hasNext()) {
+            Bullet bullet = itBullet.next();
+            if (bullet.isDead()) {
+                itBullet.remove();
+            }
+        }
+//        for (int i = 0; i < bullets.size(); ++i) {
+//            if (bullets.get(i).isDead()) {
+//                bullets.remove(i);
+//                --i;
+//            }
+//        }
+
+        Iterator<MyAnimation> itAnim = myAnimations.iterator();
+        while (itAnim.hasNext()) {
+            MyAnimation myAnim = itAnim.next();
+            if (myAnim.isDead()) {
+                itAnim.remove();
             }
         }
 
-        for (int i = 0; i < bullets.size(); ++i) {
-            if (bullets.get(i).isDead()) {
-                bullets.remove(i);
-                --i;
-            }
-        }
-
-        for (int i = 0; i < myAnimations.size(); ++i) {
-            if (myAnimations.get(i).isDead()) {
-                myAnimations.remove(i);
-                --i;
-            }
-        }
+//        for (int i = 0; i < myAnimations.size(); ++i) {
+//            if (myAnimations.get(i).isDead()) {
+//                myAnimations.remove(i);
+//                --i;
+//            }
+//        }
     }
 
     public static void take() {
         if (Inventory.isFull()) {
             return;
         }
-        for (int i = 0; i < subjects.size(); ++i) {
-            if (subjects.get(i).take()) {
-                Inventory.add(subjects.get(i));
-                subjects.remove(i);
-                --i;
+
+        Iterator<Subject> itSub = subjects.iterator();
+        while (itSub.hasNext()) {
+            Subject sub = itSub.next();
+            if (sub.take()) {
+                Inventory.add(sub);
+                itSub.remove();
             }
         }
+
+//        for (int i = 0; i < subjects.size(); ++i) {
+//            if (subjects.get(i).take()) {
+//                Inventory.add(subjects.get(i));
+//                subjects.remove(i);
+//                --i;
+//            }
+//        }
     }
 
     public static void draw() {
@@ -167,7 +176,7 @@ public class World {
         }
 
         Vector3 temp = GameMapController.gameCordsToMap(pers.getCenter());
-        int persX = (int) temp.x, persY = (int) temp.y, drawDist = 40;
+        int persX = (int) temp.x, persY = (int) temp.y, drawDist = 25;
 
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[0].length; j++) {

@@ -4,15 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Inventory {
+    public static final Texture frame = new Texture(Gdx.files.internal("red.png"));
     public static List<Subject> subjects;
     public static Subject usingSubject;
-    public static Rectangle [] icons;
-    public static final Texture frame = new Texture(Gdx.files.internal("red.png"));
+    public static Rectangle[] icons;
     public static Button take;
     public static int aim = -1;
 
@@ -78,7 +77,7 @@ public class Inventory {
             World.pers.weapon = (Weapon) usingSubject;
         }
     }
-    
+
     public static boolean isFull() {
         return subjects.size() == 10;
     }

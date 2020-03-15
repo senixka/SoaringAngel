@@ -6,11 +6,15 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.MapGenerator.GameMapController;
-import com.mygdx.game.MapGenerator.GameMapGenerator;
 import com.mygdx.game.MapGenerator.Pair;
 
 public class GameController implements InputProcessor {
-    public boolean flagA, flagS, flagD, flagW;
+    public static final float zoom = 2.0f;
+    public static final int contrSize = 100;
+    public static final Vector3 attackButton = new Vector3(650, 50, 0);
+    public static final int attackSize = 100;
+    public static final Vector3 menuButton = new Vector3(750, 450, 0);
+    public static final int menuSize = 30;
     public static Texture hpAndEnergy = new Texture(Gdx.files.internal("HpAndEnergy.psd"));
     public static Texture hp = new Texture(Gdx.files.internal("red.png"));
     public static Texture energy = new Texture(Gdx.files.internal("blue.png"));
@@ -20,21 +24,12 @@ public class GameController implements InputProcessor {
     public static Texture contr2 = new Texture(Gdx.files.internal("Controller2.psd"));
     public static Texture attackButton1 = new Texture(Gdx.files.internal("AttackButton1.psd"));
     public static Texture attackButton2 = new Texture(Gdx.files.internal("AttackButton2.psd"));
-    public static final float zoom = 1.5f;
-    public static final int contrSize = 100;
+    public static boolean flag = true;
+    public boolean flagA, flagS, flagD, flagW;
     public Vector3 speedVector;
-
-
     public int contrFinger = -1;
     public Vector3 contrStart;
-
     public int attackFinger = -1;
-    public static final Vector3 attackButton = new Vector3(650, 50, 0);
-    public static final int attackSize = 100;
-
-    public static final Vector3 menuButton = new Vector3(750, 450, 0);
-    public static final int menuSize = 30;
-
 
     @Override
     public boolean keyDown(int keycode) {
@@ -217,20 +212,10 @@ public class GameController implements InputProcessor {
         MyGame.batch.draw(hp, x + sizeX / 800 * 40, y - sizeY / 480 * 20, sizeX / 800 * 100 * ((float) World.pers.hp / World.pers.maxHp), sizeY / 480 * 10);
         MyGame.batch.draw(energy, x + sizeX / 800 * 40, y - sizeY / 480 * 40, sizeX / 800 * 100 * ((float) World.pers.energy / World.pers.maxEnergy), sizeY / 480 * 10);
 
-//        MyGame.batch.draw(hp, x + sizeX - World.map.length * zoom, y - World.map[0].length * zoom, World.map.length * zoom, World.map[0].length * zoom);
-//        for (int i = 0; i < World.miniMap.length; i++) {
-//            for (int j = 0; j < World.miniMap[i].length; j++) {
-//                if (World.miniMap[i][j] == GameMapController.wallCode) {
-//                    MyGame.batch.draw(energy, x + sizeX - World.miniMap.length * zoom + i * zoom, y - World.miniMap[i].length * zoom + j * zoom, zoom, zoom);
-//                }
-//                if (World.miniMap[i][j] == GameMapController.roomPassedCode) {
-//                    MyGame.batch.draw(desert, x + sizeX - World.miniMap.length * zoom + i * zoom, y - World.miniMap[i].length * zoom + j * zoom, zoom, zoom);
-//                }
-//            }
-//        }
-//        Vector3 p = GameMapController.gameCordsToMap(World.pers.getCenter());
-//        MyGame.batch.draw(persColor, x + sizeX - World.map.length * zoom + p.x * zoom - 15 * zoom / 2, y - World.map[0].length * zoom + p.y * zoom - 15 * zoom / 2, 15 * zoom, 15 * zoom);
+        MyGame.batch.draw(World.miniMap, x + sizeX - World.map.length * zoom, y - World.map[0].length * zoom, World.map.length * zoom, World.map[0].length * zoom);
 
+        Vector3 p = GameMapController.gameCordsToMap(World.pers.getCenter());
+        MyGame.batch.draw(persColor, x + sizeX - World.map.length * zoom + p.x * zoom - 15 * zoom / 2, y - World.map[0].length * zoom + p.y * zoom - 15 * zoom / 2, 15 * zoom, 15 * zoom);
 
         y -= sizeY;
         if (contrStart != null) {

@@ -13,6 +13,10 @@ public class MyGame extends Game {
     public static MyGame game;
     public static GameScreen gameScreen;
 
+    public static void staticSetScreen(Screen sc) {
+        game.setScreen(sc);
+    }
+
     @Override
     public void create() {
         System.out.println("We start");
@@ -31,9 +35,5 @@ public class MyGame extends Game {
     @Override
     public void dispose() {
         super.dispose();
-    }
-
-    public static void staticSetScreen(Screen sc) {
-        game.setScreen(sc);
     }
 }

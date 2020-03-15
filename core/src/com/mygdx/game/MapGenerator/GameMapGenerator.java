@@ -1,18 +1,25 @@
 package com.mygdx.game.MapGenerator;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
-import com.mygdx.game.Mobs.Slime;
 import com.mygdx.game.World;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 public class GameMapGenerator {
+    public static final int wallCode = 0, spaceCode = 1, openDoorCode = 2, closeDoorCode = -2;
     /**
      * 0 <= BONUS_ROOM_EPS <= 100
      */
     public final int WIDTH, HEIGHT, BORDER, MIN_HEIGHT, MIN_WIDTH, BONUS_ROOM_EPS, ENTER_ROOM_HEIGHT, ENTER_ROOM_WIDTH;
     public String connectRoomsFunction;
-    public static final int wallCode = 0, spaceCode = 1, openDoorCode = 2, closeDoorCode = -2;
     public int[][] localGameMap, localGameMiniMap;
 
     public int[][] nodeGameMap, roomGameMap;
@@ -20,6 +27,8 @@ public class GameMapGenerator {
     public HashMap<Integer, Node> intToNode;
     public ArrayList<Room> localRooms;
     public Node root, mazeEnter;
+    public Pixmap localPixMiniMap;
+    public Texture miniMapTexture;
 
     //######################### PUBLIC #########################
 
@@ -40,6 +49,9 @@ public class GameMapGenerator {
             this.localGameMiniMap = new int[HEIGHT][WIDTH];
             fillMatrix(this.localGameMap, wallCode);
             fillMatrix(this.localGameMiniMap, wallCode);
+
+            this.localPixMiniMap = new Pixmap(HEIGHT, WIDTH, Pixmap.Format.RGBA8888);
+
             this.nodeGameMap = new int[HEIGHT][WIDTH];
             this.roomGameMap = new int[HEIGHT][WIDTH];
             this.intToNode = new HashMap<>();
@@ -59,24 +71,16 @@ public class GameMapGenerator {
             initNodeGameMap(rooms);
             initGameMap(localGameMap, rooms);
             initGameMiniMap(localGameMiniMap, rooms);
+            initPixelMiniMap(localGameMiniMap, localPixMiniMap);
+            this.miniMapTexture = new Texture(localPixMiniMap);
             this.localRooms = rooms;
 
             if (checkRoomsConnection(localGameMap)) {
                 break;
             }
+            localPixMiniMap.dispose();
+            miniMapTexture.dispose();
         }
-    }
-
-    public int[][] getMap() {
-        int[][] gameMap = new int[HEIGHT][WIDTH];
-        copyMatrix(localGameMap, gameMap);
-        return gameMap;
-    }
-
-    public int[][] getMiniMap() {
-        int[][] gameMiniMap = new int[HEIGHT][WIDTH];
-        copyMatrix(localGameMiniMap, gameMiniMap);
-        return gameMiniMap;
     }
 
     public static Vector3 gameCordsToMap(Vector3 vec) {
@@ -93,7 +97,42 @@ public class GameMapGenerator {
         return tmp;
     }
 
+    private static void copyMatrix(int[][] from, int[][] to) {
+        for (int i = 0; i < from.length; ++i) {
+            for (int j = 0; j < from[i].length; ++j) {
+                to[i][j] = from[i][j];
+            }
+        }
+    }
+
+    private static void fillMatrix(int[][] matrix, int val) {
+        for (int i = 0; i < matrix.length; ++i) {
+            for (int j = 0; j < matrix[i].length; ++j) {
+                matrix[i][j] = val;
+            }
+        }
+    }
+
     //######################### INIT #########################
+
+    private static void fillMatrix(boolean[][] matrix, boolean val) {
+        for (int i = 0; i < matrix.length; ++i) {
+            for (int j = 0; j < matrix[i].length; ++j) {
+                matrix[i][j] = val;
+            }
+        }
+    }
+
+    public int[][] getMap() {
+        int[][] gameMap = new int[HEIGHT][WIDTH];
+        copyMatrix(localGameMap, gameMap);
+        return gameMap;
+    }
+
+    public Texture getMiniMap() {
+        Texture temp = new Texture(localPixMiniMap);
+        return temp;
+    }
 
     private void initGameMap(int[][] gameMap, ArrayList<Room> rooms) {
         for (int i = 0; i < rooms.size(); ++i) {
@@ -136,6 +175,21 @@ public class GameMapGenerator {
         }
     }
 
+    //######################### PRINT #########################
+
+    private void initPixelMiniMap(int[][] gameMiniMap, Pixmap pixmap) {
+        pixmap.setColor(Color.BLUE);
+        pixmap.fill();
+        pixmap.setColor(Color.RED);
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                if (gameMiniMap[i][j] != wallCode) {
+                    pixmap.drawPixel(i, WIDTH - 1 - j);
+                }
+            }
+        }
+    }
+
     private void initRoomGameMap(ArrayList<Room> rooms) {
         for (int r = 0; r < rooms.size(); ++r) {
             Room room = rooms.get(r);
@@ -163,10 +217,8 @@ public class GameMapGenerator {
         }
     }
 
-    //######################### PRINT #########################
-
     private void printRoomShelterToMap(int[][] gameMap, Room room) {
-        ArrayList<Instruction> temp = room.shelter.shelters.get(room.shelter.index).tmp;
+        ArrayList<Instruction> temp = Shelter.shelters.get(room.shelter.index).tmp;
         for (int i = 0; i < temp.size(); ++i) {
             Instruction inst = temp.get(i);
             printInstructionToMap(gameMap, room, inst);
@@ -198,6 +250,8 @@ public class GameMapGenerator {
         }
     }
 
+    //######################### CREATE #########################
+
     private void printRoomToMap(int[][] gameMap, Room room) {
         for (int i = room.x; i < room.x + room.height; ++i) {
             for (int j = room.y; j < room.y + room.width; ++j) {
@@ -225,8 +279,6 @@ public class GameMapGenerator {
             }
         }
     }
-
-    //######################### CREATE #########################
 
     private void createEnterRoom(Node v, int height, int width) {
         int deltaW = 2 * BORDER + width;
@@ -269,6 +321,8 @@ public class GameMapGenerator {
         }
     }
 
+    //######################### CONNECT #########################
+
     private void createRooms(Node v) {
         if (v.rightChild != null) {
             createRooms(v.leftChild);
@@ -293,8 +347,6 @@ public class GameMapGenerator {
             room.extractDoorsFromWays();
         }
     }
-
-    //######################### CONNECT #########################
 
     private ArrayList<Pair> connectToPoints(int[][] gameMap, Pair a, Pair b) {
         ArrayList<Pair> path = new ArrayList<>();
@@ -457,6 +509,8 @@ public class GameMapGenerator {
         return prtDoors;
     }
 
+    //######################### HELPER #########################
+
     private void connectTwoRoomsByWayPriority(int[][] gameMap, Room a, Room b) {
         ArrayList<Pair> fromS = getCenteredEntersToRoom(a, b);
         ArrayList<Pair> fromF = getCenteredEntersToRoom(b, a);
@@ -592,8 +646,6 @@ public class GameMapGenerator {
         }
     }
 
-    //######################### HELPER #########################
-
     private Node pointToNode(int pointX, int pointY) {
         return intToNode.get(nodeGameMap[pointX][pointY]);
     }
@@ -663,30 +715,6 @@ public class GameMapGenerator {
         } else {
             getLeafsRoom(rooms, v.leftChild);
             getLeafsRoom(rooms, v.rightChild);
-        }
-    }
-
-    private static void copyMatrix(int[][] from, int[][] to) {
-        for (int i = 0; i < from.length; ++i) {
-            for (int j = 0; j < from[i].length; ++j) {
-                to[i][j] = from[i][j];
-            }
-        }
-    }
-
-    private static void fillMatrix(int[][] matrix, int val) {
-        for (int i = 0; i < matrix.length; ++i) {
-            for (int j = 0; j < matrix[i].length; ++j) {
-                matrix[i][j] = val;
-            }
-        }
-    }
-
-    private static void fillMatrix(boolean[][] matrix, boolean val) {
-        for (int i = 0; i < matrix.length; ++i) {
-            for (int j = 0; j < matrix[i].length; ++j) {
-                matrix[i][j] = val;
-            }
         }
     }
 

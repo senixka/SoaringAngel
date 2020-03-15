@@ -1,9 +1,9 @@
 package com.mygdx.game.MapGenerator;
 
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.Mob;
 import com.mygdx.game.Mobs.Boss;
 import com.mygdx.game.Mobs.Slime;
-import com.mygdx.game.Mob;
 import com.mygdx.game.Subject;
 import com.mygdx.game.Weapons.DNKgun;
 import com.mygdx.game.World;
@@ -45,7 +45,7 @@ public class Room {
     public void configureBonusEnvironment() {
         isBonus = true;
         isEnter = false;
-        shelter.index = shelter.shelters.indexOf(shelter.tmpEmpty);
+        shelter.index = Shelter.shelters.indexOf(Shelter.tmpEmpty);
         Subject s = new DNKgun();
         Pair point = getCenterPointInRoom();
         Vector3 temp = GameMapController.mapCordsToGame(new Vector3(point.first, point.second, 0));
@@ -56,7 +56,7 @@ public class Room {
     public void configureEnterEnvironment() {
         isEnter = true;
         isBonus = false;
-        shelter.index = shelter.shelters.indexOf(shelter.tmpEmpty);
+        shelter.index = Shelter.shelters.indexOf(Shelter.tmpEmpty);
     }
 
     public void markRoomBonus() {
@@ -84,10 +84,7 @@ public class Room {
     }
 
     public boolean isPointInRoom(int pointX, int pointY) {
-        if (x <= pointX && pointX < x + height && y <= pointY && pointY < y + width) {
-            return true;
-        }
-        return false;
+        return x <= pointX && pointX < x + height && y <= pointY && pointY < y + width;
     }
 
     //######################### WAY & DOOR #########################
@@ -113,7 +110,7 @@ public class Room {
         while (localGameMap[cords.first][cords.second] != GameMapGenerator.spaceCode) {
             cords = getRandomPointInRoom();
         }
-        addMob(mob,cords.first * World.pixSize, cords.second * World.pixSize);
+        addMob(mob, cords.first * World.pixSize, cords.second * World.pixSize);
     }
 
     public void removeMob(Mob mob) {

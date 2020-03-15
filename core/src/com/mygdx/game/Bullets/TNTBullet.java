@@ -7,7 +7,6 @@ import com.mygdx.game.Animations.Explosion;
 import com.mygdx.game.Bullet;
 import com.mygdx.game.Helper;
 import com.mygdx.game.Mob;
-import com.mygdx.game.Rectangle;
 import com.mygdx.game.World;
 
 public class TNTBullet extends Bullet {

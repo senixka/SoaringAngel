@@ -15,8 +15,8 @@ import com.mygdx.game.World;
 import java.util.ArrayList;
 
 public class Boss extends Mob {
-    public int timer = 0, mobTimer = 0;
     private static final Texture boss = new Texture(Gdx.files.internal("Boss.png"));
+    public int timer = 0, mobTimer = 0;
 
     public Boss() {
 

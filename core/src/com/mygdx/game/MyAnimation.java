@@ -1,24 +1,19 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class MyAnimation {
-    public int FRAME_COLS; // #1
-    public int FRAME_ROWS; // #2
-
-    Animation walkAnimation; // #3
-    Texture walkSheet; // #4
-    TextureRegion[] walkFrames; // #5
-    TextureRegion currentFrame; // #7
-
-    float x, y, sizeX, sizeY;
-
-    float stateTime; // #8
     public boolean looping;
+    private int FRAME_COLS;
+    private int FRAME_ROWS;
+    private float stateTime;
+    private float x, y, sizeX, sizeY;
+    private Animation<TextureRegion> walkAnimation;
+    private Texture walkSheet;
+    private TextureRegion[] walkFrames;
+    private TextureRegion currentFrame;
 
     public MyAnimation(Texture texture, int FRAME_COLS, int FRAME_ROWS) {
         walkSheet = texture;
@@ -27,9 +22,8 @@ public class MyAnimation {
         create();
     }
 
-    public void create() {
-        //walkSheet = new Texture(Gdx.files.internal("animation_sheet.png")); // #9
-        TextureRegion[][] tmp = TextureRegion.split(walkSheet, walkSheet.getWidth()/FRAME_COLS, walkSheet.getHeight()/FRAME_ROWS); // #10
+    private void create() {
+        TextureRegion[][] tmp = TextureRegion.split(walkSheet, walkSheet.getWidth() / FRAME_COLS, walkSheet.getHeight() / FRAME_ROWS); // #10
         walkFrames = new TextureRegion[FRAME_COLS * FRAME_ROWS];
         int index = 0;
         for (int i = 0; i < FRAME_ROWS; i++) {
@@ -37,14 +31,13 @@ public class MyAnimation {
                 walkFrames[index++] = tmp[i][j];
             }
         }
-        walkAnimation = new Animation(0.025f, walkFrames); // #11
-        stateTime = 0f; // #13
+        walkAnimation = new Animation<>(0.025f, walkFrames);
+        stateTime = 0f;
     }
 
-
     public void update(float delta) {
-        stateTime += delta; // #15
-        currentFrame = (TextureRegion) walkAnimation.getKeyFrame(stateTime, looping); // #16
+        stateTime += delta;
+        currentFrame = walkAnimation.getKeyFrame(stateTime, looping);
     }
 
     public void draw() {
@@ -58,8 +51,9 @@ public class MyAnimation {
         this.x = x;
         this.y = y;
     }
-    public void setSize(float sixeX, float sizeY) {
-        this.sizeX = sixeX;
+
+    public void setSize(float sizeX, float sizeY) {
+        this.sizeX = sizeX;
         this.sizeY = sizeY;
     }
 

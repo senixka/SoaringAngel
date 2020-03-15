@@ -11,7 +11,7 @@ public class Helper {
 
     public static Vector3 norm(Vector3 v) {
         Vector3 ans = v.cpy();
-        if (v.equals(v.Zero)) {
+        if (v.equals(Vector3.Zero)) {
             return ans;
         }
         ans.x = ans.x / dist(Vector3.Zero, v);
