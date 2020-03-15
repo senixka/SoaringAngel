@@ -11,6 +11,8 @@ import com.mygdx.game.MapGenerator.Pair;
 import com.mygdx.game.Weapons.Bazook;
 import com.mygdx.game.Weapons.DNKgun;
 import com.mygdx.game.Weapons.FirstGun;
+import com.mygdx.game.Weapons.Flamethrower;
+import com.mygdx.game.Weapons.Icethrower;
 import com.mygdx.game.Weapons.Relstron;
 import com.mygdx.game.Weapons.Shotgun;
 import com.mygdx.game.Weapons.Shotgun2;
@@ -86,6 +88,8 @@ public class World {
         Inventory.add(new Relstron());
         Inventory.add(new SpeedGun());
         Inventory.add(new WeaponGun());
+        Inventory.add(new Flamethrower());
+        Inventory.add(new Icethrower());
 
         Pair temp = World.mapController.teleportPersInMaze();
         Vector3 tmp = GameMapController.mapCordsToGame(new Vector3(temp.first, temp.second, 0));

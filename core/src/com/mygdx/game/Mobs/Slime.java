@@ -89,6 +89,10 @@ public class Slime extends Mob {
 
     @Override
     public void update(float delta) {
+        super.update(delta);
+        if (iceCondition) {
+            return;
+        }
         float perX = World.pers.getCenter().x, perY = World.pers.getCenter().y;
         Vector3 vec = new Vector3(perX - (x + (float) sizeX / 2),
                 perY - (y + (float) sizeY / 2), 0).nor();

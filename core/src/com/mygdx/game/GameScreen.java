@@ -19,7 +19,7 @@ public class GameScreen implements Screen {
         font = MyGame.font;
         font.getData().setScale(3);
         camera = MyGame.camera;
-        camera.setToOrtho(false, 3 * 800, 3 * 480);
+        camera.setToOrtho(false, 2 * 800, 2 * 480);
         controller = new GameController();
         Gdx.input.setInputProcessor(controller);
         World.start(controller);
@@ -46,7 +46,7 @@ public class GameScreen implements Screen {
 
     public void contin() {
 
-        camera.setToOrtho(false, 3 * 800, 3 * 480);
+        camera.setToOrtho(false, 2 * 800, 2 * 480);
         controller = new GameController();
         Gdx.input.setInputProcessor(controller);
         MyGame.staticSetScreen(this);

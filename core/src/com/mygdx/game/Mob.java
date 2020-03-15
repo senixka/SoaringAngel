@@ -12,6 +12,10 @@ public class Mob {
     public Texture texture, mark;
     public Room room;
     public boolean target, isDead;
+    public boolean fireCondition = false, iceCondition = false;
+    private float timerFire = 0, timerIce = 0;
+    public static final Texture fireConditionIMG = new Texture(Gdx.files.internal("FireCondition.psd"));
+    public static final Texture iceConditionIMG = new Texture(Gdx.files.internal("IceCondition.psd"));
 
     public Mob() {
 
@@ -53,6 +57,12 @@ public class Mob {
         if (target) {
             MyGame.batch.draw(mark, x + (sizeX - ((float) sizeX / maxHP * hp)) / 2, y - 10, (float) sizeX / maxHP * hp, 10);
         }
+        if (fireCondition) {
+            MyGame.batch.draw(fireConditionIMG, x, y + sizeY - 10, 50, 50);
+        }
+        if (iceCondition) {
+            MyGame.batch.draw(iceConditionIMG, x, y, sizeX, sizeX);
+        }
     }
 
     public void setTarget(boolean target) {
@@ -63,5 +73,22 @@ public class Mob {
     }
 
     public void update(float delta) {
+        if (fireCondition && ((int) (timerFire * 100)) % 5 == 0) {
+            hit(1);
+        }
+        if (fireCondition && timerFire < 10) {
+            timerFire += delta * 10;
+        } else {
+            fireCondition = false;
+            timerFire = 0;
+        }
+
+
+        if (iceCondition && timerIce < 10) {
+            timerIce += delta * 2;
+        } else {
+            iceCondition = false;
+            timerIce = 0;
+        }
     }
 }
