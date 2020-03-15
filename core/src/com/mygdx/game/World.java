@@ -3,6 +3,8 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.MapGenerator.BossMapController;
+import com.mygdx.game.MapGenerator.BossMapGenerator;
 import com.mygdx.game.MapGenerator.GameMapController;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
 import com.mygdx.game.MapGenerator.Pair;
@@ -21,6 +23,8 @@ import com.mygdx.game.Weapons.WeaponGun;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javafx.scene.media.VideoTrack;
+
 public class World {
     public static final int pixSize = 50;
     public static Pers pers;
@@ -32,7 +36,11 @@ public class World {
     public static int[][] map;
     public static Texture miniMap;
     public static Texture pix, pix2, pix3;
-    public static GameMapController mapController;
+    public static GameMapController gameMapController;
+    public static BossMapController bossMapController;
+    public static Texture CD1, CD2, CD3;
+    public static boolean CDFlag = false;
+    public static int CDCnt = 150;
 
     public static void start(GameController controller2) {
         pers = new Pers();
@@ -47,6 +55,9 @@ public class World {
         pix = new Texture(Gdx.files.internal("StonePix.psd"));
         pix2 = new Texture(Gdx.files.internal("StonePixDown.psd"));
         pix3 = new Texture(Gdx.files.internal("DoorPix.png"));
+        CD1 = new Texture(Gdx.files.internal("CountDown1.png"));
+        CD2 = new Texture(Gdx.files.internal("CountDown2.png"));
+        CD3 = new Texture(Gdx.files.internal("CountDown3.png"));
 
         createMap();
         Inventory.create();
@@ -63,7 +74,7 @@ public class World {
         Inventory.add(new Flamethrower());
         Inventory.add(new Icethrower());
 
-        Pair temp = World.mapController.teleportPersInMaze();
+        Pair temp = World.gameMapController.teleportPersInMaze();
         Vector3 tmp = GameMapController.mapCordsToGame(new Vector3(temp.first, temp.second, 0));
         World.pers.setPosition(tmp.x, tmp.y);
 
@@ -73,6 +84,11 @@ public class World {
         if (!Helper.globalCheck()) {
             return;
         }
+
+        if (CDFlag) {
+            return;
+        }
+
         for (MyAnimation animation : myAnimations) {
             animation.update(delta);
         }
@@ -94,7 +110,37 @@ public class World {
         pers.update(delta);
         setTarget();
 
-        mapController.update();
+        if (gameMapController != null) {
+            if (gameMapController.goToNextLevel()) {
+                BossMapGenerator bossGen = new BossMapGenerator(100, 100, 35);
+                bossMapController = new BossMapController(bossGen);
+                map = bossMapController.getMap();
+                miniMap = bossMapController.getMiniMap();
+                Pair temp = World.bossMapController.teleportPersInMaze();
+                Vector3 tmp = BossMapController.mapCordsToGame(new Vector3(temp.first, temp.second, 0));
+                World.pers.setPosition(tmp.x, tmp.y);
+                subjects.clear();
+                gameMapController = null;
+                CDFlag = true;
+            } else {
+                gameMapController.update();
+            }
+        } else if (bossMapController != null) {
+            if (bossMapController.goToNextLevel()) {
+                GameMapGenerator gameGen = new GameMapGenerator(250, 250, 13, 15, 15, 30, "prt", 30, 30);
+                gameMapController = new GameMapController(gameGen);
+                map = gameMapController.getMap();
+                miniMap = gameMapController.getMiniMap();
+                Pair temp = World.gameMapController.teleportPersInMaze();
+                Vector3 tmp = GameMapController.mapCordsToGame(new Vector3(temp.first, temp.second, 0));
+                World.pers.setPosition(tmp.x, tmp.y);
+                subjects.clear();
+                bossMapController = null;
+                CDFlag = true;
+            } else {
+                bossMapController.update();
+            }
+        }
     }
 
     public static void delete() {
@@ -172,6 +218,26 @@ public class World {
 
         if (World.pers == null) {
             System.out.println("Whaat");
+            return;
+        }
+
+        if (CDFlag) {
+            float sizeX = MyGame.camera.viewportWidth;
+            float sizeY = MyGame.camera.viewportHeight;
+            float x = MyGame.camera.position.x - sizeX / 2;
+            float y = MyGame.camera.position.y - sizeY / 2;
+
+            if (CDCnt > 100) {
+                MyGame.batch.draw(CD3, x, y, sizeX, sizeY);
+            } else if (CDCnt > 50) {
+                MyGame.batch.draw(CD2, x, y, sizeX, sizeY);
+            } else if (CDCnt > 0) {
+                MyGame.batch.draw(CD1, x, y, sizeX, sizeY);
+            } else {
+                CDCnt = 151;
+                CDFlag = false;
+            }
+            --CDCnt;
             return;
         }
 
@@ -270,12 +336,10 @@ public class World {
 
     public static void createMap() {
         long start = System.currentTimeMillis();
-        GameMapGenerator tempGenerator = new GameMapGenerator(300, 300, 8, 10, 10, 30, "prt", 30, 30);
+        GameMapGenerator tempGenerator = new GameMapGenerator(250, 250, 13, 15, 15, 30, "prt", 30, 30);
         map = tempGenerator.getMap();
         miniMap = tempGenerator.getMiniMap();
-        mapController = new GameMapController(tempGenerator);
-        //BossMapGenerator tempGenerator = new BossMapGenerator(100, 100, 20);
-        //map = tempGenerator.getMap();
+        gameMapController = new GameMapController(tempGenerator);
         System.out.println("Generation time: " + (double) (System.currentTimeMillis() - start) + " millis");
     }
 }

@@ -14,11 +14,11 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class GameMapGenerator {
-    public static final int wallCode = 0, spaceCode = 1, openDoorCode = 2, closeDoorCode = -2;
     /**
      * 0 <= BONUS_ROOM_EPS <= 100
      */
     public final int WIDTH, HEIGHT, BORDER, MIN_HEIGHT, MIN_WIDTH, BONUS_ROOM_EPS, ENTER_ROOM_HEIGHT, ENTER_ROOM_WIDTH;
+    public static final int wallCode = 0, spaceCode = 1, openDoorCode = 2, closeDoorCode = -2;
     public String connectRoomsFunction;
     public int[][] localGameMap, localGameMiniMap;
 

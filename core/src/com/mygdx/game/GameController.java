@@ -9,7 +9,7 @@ import com.mygdx.game.MapGenerator.GameMapController;
 import com.mygdx.game.MapGenerator.Pair;
 
 public class GameController implements InputProcessor {
-    public static final float zoom = 2.0f;
+    public static final float zoom = 1.5f;
     public static final int contrSize = 100;
     public static final Vector3 attackButton = new Vector3(650, 50, 0);
     public static final int attackSize = 100;
@@ -108,11 +108,6 @@ public class GameController implements InputProcessor {
         }
         if (character == '2') {
             World.pers.energy = World.pers.maxEnergy;
-        }
-        if (character == '0') {
-            Pair temp = World.mapController.teleportPersInMaze();
-            Vector3 tmp = GameMapController.mapCordsToGame(new Vector3(temp.first, temp.second, 0));
-            World.pers.setPosition(tmp.x, tmp.y);
         }
         return false;
     }

@@ -57,6 +57,17 @@ public class GameMapController {
         this.roomQuantity = localRooms.size();
     }
 
+    public int[][] getMap() {
+        int[][] gameMap = new int[HEIGHT][WIDTH];
+        copyMatrix(localGameMap, gameMap);
+        return gameMap;
+    }
+
+    public Texture getMiniMap() {
+        Texture temp = new Texture(localPixMiniMap);
+        return temp;
+    }
+
     public static Vector3 gameCordsToMap(Vector3 vec) {
         Vector3 tmp = new Vector3();
         tmp.x = (int) (vec.x / (float) World.pixSize);
@@ -86,14 +97,6 @@ public class GameMapController {
     }
 
     public static void fillMatrix(int[][] matrix, int val) {
-        for (int i = 0; i < matrix.length; ++i) {
-            for (int j = 0; j < matrix[i].length; ++j) {
-                matrix[i][j] = val;
-            }
-        }
-    }
-
-    public static void fillMatrix(boolean[][] matrix, boolean val) {
         for (int i = 0; i < matrix.length; ++i) {
             for (int j = 0; j < matrix[i].length; ++j) {
                 matrix[i][j] = val;
