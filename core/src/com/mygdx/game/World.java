@@ -6,12 +6,14 @@ import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.MapGenerator.GameMapController;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
 import com.mygdx.game.MapGenerator.Pair;
+import com.mygdx.game.NPCs.Seller;
 import com.mygdx.game.Weapons.Bazook;
 import com.mygdx.game.Weapons.DNKgun;
 import com.mygdx.game.Weapons.FirstGun;
 import com.mygdx.game.Weapons.Flamethrower;
 import com.mygdx.game.Weapons.Icethrower;
 import com.mygdx.game.Weapons.Relstron;
+import com.mygdx.game.Weapons.RicochetGun;
 import com.mygdx.game.Weapons.Shotgun;
 import com.mygdx.game.Weapons.Shotgun2;
 import com.mygdx.game.Weapons.SpeedGun;
@@ -29,6 +31,7 @@ public class World {
     public static ArrayList<Bullet> bullets;
     public static ArrayList<Subject> subjects;
     public static ArrayList<MyAnimation> myAnimations;
+    public static ArrayList<NPC> npcs;
     public static int[][] map;
     public static Texture miniMap;
     public static Texture pix, pix2, pix3;
@@ -44,24 +47,29 @@ public class World {
         subjects = new ArrayList<>();
         bullets = new ArrayList<Bullet>();
 
+        npcs = new ArrayList<>();
+        npcs.add(new Seller(-100, -100));
+
         pix = new Texture(Gdx.files.internal("StonePix.psd"));
         pix2 = new Texture(Gdx.files.internal("StonePixDown.psd"));
         pix3 = new Texture(Gdx.files.internal("DoorPix.png"));
 
         createMap();
         Inventory.create();
+        Shop.create();
 
-        Inventory.add(new FirstGun());
+        //Inventory.add(new FirstGun());
         Inventory.add(new Bazook());
         Inventory.add(new TNTGun());
         Inventory.add(new Shotgun2());
-        Inventory.add(new Shotgun());
+        //Inventory.add(new Shotgun());
         Inventory.add(new DNKgun());
-        Inventory.add(new Relstron());
-        Inventory.add(new SpeedGun());
-        Inventory.add(new WeaponGun());
+        //Inventory.add(new Relstron());
+        //Inventory.add(new SpeedGun());
+        //Inventory.add(new WeaponGun());
         Inventory.add(new Flamethrower());
         Inventory.add(new Icethrower());
+        Inventory.add(new RicochetGun());
 
         Pair temp = World.mapController.teleportPersInMaze();
         Vector3 tmp = GameMapController.mapCordsToGame(new Vector3(temp.first, temp.second, 0));
@@ -165,6 +173,12 @@ public class World {
 //        }
     }
 
+    public static void talk() {
+        for (NPC npc : npcs) {
+            npc.talk();
+        }
+    }
+
     public static void draw() {
         if (!Helper.globalCheck()) {
             return;
@@ -221,7 +235,13 @@ public class World {
             animation.draw();
         }
 
+        for (NPC npc : npcs) {
+            npc.draw1();
+        }
         pers.draw();
+        for (NPC npc : npcs) {
+            npc.draw2();
+        }
 
         controller.draw();
     }

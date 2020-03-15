@@ -4,6 +4,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Mob;
 import com.mygdx.game.Mobs.Boss;
 import com.mygdx.game.Mobs.Slime;
+import com.mygdx.game.NPC;
+import com.mygdx.game.NPCs.Seller;
 import com.mygdx.game.Subject;
 import com.mygdx.game.Weapons.DNKgun;
 import com.mygdx.game.World;
@@ -46,11 +48,13 @@ public class Room {
         isBonus = true;
         isEnter = false;
         shelter.index = Shelter.shelters.indexOf(Shelter.tmpEmpty);
-        Subject s = new DNKgun();
+        //Subject s = new DNKgun();
         Pair point = getCenterPointInRoom();
         Vector3 temp = GameMapController.mapCordsToGame(new Vector3(point.first, point.second, 0));
-        s.setPosition(temp.x, temp.y);
-        World.subjects.add(s);
+        //s.setPosition(temp.x, temp.y);
+        //World.subjects.add(s);
+        Seller seller = new Seller(temp.x, temp.y);
+        World.npcs.add(seller);
     }
 
     public void configureEnterEnvironment() {

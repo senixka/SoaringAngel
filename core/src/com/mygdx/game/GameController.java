@@ -9,7 +9,7 @@ import com.mygdx.game.MapGenerator.GameMapController;
 import com.mygdx.game.MapGenerator.Pair;
 
 public class GameController implements InputProcessor {
-    public static final float zoom = 2.0f;
+    public static final float zoom = 1.0f;
     public static final int contrSize = 100;
     public static final Vector3 attackButton = new Vector3(650, 50, 0);
     public static final int attackSize = 100;
@@ -89,6 +89,7 @@ public class GameController implements InputProcessor {
     public boolean keyTyped(char character) {
         if (character == 'e') {
             World.take();
+            World.talk();
         }
 
         if (character == 'i') {
