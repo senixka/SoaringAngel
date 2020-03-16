@@ -70,4 +70,16 @@ public class Shotgun extends Weapon {
     public void attackUp() {
         isFire = false;
     }
+
+    @Override
+    public String getDamage() {
+        return "5";
+    }
+
+    @Override
+    public String getRapid() {
+        return Integer.toString(rapid);
+    }
+
+
 }

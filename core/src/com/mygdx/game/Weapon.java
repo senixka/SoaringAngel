@@ -6,9 +6,11 @@ import com.badlogic.gdx.math.Vector3;
 public class Weapon extends Subject {
     public int energy = 0;
 
+
     public Weapon(Texture texture, String name, int energy) {
         super(texture, name);
         this.energy = energy;
+        setText(getDiscript());
     }
 
     public void draw() {
@@ -50,5 +52,22 @@ public class Weapon extends Subject {
             return true;
         }
         return false;
+    }
+
+    public String getDiscript() {
+        String s = "Rapid: " + getRapid() + "\n" + "Energy: " + energy + "\n" + "Damage: " + getDamage() + "\n" + addInf();
+        return s;
+    }
+
+    public String  getDamage() {
+        return "";
+    }
+
+    public String getRapid() {
+        return "";
+    }
+
+    public String addInf() {
+        return "";
     }
 }

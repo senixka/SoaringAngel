@@ -69,7 +69,9 @@ public class Pers {
 
     public void draw() {
         MyGame.batch.draw(texture, x, y, sizeX, sizeY, 0, 0, texture.getWidth(), texture.getHeight(), flip, false);
-        weapon.draw();
+        if (weapon != null) {
+            weapon.draw();
+        }
     }
 
     public boolean getFlip() {

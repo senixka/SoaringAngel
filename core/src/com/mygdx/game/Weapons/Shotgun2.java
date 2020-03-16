@@ -51,4 +51,19 @@ public class Shotgun2 extends Weapon {
     public void attackUp() {
         isFire = false;
     }
+
+    @Override
+    public String getDamage() {
+        return "5 - 15";
+    }
+
+    @Override
+    public String getRapid() {
+        return Integer.toString(rapid);
+    }
+
+    @Override
+    public String addInf() {
+        return "More bullet - more damage";
+    }
 }

@@ -9,11 +9,16 @@ public class Subject {
     public boolean free;
     public Texture texture;
     public String name;
+    public String text;
 
     public Subject(Texture texture, String name) {
         this.texture = texture;
         this.name = name;
         free = true;
+    }
+
+    public void setText(String text) {
+        this.text = name + "\n"+ text;
     }
 
     public void setPosition(float x, float y) {

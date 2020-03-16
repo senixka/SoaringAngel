@@ -15,7 +15,7 @@ public class Icethrower extends Weapon {
     public boolean isRealyFire = false;
 
     public Icethrower() {
-        super(texture, "Flamethrower", 1);
+        super(texture, "Icethrower", 1);
     }
 
     @Override
@@ -74,5 +74,20 @@ public class Icethrower extends Weapon {
     @Override
     public void attackUp() {
         isFire = false;
+    }
+
+    @Override
+    public String getDamage() {
+        return "0";
+    }
+
+    @Override
+    public String getRapid() {
+        return "Inf";
+    }
+
+    @Override
+    public String addInf() {
+        return "Freeze enemies";
     }
 }

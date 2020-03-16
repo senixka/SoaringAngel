@@ -57,4 +57,19 @@ public class SpeedGun extends Weapon {
         rapidBonus = -90;
         energy = 1;
     }
+
+    @Override
+    public String getDamage() {
+        return "5";
+    }
+
+    @Override
+    public String getRapid() {
+        return "10 - 200";
+    }
+
+    @Override
+    public String addInf() {
+        return "Rapid slowly increase. After rapid\n150, energy cost is 0";
+    }
 }

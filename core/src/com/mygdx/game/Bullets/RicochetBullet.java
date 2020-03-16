@@ -30,7 +30,7 @@ public class RicochetBullet extends Bullet {
             vect.y = -vect.y;
             live -= 1;
         }
-        if (live == -1) {
+        if (live <= -1) {
             dead = -1;
         }
     }

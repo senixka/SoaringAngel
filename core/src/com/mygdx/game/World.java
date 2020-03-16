@@ -36,7 +36,7 @@ public class World {
     public static ArrayList<NPC> npcs;
     public static int[][] map;
     public static Texture miniMap;
-    public static Texture pix, pix2, pix3;
+    public static Texture pix, pix2, pix3, pix4;
     public static GameMapController gameMapController;
     public static BossMapController bossMapController;
     public static Texture CD1, CD2, CD3;
@@ -56,9 +56,10 @@ public class World {
         npcs = new ArrayList<>();
         npcs.add(new Seller(-100, -100));
 
-        pix = new Texture(Gdx.files.internal("StonePix.psd"));
-        pix2 = new Texture(Gdx.files.internal("StonePixDown.psd"));
+        pix = new Texture(Gdx.files.internal("StoneUp.psd"));
+        pix2 = new Texture(Gdx.files.internal("StoneDown.psd"));
         pix3 = new Texture(Gdx.files.internal("DoorPix.png"));
+        pix4 = new Texture(Gdx.files.internal("StoneFloor.psd"));
         CD1 = new Texture(Gdx.files.internal("CountDown1.png"));
         CD2 = new Texture(Gdx.files.internal("CountDown2.png"));
         CD3 = new Texture(Gdx.files.internal("CountDown3.png"));
@@ -67,11 +68,11 @@ public class World {
         Inventory.create();
         Shop.create();
 
-        //Inventory.add(new FirstGun());
         Inventory.add(new Bazook());
+        Inventory.add(new FirstGun());
         Inventory.add(new TNTGun());
         Inventory.add(new Shotgun2());
-        //Inventory.add(new Shotgun());
+        Inventory.add(new Shotgun());
         Inventory.add(new DNKgun());
         //Inventory.add(new Relstron());
         //Inventory.add(new SpeedGun());
@@ -258,9 +259,12 @@ public class World {
 
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[0].length; j++) {
-                if (map[i][j] == GameMapGenerator.wallCode) {
-                    if (Math.abs(persX - i) < drawDist && Math.abs(persY - j) < drawDist) {
-                        MyGame.batch.draw(pix2, i * pixSize, j * pixSize - pixSize / 2, pixSize, pixSize / 2);
+                if (Math.abs(persX - i) < drawDist && Math.abs(persY - j) < drawDist) {
+                    if (map[i][j] == GameMapGenerator.wallCode) {
+                        MyGame.batch.draw(pix2, i * pixSize, j * pixSize - pixSize, pixSize, pixSize);
+                    }
+                    if (map[i][j] == GameMapGenerator.spaceCode) {
+                        MyGame.batch.draw(pix4, i * pixSize, j * pixSize, pixSize, pixSize);
                     }
                 }
             }

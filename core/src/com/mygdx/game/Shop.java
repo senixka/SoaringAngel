@@ -44,6 +44,16 @@ public class Shop {
 
         if (aim != -1) {
             MyGame.batch.draw(frame, icons[aim].x, icons[aim].y, icons[aim].width, icons[aim].height);
+            MyGame.font.getData().setScale(1.5f);
+            Subject s = null;
+
+            if (aim < 10 && aim < subjects.size()){
+                s = subjects.get(aim);
+            }
+            if (s != null) {
+                MyGame.font.draw(MyGame.batch, s.text, 410, 430);
+            }
+            MyGame.font.getData().setScale(2);
             take.draw(MyGame.batch, MyGame.font);
         }
         for (int i = 0; i < 10; i++) {

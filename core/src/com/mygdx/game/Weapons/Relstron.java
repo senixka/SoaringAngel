@@ -70,4 +70,19 @@ public class Relstron extends Weapon {
         b.vect = getVector();
         b = null;
     }
+
+    @Override
+    public String getDamage() {
+        return "5 - 40";
+    }
+
+    @Override
+    public String getRapid() {
+        return "Inf";
+    }
+
+    @Override
+    public String addInf() {
+        return "Charge it, to make it stronger";
+    }
 }

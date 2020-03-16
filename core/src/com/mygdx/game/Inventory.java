@@ -12,7 +12,7 @@ public class Inventory {
     public static List<Subject> subjects;
     public static Subject usingSubject;
     public static Rectangle[] icons;
-    public static Button take;
+    public static Button take, left;
     public static int aim = -1;
 
 
@@ -38,8 +38,11 @@ public class Inventory {
         icons[15] = new Rectangle(220, 345, 100, 80);
 
         MyGame.font.getData().setScale(2);
-        take = new Button(400, 100, 200, 50);
+        take = new Button(410, 60, 130, 50);
         take.setText("Equip");
+
+        left = new Button(560, 60, 130, 50);
+        left.setText("Throw");
 
     }
 
@@ -50,7 +53,19 @@ public class Inventory {
 
         if (aim != -1) {
             MyGame.batch.draw(frame, icons[aim].x, icons[aim].y, icons[aim].width, icons[aim].height);
+            MyGame.font.getData().setScale(1.5f);
+            Subject s = null;
+            if (aim == 15) {
+                s = usingSubject;
+            } else if (aim < 10 && aim < subjects.size()){
+                s = subjects.get(aim);
+            }
+            if (s != null) {
+                MyGame.font.draw(MyGame.batch, s.text, 410, 430);
+            }
+            MyGame.font.getData().setScale(2);
             take.draw(MyGame.batch, MyGame.font);
+            left.draw(MyGame.batch, MyGame.font);
         }
         for (int i = 0; i < 10; i++) {
             if (subjects.size() > i) {
@@ -112,7 +127,27 @@ public class Inventory {
             System.out.println("Yeeep");
             equip();
         }
+        if (aim != -1 && left.isPressed(v)) {
+            System.out.println("Yeeep");
+            left();
+        }
         setAim(v);
+    }
+
+    public static void left() {
+        if (aim == -1) {
+            return;
+        } else if (aim == 15) {
+            usingSubject.setPosition(World.pers.x, World.pers.y);
+            World.subjects.add(usingSubject);
+            usingSubject = null;
+        } else if (aim < subjects.size()) {
+            subjects.get(aim).setPosition(World.pers.x, World.pers.y);
+            World.subjects.add(subjects.get(aim));
+            subjects.remove(aim);
+        }
+        World.pers.weapon = (Weapon) usingSubject;
+        aim = -1;
     }
 
 }
