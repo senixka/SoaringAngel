@@ -25,8 +25,6 @@ import com.mygdx.game.Weapons.WeaponGun;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javafx.scene.media.VideoTrack;
-
 public class World {
     public static final int pixSize = 50;
     public static Pers pers;
