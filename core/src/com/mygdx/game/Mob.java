@@ -42,6 +42,9 @@ public class Mob {
     }
 
     public void hit(int damage) {
+        if (!isStarted) {
+            return;
+        }
         hp -= damage;
     }
 

@@ -33,7 +33,7 @@ public class NPC {
         return new Vector3(x + sizeX / 2, y + sizeY / 2, 0);
     }
 
-    public void talk() {
-
+    public boolean talk() {
+        return false;
     }
 }

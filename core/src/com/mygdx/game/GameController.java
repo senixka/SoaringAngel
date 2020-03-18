@@ -13,6 +13,8 @@ public class GameController implements InputProcessor {
     public static final int contrSize = 100;
     public static final Vector3 attackButton = new Vector3(650, 50, 0);
     public static final int attackSize = 100;
+    public static final Vector3 speedButton = new Vector3(600, 50, 0);
+    public static final int speedSize = 40;
     public static final Vector3 menuButton = new Vector3(750, 450, 0);
     public static final int menuSize = 30;
     public static Texture hpAndEnergy = new Texture(Gdx.files.internal("HpAndEnergy.psd"));
@@ -24,12 +26,15 @@ public class GameController implements InputProcessor {
     public static Texture contr2 = new Texture(Gdx.files.internal("Controller2.psd"));
     public static Texture attackButton1 = new Texture(Gdx.files.internal("AttackButton1.psd"));
     public static Texture attackButton2 = new Texture(Gdx.files.internal("AttackButton2.psd"));
+    public static Texture speedButton1 = new Texture(Gdx.files.internal("Dodge1.psd"));
+    public static Texture speedButton2 = new Texture(Gdx.files.internal("Dodge2.psd"));
     public static boolean flag = true;
     public boolean flagA, flagS, flagD, flagW;
     public Vector3 speedVector;
     public int contrFinger = -1;
     public Vector3 contrStart;
     public int attackFinger = -1;
+    public int speedFinger = -1;
 
     @Override
     public boolean keyDown(int keycode) {
@@ -127,12 +132,24 @@ public class GameController implements InputProcessor {
         }
 
 
-        if (Helper.dist(new Vector3(touch.x - x, touch.y - y, 0), new Vector3((attackButton.x + attackSize / 2) * sizeX / 800, (attackButton.y + attackSize / 2) * sizeY / 480, 0)) < attackSize * sizeX / 800) {
+        if (Helper.dist(new Vector3(touch.x - x, touch.y - y, 0), new Vector3((attackButton.x + attackSize / 2) * sizeX / 800, (attackButton.y + attackSize / 2) * sizeY / 480, 0)) < attackSize * sizeX / 2 / 800) {
             attackFinger = pointer;
-            World.take();
+            if (World.take()) {
+                attackFinger = -1;
+                return false;
+            }
+            if (World.talk()) {
+                attackFinger = -1;
+                return false;
+            }
             if (World.pers.weapon != null) {
                 World.pers.weapon.attackDown();
             }
+        }
+
+        if (Helper.dist(new Vector3(touch.x - x, touch.y - y, 0), new Vector3((speedButton.x + speedSize / 2) * sizeX / 800, (speedButton.y + speedSize / 2) * sizeY / 480, 0)) < speedSize * sizeX / 2 / 800) {
+            speedFinger = pointer;
+            World.pers.setSpeedBoost(600);
         }
 
         if (Helper.dist(new Vector3(touch.x - x, touch.y - y, 0), new Vector3((menuButton.x + menuSize / 2) * sizeX / 800, (menuButton.y + menuSize / 2) * sizeY / 480, 0)) < menuSize * sizeX / 800) {
@@ -153,6 +170,10 @@ public class GameController implements InputProcessor {
             if (World.pers.weapon != null) {
                 World.pers.weapon.attackUp();
             }
+        }
+        if (pointer == speedFinger) {
+            speedFinger = -1;
+            World.pers.setSpeedBoost(0);
         }
         return false;
     }
@@ -226,6 +247,12 @@ public class GameController implements InputProcessor {
             MyGame.batch.draw(attackButton1, attackButton.x * sizeX / 800 + x, attackButton.y * sizeY / 480 + y, attackSize * sizeX / 800, attackSize * sizeY / 480);
         } else {
             MyGame.batch.draw(attackButton2, attackButton.x * sizeX / 800 + x, attackButton.y * sizeY / 480 + y, attackSize * sizeX / 800, attackSize * sizeY / 480);
+        }
+
+        if (speedFinger == -1) {
+            MyGame.batch.draw(speedButton1, speedButton.x * sizeX / 800 + x, speedButton.y * sizeY / 480 + y, speedSize * sizeX / 800, speedSize * sizeY / 480);
+        } else {
+            MyGame.batch.draw(speedButton2, speedButton.x * sizeX / 800 + x, speedButton.y * sizeY / 480 + y, speedSize * sizeX / 800, speedSize * sizeY / 480);
         }
         MyGame.batch.draw(attackButton1, menuButton.x * sizeX / 800 + x, menuButton.y * sizeY / 480 + y, menuSize * sizeX / 800, menuSize * sizeY / 480);
 

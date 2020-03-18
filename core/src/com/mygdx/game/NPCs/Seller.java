@@ -23,9 +23,11 @@ public class Seller extends NPC {
     }
 
     @Override
-    public void talk() {
+    public boolean talk() {
         if (Helper.dist(World.pers.getCenter(), getCenter()) < 100) {
             MyGame.staticSetScreen(new ShopScreen(shop));
+            return true;
         }
+        return false;
     }
 }

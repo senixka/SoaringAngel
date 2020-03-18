@@ -195,9 +195,9 @@ public class World {
 //        }
     }
 
-    public static void take() {
+    public static boolean take() {
         if (Inventory.isFull()) {
-            return;
+            return false;
         }
 
         Iterator<Subject> itSub = subjects.iterator();
@@ -206,8 +206,10 @@ public class World {
             if (sub.take()) {
                 Inventory.add(sub);
                 itSub.remove();
+                return true;
             }
         }
+        return false;
 
 //        for (int i = 0; i < subjects.size(); ++i) {
 //            if (subjects.get(i).take()) {
@@ -218,10 +220,13 @@ public class World {
 //        }
     }
 
-    public static void talk() {
+    public static boolean talk() {
         for (NPC npc : npcs) {
-            npc.talk();
+            if (npc.talk()) {
+                return true;
+            }
         }
+        return false;
     }
 
     public static void draw() {
