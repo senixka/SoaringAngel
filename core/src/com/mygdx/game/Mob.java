@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.Animations.MonsterAppear;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
 import com.mygdx.game.MapGenerator.Room;
 
@@ -16,6 +17,10 @@ public class Mob {
     private float timerFire = 0, timerIce = 0;
     public static final Texture fireConditionIMG = new Texture(Gdx.files.internal("FireCondition.psd"));
     public static final Texture iceConditionIMG = new Texture(Gdx.files.internal("IceCondition.psd"));
+    public static final Texture preMobIMG = new Texture(Gdx.files.internal("PreMob.psd"));
+    public float startTime = 1;
+    public boolean isStarted = false;
+
 
     public Mob() {
 
@@ -53,6 +58,10 @@ public class Mob {
     }
 
     public void draw() {
+        if (startTime > 0) {
+            MyGame.batch.draw(preMobIMG, x, y, sizeX, sizeX);
+            return;
+        }
         MyGame.batch.draw(texture, x, y, sizeX, sizeY);
         if (target) {
             MyGame.batch.draw(mark, x + (sizeX - ((float) sizeX / maxHP * hp)) / 2, y - 10, (float) sizeX / maxHP * hp, 10);
@@ -73,6 +82,15 @@ public class Mob {
     }
 
     public void update(float delta) {
+        if (startTime > 0) {
+            startTime -= delta;
+            return;
+        }
+        if (!isStarted) {
+            World.myAnimations.add(new MonsterAppear(x, y, sizeX, sizeY));
+            isStarted = true;
+        }
+
         if (fireCondition && ((int) (timerFire * 100)) % 5 == 0) {
             hit(1);
         }
@@ -82,13 +100,19 @@ public class Mob {
             fireCondition = false;
             timerFire = 0;
         }
-
-
         if (iceCondition && timerIce < 10) {
             timerIce += delta * 2;
         } else {
             iceCondition = false;
             timerIce = 0;
         }
+
+        if (!iceCondition) {
+            realUpdate(delta);
+        }
+    }
+
+    public void realUpdate(float delta) {
+
     }
 }
