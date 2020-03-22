@@ -13,8 +13,8 @@ public class Pers {
     public Weapon weapon;
     public Vector3 lastVect;
     public boolean flip = false;
-    int hp, energy;
-    int maxHp = 50, maxEnergy = 250;
+    public int hp, energy;
+    public int maxHp = 50, maxEnergy = 250;
 
     public Pers() {
         texture = new Texture(Gdx.files.internal("Human.psd"));

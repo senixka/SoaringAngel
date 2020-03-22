@@ -10,10 +10,21 @@ import com.mygdx.game.World;
 
 public class WeaponGunBullet extends Bullet {
     public static final Texture IMG = new Texture(Gdx.files.internal("RedCircleBullet.psd"));
+    public static final Texture IMG2 = new Texture(Gdx.files.internal("BlueCircleBullet.psd"));
 
     public WeaponGunBullet(Vector3 vect, float x, float y) {
-        super(IMG, 200, 50, 50, 10, vect, x, y);
+        super(IMG2, 200, 50, 50, 10, vect, x, y);
     }
+
+    public WeaponGunBullet(Vector3 vect, float x, float y, boolean isEn) {
+        super(IMG2, 200, 50, 50, 10, vect, x, y);
+        if (isEn) {
+            isEnemy = true;
+            texture = IMG;
+        }
+    }
+
+
 
     @Override
     public void update(float delta) {

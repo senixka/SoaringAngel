@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class Boss extends Mob {
     private static final Texture boss = new Texture(Gdx.files.internal("Boss.png"));
-    public int timer = 0, mobTimer = 0;
+    public float timer = 0, mobTimer = 0;
 
     public Boss() {
 
@@ -68,7 +68,7 @@ public class Boss extends Mob {
         }
     }
 
-    private void shoot(Vector3 vec) {
+    private void shoot(Vector3 vec, float delta) {
         Vector3 newVec = new Vector3(World.pers.getCenter().x, World.pers.getCenter().y, 0);
         int targetX = (int) GameMapGenerator.gameCordsToMap(newVec).x;
         int targetY = (int) GameMapGenerator.gameCordsToMap(newVec).y;
@@ -77,36 +77,34 @@ public class Boss extends Mob {
         }
 
         if (hp < maxHP / 2) {
-            if (timer == 0) {
-                timer = 20;
+            if (timer <= 0) {
+                timer = 1.5f;
                 Vector3 tempVec;
                 for (int i = 0; i < 360; i += 20) {
                     tempVec = new Vector3((float) Math.sin((double) System.currentTimeMillis() / 10d), (float) Math.cos((double) System.currentTimeMillis() / 10d), 0);
-                    FirstBullet b = new FirstBullet(tempVec.rotate(new Vector3(0, 0, 1), i), x + sizeX / 2, y + sizeY / 2);
-                    b.isEnemy = true;
+                    FirstBullet b = new FirstBullet(tempVec.rotate(new Vector3(0, 0, 1), i), x + sizeX / 2, y + sizeY / 2, true);
                 }
             } else {
-                --timer;
+                timer -= delta;
             }
-            if (mobTimer == 0) {
-                mobTimer = 1000;
+            if (mobTimer <= 0) {
+                mobTimer = 15;
                 for (int i = 0; i < 5; ++i) {
                     room.createMob(new Slime());
                 }
             } else {
-                --mobTimer;
+                mobTimer -= delta;
             }
         } else {
-            if (timer == 0) {
-                timer = 80;
+            if (timer <= 0) {
+                timer = 1.5f;
                 Vector3 tempVec;
                 for (int i = -20; i <= 20; i += 6) {
                     tempVec = vec.cpy().nor();
-                    FirstBullet b = new FirstBullet(tempVec.rotate(new Vector3(0, 0, 1), i), x + sizeX / 2, y + sizeY / 2);
-                    b.isEnemy = true;
+                    FirstBullet b = new FirstBullet(tempVec.rotate(new Vector3(0, 0, 1), i), x + sizeX / 2, y + sizeY / 2, true);
                 }
             } else {
-                --timer;
+                timer -= delta;
             }
         }
     }
@@ -118,6 +116,6 @@ public class Boss extends Mob {
         vec.x *= delta * speed;
         vec.y *= delta * speed;
         move(delta);
-        shoot(vec);
+        shoot(vec, delta);
     }
 }

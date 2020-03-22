@@ -15,8 +15,8 @@ public class GameController implements InputProcessor {
     public static final int attackSize = 100;
     public static final Vector3 speedButton = new Vector3(600, 50, 0);
     public static final int speedSize = 40;
-    public static final Vector3 menuButton = new Vector3(750, 450, 0);
-    public static final int menuSize = 30;
+    public static final int menuSize = 40;
+    public static final Vector3 menuButton = new Vector3(750, 300, 0);
     public static Texture hpAndEnergy = new Texture(Gdx.files.internal("HpAndEnergy.psd"));
     public static Texture hp = new Texture(Gdx.files.internal("red.png"));
     public static Texture energy = new Texture(Gdx.files.internal("blue.png"));
@@ -28,6 +28,7 @@ public class GameController implements InputProcessor {
     public static Texture attackButton2 = new Texture(Gdx.files.internal("AttackButton2.psd"));
     public static Texture speedButton1 = new Texture(Gdx.files.internal("Dodge1.psd"));
     public static Texture speedButton2 = new Texture(Gdx.files.internal("Dodge2.psd"));
+    public static Texture menuButtonIMG = new Texture(Gdx.files.internal("Inventory.psd"));
     public static boolean flag = true;
     public boolean flagA, flagS, flagD, flagW;
     public Vector3 speedVector;
@@ -35,6 +36,10 @@ public class GameController implements InputProcessor {
     public Vector3 contrStart;
     public int attackFinger = -1;
     public int speedFinger = -1;
+
+
+    public GameController() {
+    }
 
     @Override
     public boolean keyDown(int keycode) {
@@ -254,7 +259,7 @@ public class GameController implements InputProcessor {
         } else {
             MyGame.batch.draw(speedButton2, speedButton.x * sizeX / 800 + x, speedButton.y * sizeY / 480 + y, speedSize * sizeX / 800, speedSize * sizeY / 480);
         }
-        MyGame.batch.draw(attackButton1, menuButton.x * sizeX / 800 + x, menuButton.y * sizeY / 480 + y, menuSize * sizeX / 800, menuSize * sizeY / 480);
+        MyGame.batch.draw(menuButtonIMG, menuButton.x * sizeX / 800 + x, menuButton.y * sizeY / 480 + y, menuSize * sizeX / 800, menuSize * sizeY / 480);
 
     }
 }

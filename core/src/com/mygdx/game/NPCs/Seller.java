@@ -6,8 +6,11 @@ import com.mygdx.game.Helper;
 import com.mygdx.game.MyGame;
 import com.mygdx.game.NPC;
 import com.mygdx.game.PauseMenuScreen;
+import com.mygdx.game.Potions.EnergyPotion;
+import com.mygdx.game.Potions.HealthPotion;
 import com.mygdx.game.Shop;
 import com.mygdx.game.ShopScreen;
+import com.mygdx.game.Weapon;
 import com.mygdx.game.Weapons.FirstGun;
 import com.mygdx.game.World;
 
@@ -19,7 +22,11 @@ public class Seller extends NPC {
     public Seller(float x, float y) {
         super(IMG, x, y, sizeX, sizeY);
         shop = new Shop();
-        shop.add(new FirstGun());
+        shop.add(new HealthPotion());
+        shop.add(new EnergyPotion());
+        for (int i = 0; i < 5; i++) {
+            shop.add(Helper.getRandomWeapon());
+        }
     }
 
     @Override

@@ -12,7 +12,7 @@ public class Inventory {
     public static List<Subject> subjects;
     public static Subject usingSubject;
     public static Rectangle[] icons;
-    public static Button take, left;
+    public static Button take, left, use;
     public static int aim = -1;
 
 
@@ -41,6 +41,9 @@ public class Inventory {
         take = new Button(410, 60, 130, 50);
         take.setText("Equip");
 
+        use = new Button(410, 60, 130, 50);
+        use.setText("Use");
+
         left = new Button(560, 60, 130, 50);
         left.setText("Throw");
 
@@ -64,7 +67,11 @@ public class Inventory {
                 MyGame.font.draw(MyGame.batch, s.text, 410, 430);
             }
             MyGame.font.getData().setScale(2);
-            take.draw(MyGame.batch, MyGame.font);
+            if (aim >= 0 && aim < 10 && subjects.get(aim) instanceof Potion) {
+                use.draw(MyGame.batch, MyGame.font);
+            } else {
+                take.draw(MyGame.batch, MyGame.font);
+            }
             left.draw(MyGame.batch, MyGame.font);
         }
         for (int i = 0; i < 10; i++) {
@@ -123,15 +130,24 @@ public class Inventory {
     }
 
     public static void touchDown(Vector3 v) {
-        if (aim != -1 && take.isPressed(v)) {
+        if (aim >= 0 && aim < 10 && subjects.get(aim) instanceof Weapon && take.isPressed(v)) {
             System.out.println("Yeeep");
             equip();
+        }
+        if (aim >= 0 && aim < 10 && subjects.get(aim) instanceof Potion && use.isPressed(v)) {
+            System.out.println("Yeeep");
+            use();
         }
         if (aim != -1 && left.isPressed(v)) {
             System.out.println("Yeeep");
             left();
         }
         setAim(v);
+    }
+
+    public static void use() {
+        Potion p = (Potion) subjects.remove(aim);
+        p.use();
     }
 
     public static void left() {

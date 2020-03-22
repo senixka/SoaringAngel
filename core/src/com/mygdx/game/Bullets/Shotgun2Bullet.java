@@ -5,13 +5,23 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Bullet;
 import com.mygdx.game.Helper;
+import com.mygdx.game.Weapons.Shotgun2;
 
 public class Shotgun2Bullet extends Bullet {
 
     public static final Texture IMG = new Texture(Gdx.files.internal("RedCircleBullet.psd"));
+    public static final Texture IMG2 = new Texture(Gdx.files.internal("BlueCircleBullet.psd"));
 
     public Shotgun2Bullet(Vector3 vect, float x, float y) {
-        super(IMG, 400, 40, 40, 15, vect, x, y);
+        super(IMG2, 400, 40, 40, 15, vect, x, y);
+    }
+
+    public Shotgun2Bullet(Vector3 vect, float x, float y, boolean isEn) {
+        super(IMG2, 400, 40, 40, 15, vect, x, y);
+        if (isEn) {
+            isEnemy = true;
+            texture = IMG;
+        }
     }
 
     @Override

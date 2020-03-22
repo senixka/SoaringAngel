@@ -7,17 +7,32 @@ import com.mygdx.game.Bullet;
 
 public class DNKBullet extends Bullet {
     public static final Texture IMG = new Texture(Gdx.files.internal("RedCircleBullet.psd"));
+    public static final Texture IMG2 = new Texture(Gdx.files.internal("BlueCircleBullet.psd"));
     Vector3 center;
     double alp;
     double angSpeed = 180;
 
     public DNKBullet(Vector3 vect, float x, float y, int num) {
-        super(IMG, 600, 20, 20, 5, vect, x, y);
+        super(IMG2, 600, 20, 20, 5, vect, x, y);
         center = new Vector3(x, y, 0);
         if (num == 1) {
             alp = 0;
         } else {
             alp = 180;
+        }
+    }
+
+    public DNKBullet(Vector3 vect, float x, float y, int num, boolean isEn) {
+        super(IMG2, 600, 20, 20, 5, vect, x, y);
+        center = new Vector3(x, y, 0);
+        if (num == 1) {
+            alp = 0;
+        } else {
+            alp = 180;
+        }
+        if (isEn) {
+            isEnemy = true;
+            texture = IMG;
         }
     }
 

@@ -9,6 +9,8 @@ import com.mygdx.game.MapGenerator.GameMapController;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
 import com.mygdx.game.MapGenerator.Pair;
 import com.mygdx.game.NPCs.Seller;
+import com.mygdx.game.Potions.EnergyPotion;
+import com.mygdx.game.Potions.HealthPotion;
 import com.mygdx.game.Weapons.Bazook;
 import com.mygdx.game.Weapons.DNKgun;
 import com.mygdx.game.Weapons.FirstGun;
@@ -71,18 +73,23 @@ public class World {
         Inventory.create();
         Shop.create();
 
-        Inventory.add(new Bazook());
-        Inventory.add(new FirstGun());
-        Inventory.add(new TNTGun());
-        Inventory.add(new Shotgun2());
-        Inventory.add(new Shotgun());
-        Inventory.add(new DNKgun());
+        Inventory.add(Helper.getRandomWeapon());
+        Inventory.add(Helper.getRandomWeapon());
+        Inventory.add(new HealthPotion());
+        Inventory.add(new EnergyPotion());
+
+//        Inventory.add(new Bazook());
+//        Inventory.add(new FirstGun());
+//        Inventory.add(new TNTGun());
+//        Inventory.add(new Shotgun2());
+//        Inventory.add(new Shotgun());
+//        Inventory.add(new DNKgun());
         //Inventory.add(new Relstron());
         //Inventory.add(new SpeedGun());
         //Inventory.add(new WeaponGun());
-        Inventory.add(new Flamethrower());
-        Inventory.add(new Icethrower());
-        Inventory.add(new RicochetGun());
+//        Inventory.add(new Flamethrower());
+//        Inventory.add(new Icethrower());
+//        Inventory.add(new RicochetGun());
 
         Pair temp = World.gameMapController.teleportPersInMaze();
         Vector3 tmp = GameMapController.mapCordsToGame(new Vector3(temp.first, temp.second, 0));

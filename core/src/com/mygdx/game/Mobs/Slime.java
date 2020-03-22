@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class Slime extends Mob {
 
     private static final Texture zombie = new Texture(Gdx.files.internal("Zombie.psd"));
-    public int timer = 0;
+    public float timer = 0;
 
     public Slime() {
 
@@ -70,19 +70,18 @@ public class Slime extends Mob {
         }
     }
 
-    private void shoot(Vector3 vec) {
+    private void shoot(Vector3 vec, float delta) {
         Vector3 newVec = new Vector3(World.pers.getCenter().x, World.pers.getCenter().y, 0);
         int targetX = (int) GameMapGenerator.gameCordsToMap(newVec).x;
         int targetY = (int) GameMapGenerator.gameCordsToMap(newVec).y;
         if (!room.isPointInRoom(targetX, targetY)) {
             return;
         }
-        if (timer == 0) {
-            Bullet b = new FirstBullet(Helper.norm(vec), x + sizeX / 2, y + sizeY / 2);
-            b.isEnemy = true;
-            timer = 20;
+        if (timer <= 0) {
+            Bullet b = new FirstBullet(Helper.norm(vec), x + sizeX / 2, y + sizeY / 2, true);
+            timer = 1;
         } else {
-            --timer;
+            timer -= delta;
         }
     }
 
@@ -94,6 +93,6 @@ public class Slime extends Mob {
         vec.x *= delta * speed;
         vec.y *= delta * speed;
         move(delta);
-        shoot(vec);
+        shoot(vec, delta);
     }
 }

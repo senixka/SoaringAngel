@@ -9,11 +9,21 @@ import com.mygdx.game.Rectangle;
 
 public class RicochetBullet extends Bullet {
     public static final Texture IMG = new Texture(Gdx.files.internal("RedCircleBullet.psd"));
+    public static final Texture IMG2 = new Texture(Gdx.files.internal("BlueCircleBullet.psd"));
     public int live = 2;
 
     public RicochetBullet(Vector3 vect, float x, float y) {
-        super(IMG, 600, 20, 20, 5, vect, x, y);
+        super(IMG2, 600, 20, 20, 5, vect, x, y);
         dead = 1000;
+    }
+
+    public RicochetBullet(Vector3 vect, float x, float y, boolean isEn) {
+        super(IMG2, 600, 20, 20, 5, vect, x, y);
+        dead = 1000;
+        if (isEn) {
+            isEnemy = true;
+            texture = IMG;
+        }
     }
 
     @Override

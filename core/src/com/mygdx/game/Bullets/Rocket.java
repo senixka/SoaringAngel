@@ -12,9 +12,18 @@ import com.mygdx.game.World;
 
 public class Rocket extends Bullet {
     public static final Texture IMG = new Texture(Gdx.files.internal("RedCircleBullet.psd"));
+    public static final Texture IMG2 = new Texture(Gdx.files.internal("BlueCircleBullet.psd"));
 
     public Rocket(Vector3 vect, float x, float y) {
-        super(IMG, 400, 40, 40, 15, vect, x, y);
+        super(IMG2, 400, 40, 40, 15, vect, x, y);
+    }
+
+    public Rocket(Vector3 vect, float x, float y, boolean isEn) {
+        super(IMG2, 400, 40, 40, 15, vect, x, y);
+        if (isEn) {
+            isEnemy = true;
+            texture = IMG;
+        }
     }
 
     @Override

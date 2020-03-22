@@ -1,8 +1,23 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.Weapons.Bazook;
+import com.mygdx.game.Weapons.DNKgun;
+import com.mygdx.game.Weapons.FirstGun;
+import com.mygdx.game.Weapons.Flamethrower;
+import com.mygdx.game.Weapons.Icethrower;
+import com.mygdx.game.Weapons.Relstron;
+import com.mygdx.game.Weapons.RicochetGun;
+import com.mygdx.game.Weapons.Shotgun;
+import com.mygdx.game.Weapons.Shotgun2;
+import com.mygdx.game.Weapons.SpeedGun;
+import com.mygdx.game.Weapons.TNTGun;
+import com.mygdx.game.Weapons.WeaponGun;
+
+import java.util.Random;
 
 public class Helper {
+    public static final Random rnd = new Random();
     public static float dist(Vector3 v, Vector3 v2) {
         float a = v.x - v2.x;
         float b = v.y - v2.y;
@@ -76,5 +91,36 @@ public class Helper {
         }
 
         return false;
+    }
+
+    public static Weapon getRandomWeapon() {
+        int r = Math.abs(rnd.nextInt()) % 12;
+        if (r == 0) {
+            return new Bazook();
+        } else if (r == 1) {
+            return new DNKgun();
+        } else if (r == 2) {
+            return new FirstGun();
+        } else if (r == 3) {
+            return new Flamethrower();
+        } else if (r == 4) {
+            return new Icethrower();
+        } else if (r == 5) {
+            return new Relstron();
+        } else if (r == 6) {
+            return new RicochetGun();
+        } else if (r == 7) {
+            return new Shotgun();
+        } else if (r == 8) {
+            return new Shotgun2();
+        } else if (r == 9) {
+            return new SpeedGun();
+        } else if (r == 10) {
+            return new TNTGun();
+        } else if (r == 11) {
+            return new WeaponGun();
+        }
+
+        return null;
     }
 }
