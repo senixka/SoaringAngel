@@ -37,8 +37,8 @@ public class Weapon extends Subject {
             return Helper.norm(getPers().lastVect.cpy());
         }
 
-        float x = getPers().target.x - getPers().getX();
-        float y = getPers().target.y - getPers().getY();
+        float x = getPers().target.getCenter().x - getPers().getCenter().x;
+        float y = getPers().target.getCenter().y - getPers().getCenter().y;
         return Helper.norm(new Vector3(x, y, 0));
     }
 

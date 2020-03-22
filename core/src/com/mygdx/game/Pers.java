@@ -90,7 +90,7 @@ public class Pers {
         if (weapon != null) {
             weapon.update(delta);
         }
-        energy = maxEnergy;
+        //energy = maxEnergy;
     }
 
     public Rectangle getBody() {
@@ -107,6 +107,14 @@ public class Pers {
         hp -= dmg;
         if (hp < 0) {
             hp = 0;
+        }
+    }
+
+    public void addEnergy(int en) {
+        if (en + energy > maxEnergy) {
+            energy = maxEnergy;
+        } else {
+            energy += en;
         }
     }
 }

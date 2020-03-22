@@ -34,6 +34,7 @@ public class World {
     public static ArrayList<Subject> subjects;
     public static ArrayList<MyAnimation> myAnimations;
     public static ArrayList<NPC> npcs;
+    public static ArrayList<Dot> dots;
     public static int[][] map;
     public static Texture miniMap;
     public static Texture pix, pix2, pix3, pix4;
@@ -55,6 +56,8 @@ public class World {
 
         npcs = new ArrayList<>();
         npcs.add(new Seller(-100, -100));
+
+        dots = new ArrayList<>();
 
         pix = new Texture(Gdx.files.internal("StoneUp.psd"));
         pix2 = new Texture(Gdx.files.internal("StoneDown.psd"));
@@ -98,6 +101,10 @@ public class World {
 
         for (MyAnimation animation : myAnimations) {
             animation.update(delta);
+        }
+
+        for (Dot dot : dots) {
+            dot.update(delta);
         }
 
         // Надо думать как ускорить этот кусок кода,
@@ -156,6 +163,14 @@ public class World {
             Mob mob = itMob.next();
             if (mob.isDead()) {
                 itMob.remove();
+            }
+        }
+
+        Iterator<Dot> itDot = dots.iterator();
+        while (itDot.hasNext()) {
+            Dot dot = itDot.next();
+            if (dot.take()) {
+                itDot.remove();
             }
         }
 //        for (int i = 0; i < mobs.size(); ++i) {
@@ -306,6 +321,9 @@ public class World {
         }
         for (MyAnimation animation : myAnimations) {
             animation.draw();
+        }
+        for (Dot dot : dots) {
+            dot.draw();
         }
 
         for (NPC npc : npcs) {

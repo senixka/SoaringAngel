@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Animations.MonsterAppear;
+import com.mygdx.game.Dots.EnergyDot;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
 import com.mygdx.game.MapGenerator.Room;
 
@@ -52,6 +53,7 @@ public class Mob {
         if (hp <= 0 && !isDead) {
             isDead = true;
             room.removeMob(this);
+            World.dots.add(new EnergyDot(x, y));
         }
         return isDead;
     }
