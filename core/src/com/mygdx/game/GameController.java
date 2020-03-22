@@ -39,6 +39,7 @@ public class GameController implements InputProcessor {
 
 
     public GameController() {
+        Gdx.input.setCatchBackKey(true);
     }
 
     @Override
@@ -66,6 +67,9 @@ public class GameController implements InputProcessor {
         }
         if (Input.Keys.SHIFT_LEFT == keycode) {
             World.pers.setSpeedBoost(600);
+        }
+        if (Input.Keys.BACK == keycode) {
+            MyGame.staticSetScreen(new PauseMenuScreen());
         }
         return false;
     }

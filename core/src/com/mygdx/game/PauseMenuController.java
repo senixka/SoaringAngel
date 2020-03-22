@@ -16,6 +16,10 @@ public class PauseMenuController implements InputProcessor {
         if (Input.Keys.ESCAPE == keycode) {
             MyGame.gameScreen.contin();
         }
+        if (Input.Keys.BACK == keycode) {
+            MyGame.gameScreen.contin();
+        }
+
         return false;
     }
 
