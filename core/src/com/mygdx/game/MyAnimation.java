@@ -10,9 +10,9 @@ public class MyAnimation {
     private int FRAME_ROWS;
     private float stateTime;
     private float x, y, sizeX, sizeY;
-    private Animation<TextureRegion> walkAnimation;
+    public Animation<TextureRegion> walkAnimation;
     private Texture walkSheet;
-    private TextureRegion[] walkFrames;
+    public TextureRegion[] walkFrames;
     private TextureRegion currentFrame;
 
     public MyAnimation(Texture texture, int FRAME_COLS, int FRAME_ROWS) {

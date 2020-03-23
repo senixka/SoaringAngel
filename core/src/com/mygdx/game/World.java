@@ -336,7 +336,9 @@ public class World {
         for (NPC npc : npcs) {
             npc.draw1();
         }
-        pers.draw();
+        if (!pers.isDead()) {
+            pers.draw();
+        }
         for (NPC npc : npcs) {
             npc.draw2();
         }

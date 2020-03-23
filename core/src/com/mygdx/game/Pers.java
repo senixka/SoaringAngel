@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.Animations.DeathAnimation;
 
 public class Pers {
     public float x = 0, y = 0;
@@ -104,9 +105,15 @@ public class Pers {
 //    }
 
     public void hit(int dmg) {
+        if (hp == 0) {
+            return;
+        }
         hp -= dmg;
         if (hp < 0) {
             hp = 0;
+        }
+        if (hp == 0) {
+            World.myAnimations.add(new DeathAnimation(getCenter().x, getCenter().y));
         }
     }
 
@@ -116,5 +123,9 @@ public class Pers {
         } else {
             energy += en;
         }
+    }
+
+    public boolean isDead() {
+        return hp == 0;
     }
 }

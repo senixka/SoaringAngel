@@ -37,13 +37,24 @@ public class GameController implements InputProcessor {
     public int attackFinger = -1;
     public int speedFinger = -1;
 
+    public int deadTime;
+    public static final Texture deathMenuIMG = new Texture(Gdx.files.internal("DeathMenu.psd"));
+    public static final Vector3 deathMenu = new Vector3(300, 200, 0);
+    public static final int deathMenuSizeX = 200, deathMenuSizeY = 100;
+
+    public static Button deathBackToMenu;
+
 
     public GameController() {
         Gdx.input.setCatchBackKey(true);
+        deadTime = 200;
     }
 
     @Override
     public boolean keyDown(int keycode) {
+        if (World.pers.isDead()) {
+            return false;
+        }
         if (Input.Keys.W == keycode) {
             flagW = true;
         }
@@ -101,6 +112,9 @@ public class GameController implements InputProcessor {
 
     @Override
     public boolean keyTyped(char character) {
+        if (World.pers.isDead()) {
+            return false;
+        }
         if (character == 'e') {
             World.take();
             World.talk();
@@ -135,6 +149,15 @@ public class GameController implements InputProcessor {
         MyGame.camera.unproject(touch);
         float x = MyGame.camera.position.x - MyGame.camera.viewportWidth / 2;
         float y = MyGame.camera.position.y - MyGame.camera.viewportHeight / 2;
+        if (World.pers.isDead() && deadTime <= 0) {
+            if (deathBackToMenu.isPressed(touch)) {
+                MyGame.staticSetScreen(new MainMenuScreen());
+            }
+            return false;
+        }
+        if (World.pers.isDead()) {
+            return false;
+        }
         if (touch.x < x + 400 * sizeX / 800 && contrFinger == -1) {
             contrFinger = pointer;
             contrStart = new Vector3(touch.x - x, touch.y - y, 0);
@@ -189,6 +212,9 @@ public class GameController implements InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        if (World.pers.isDead()) {
+            return false;
+        }
         Vector3 drag = new Vector3(screenX, screenY, 0);
         MyGame.camera.unproject(drag);
         float x = MyGame.camera.position.x - MyGame.camera.viewportWidth / 2;
@@ -234,6 +260,20 @@ public class GameController implements InputProcessor {
         float sizeY = MyGame.camera.viewportHeight;
         float x = MyGame.camera.position.x - sizeX / 2;
         float y = MyGame.camera.position.y + sizeY / 2;
+        if (World.pers.isDead() && deadTime > 0) {
+            deadTime--;
+            if (deadTime == 0) {
+                deathBackToMenu = new Button((int) (x + (deathMenu.x + 50) * sizeX / 800), (int) (y - sizeY + (deathMenu.y + 20) * sizeY / 480), (int) (deathMenuSizeX / 2 * sizeX / 800), (int) (20 * sizeY / 480));
+                deathBackToMenu.setText("Main Menu");
+            }
+            return;
+        } else if (World.pers.isDead() && deadTime <= 0) {
+            MyGame.batch.draw(deathMenuIMG, x + deathMenu.x * sizeX / 800, y - sizeY + deathMenu.y * sizeY / 480, deathMenuSizeX * sizeX / 800, deathMenuSizeY * sizeY / 480);
+            MyGame.font.getData().setScale(1.5f);
+            deathBackToMenu.draw(MyGame.batch, MyGame.font);
+            return;
+        }
+
         MyGame.batch.draw(hpAndEnergy, x, y - sizeY / 480 * 50, sizeX / 800 * 150, sizeY / 480 * 50);
         MyGame.batch.draw(hp, x + sizeX / 800 * 40, y - sizeY / 480 * 20, sizeX / 800 * 100 * ((float) World.pers.hp / World.pers.maxHp), sizeY / 480 * 10);
         MyGame.batch.draw(energy, x + sizeX / 800 * 40, y - sizeY / 480 * 40, sizeX / 800 * 100 * ((float) World.pers.energy / World.pers.maxEnergy), sizeY / 480 * 10);

@@ -47,6 +47,8 @@ public class Inventory {
         left = new Button(560, 60, 130, 50);
         left.setText("Throw");
 
+        usingSubject = null;
+
     }
 
     public static void draw() {
