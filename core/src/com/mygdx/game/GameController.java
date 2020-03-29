@@ -74,12 +74,14 @@ public class GameController implements InputProcessor {
             }
         }
         if (Input.Keys.ESCAPE == keycode) {
+            globalUp();
             MyGame.staticSetScreen(new PauseMenuScreen());
         }
         if (Input.Keys.SHIFT_LEFT == keycode) {
             World.pers.setSpeedBoost(600);
         }
         if (Input.Keys.BACK == keycode) {
+            globalUp();
             MyGame.staticSetScreen(new PauseMenuScreen());
         }
         return false;
@@ -117,7 +119,9 @@ public class GameController implements InputProcessor {
         }
         if (character == 'e') {
             World.take();
-            World.talk();
+            if (World.talk()) {
+                globalUp();
+            }
         }
 
         if (character == 'i') {
@@ -305,5 +309,14 @@ public class GameController implements InputProcessor {
         }
         MyGame.batch.draw(menuButtonIMG, menuButton.x * sizeX / 800 + x, menuButton.y * sizeY / 480 + y, menuSize * sizeX / 800, menuSize * sizeY / 480);
 
+    }
+
+    public void globalUp() {
+        for (int i = 0; i < 10; i++) {
+            touchUp(0, 0, i, 0);
+        }
+        for (int i = 0; i < 250; i++) {
+            keyUp(i);
+        }
     }
 }

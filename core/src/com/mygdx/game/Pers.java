@@ -114,6 +114,7 @@ public class Pers {
         }
         if (hp == 0) {
             World.myAnimations.add(new DeathAnimation(getCenter().x, getCenter().y));
+            World.controller.globalUp();
         }
     }
 
