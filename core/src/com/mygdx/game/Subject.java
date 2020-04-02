@@ -38,4 +38,8 @@ public class Subject {
         free = false;
         return true;
     }
+
+    public int getCost() {
+        return 5;
+    }
 }

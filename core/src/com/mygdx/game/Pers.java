@@ -16,6 +16,7 @@ public class Pers {
     public boolean flip = false;
     public int hp, energy;
     public int maxHp = 50, maxEnergy = 250;
+    public int money = 0;
 
     public Pers() {
         texture = new Texture(Gdx.files.internal("Human.psd"));

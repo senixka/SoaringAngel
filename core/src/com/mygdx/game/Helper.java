@@ -123,4 +123,8 @@ public class Helper {
 
         return null;
     }
+
+    public static Vector3 getRndVector() {
+        return norm(new Vector3(rnd.nextInt(), rnd.nextInt(), 0));
+    }
 }

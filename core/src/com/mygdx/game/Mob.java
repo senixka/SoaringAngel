@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Animations.MonsterAppear;
 import com.mygdx.game.Dots.EnergyDot;
+import com.mygdx.game.Dots.MoneyDot;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
 import com.mygdx.game.MapGenerator.Room;
 
@@ -53,7 +54,10 @@ public class Mob {
         if (hp <= 0 && !isDead) {
             isDead = true;
             room.removeMob(this);
-            World.dots.add(new EnergyDot(x, y));
+            Vector3 rand = Helper.getRndVector();
+            World.dots.add(new EnergyDot(x + rand.x * 20, y + rand.y * 20));
+            rand = Helper.getRndVector();
+            World.dots.add(new MoneyDot(x + rand.x * 10, y + rand.y * 10));
         }
         return isDead;
     }

@@ -51,7 +51,7 @@ public class Shop {
                 s = subjects.get(aim);
             }
             if (s != null) {
-                MyGame.font.draw(MyGame.batch, s.text, 410, 430);
+                MyGame.font.draw(MyGame.batch, s.text + "\nCost: " + Integer.toString(s.getCost()), 410, 430);
             }
             MyGame.font.getData().setScale(2);
             take.draw(MyGame.batch, MyGame.font);
@@ -79,7 +79,11 @@ public class Shop {
         if (Inventory.isFull()) {
             return;
         }
+        if (World.pers.money < subjects.get(aim).getCost()) {
+            return;
+        }
         Inventory.add(subjects.get(aim));
+        World.pers.money -= subjects.get(aim).getCost();
         subjects.remove(aim);
         aim = -1;
     }

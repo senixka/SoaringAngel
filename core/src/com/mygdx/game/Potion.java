@@ -10,4 +10,9 @@ public class Potion extends Subject {
     public void use() {
 
     }
+
+    @Override
+    public int getCost() {
+        return 10;
+    }
 }

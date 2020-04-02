@@ -44,6 +44,8 @@ public class GameController implements InputProcessor {
 
     public static Button deathBackToMenu;
 
+    public static final Texture moneyIMG = new Texture(Gdx.files.internal("Money.psd"));
+
 
     public GameController() {
         Gdx.input.setCatchBackKey(true);
@@ -141,6 +143,9 @@ public class GameController implements InputProcessor {
         }
         if (character == '2') {
             World.pers.energy = World.pers.maxEnergy;
+        }
+        if (character == '3') {
+            World.pers.money += 5;
         }
         return false;
     }
@@ -281,6 +286,9 @@ public class GameController implements InputProcessor {
         MyGame.batch.draw(hpAndEnergy, x, y - sizeY / 480 * 50, sizeX / 800 * 150, sizeY / 480 * 50);
         MyGame.batch.draw(hp, x + sizeX / 800 * 40, y - sizeY / 480 * 20, sizeX / 800 * 100 * ((float) World.pers.hp / World.pers.maxHp), sizeY / 480 * 10);
         MyGame.batch.draw(energy, x + sizeX / 800 * 40, y - sizeY / 480 * 40, sizeX / 800 * 100 * ((float) World.pers.energy / World.pers.maxEnergy), sizeY / 480 * 10);
+        MyGame.batch.draw(moneyIMG, x + sizeX / 800 * 150, y - sizeY / 480 * 20, sizeX / 800 * 20, sizeY / 480 * 20);
+        MyGame.font.getData().setScale(1f * sizeX / 800);
+        MyGame.font.draw(MyGame.batch, Integer.toString(World.pers.money), x + sizeX / 800 * 150 + sizeX / 800 * 20, y - sizeY / 480 * 5);
 
         MyGame.batch.draw(World.miniMap, x + sizeX - World.map.length * zoom, y - World.map[0].length * zoom, World.map.length * zoom, World.map[0].length * zoom);
 

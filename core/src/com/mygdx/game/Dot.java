@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector3;
 public class Dot {
     float x, y, sizeX, sizeY;
     public Texture img;
-    private float timer, hesitate = 5;
+    private float timer, hesitate = 10, speed = 100;
 
     public Dot(float x, float y, float sizeX, float sizeY) {
         this.x = x;
@@ -16,6 +16,12 @@ public class Dot {
     }
 
     public void update(float delta) {
+        if (Helper.dist(World.pers.getCenter(), new Vector3(x, y, 0)) < 200) {
+            Vector3 v = Helper.norm(new Vector3(World.pers.getCenter().x - x, World.pers.getCenter().y - y, 0));
+            x += v.x * speed * delta;
+            y += v.y * speed * delta;
+            return;
+        }
         if (timer > 1) {
             hesitate = -hesitate;
             timer = 0;
