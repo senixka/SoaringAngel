@@ -46,6 +46,9 @@ public class GameController implements InputProcessor {
 
     public static final Texture moneyIMG = new Texture(Gdx.files.internal("Money.psd"));
 
+    public boolean isDialogue = false;
+    public Dialogue dialogue = null;
+
 
     public GameController() {
         Gdx.input.setCatchBackKey(true);
@@ -55,6 +58,12 @@ public class GameController implements InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         if (World.pers.isDead()) {
+            return false;
+        }
+        if (isDialogue) {
+            if (Input.Keys.SPACE == keycode) {
+                dialogue.click();
+            }
             return false;
         }
         if (Input.Keys.W == keycode) {
@@ -119,6 +128,9 @@ public class GameController implements InputProcessor {
         if (World.pers.isDead()) {
             return false;
         }
+        if (isDialogue) {
+            return false;
+        }
         if (character == 'e') {
             World.take();
             if (World.talk()) {
@@ -165,6 +177,10 @@ public class GameController implements InputProcessor {
             return false;
         }
         if (World.pers.isDead()) {
+            return false;
+        }
+        if (isDialogue) {
+            dialogue.click();
             return false;
         }
         if (touch.x < x + 400 * sizeX / 800 && contrFinger == -1) {
@@ -283,6 +299,11 @@ public class GameController implements InputProcessor {
             return;
         }
 
+        if (isDialogue) {
+            dialogue.draw(x, y - sizeY, sizeX / 800);
+            return;
+        }
+
         MyGame.batch.draw(hpAndEnergy, x, y - sizeY / 480 * 50, sizeX / 800 * 150, sizeY / 480 * 50);
         MyGame.batch.draw(hp, x + sizeX / 800 * 40, y - sizeY / 480 * 20, sizeX / 800 * 100 * ((float) World.pers.hp / World.pers.maxHp), sizeY / 480 * 10);
         MyGame.batch.draw(energy, x + sizeX / 800 * 40, y - sizeY / 480 * 40, sizeX / 800 * 100 * ((float) World.pers.energy / World.pers.maxEnergy), sizeY / 480 * 10);
@@ -326,5 +347,15 @@ public class GameController implements InputProcessor {
         for (int i = 0; i < 250; i++) {
             keyUp(i);
         }
+    }
+
+    public void setDialogue(Dialogue dialogue) {
+        this.dialogue = dialogue;
+        this.isDialogue = true;
+    }
+
+    public void removeDialogue() {
+        this.isDialogue = false;
+        dialogue = null;
     }
 }

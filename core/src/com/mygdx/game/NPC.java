@@ -36,4 +36,8 @@ public class NPC {
     public boolean talk() {
         return false;
     }
+
+    public void finalTalk() {
+        return;
+    }
 }

@@ -25,6 +25,7 @@ public class MainMenuScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
         button1 = new Button(200, 300, 400, 100);
         button1.setText("Start");
+
     }
 
     @Override
