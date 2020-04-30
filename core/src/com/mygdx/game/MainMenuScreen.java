@@ -12,7 +12,7 @@ public class MainMenuScreen implements Screen {
     public SpriteBatch batch;
     public BitmapFont font;
     public OrthographicCamera camera;
-    public Button button1;
+    public Button button1, button2;
 
     public MainMenuScreen() {
         batch = MyGame.batch;
@@ -25,6 +25,9 @@ public class MainMenuScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
         button1 = new Button(200, 300, 400, 100);
         button1.setText("Start");
+
+        button2 = new Button(200, 100, 400, 100);
+        button2.setText("Education");
 
     }
 
@@ -40,12 +43,16 @@ public class MainMenuScreen implements Screen {
         camera.update();
         batch.begin();
         button1.draw(batch, font);
+        button2.draw(batch, font);
         batch.end();
         if (Gdx.input.justTouched()) {
             Vector3 vector3 = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(vector3);
             if (button1.isPressed(vector3)) {
                 MyGame.staticSetScreen(new GameScreen());
+            }
+            if (button2.isPressed(vector3)) {
+                MyGame.staticSetScreen(new EducationScreen());
             }
         }
     }

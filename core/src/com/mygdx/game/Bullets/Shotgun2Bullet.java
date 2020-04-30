@@ -13,11 +13,11 @@ public class Shotgun2Bullet extends Bullet {
     public static final Texture IMG2 = new Texture(Gdx.files.internal("BlueCircleBullet.psd"));
 
     public Shotgun2Bullet(Vector3 vect, float x, float y) {
-        super(IMG2, 400, 40, 40, 15, vect, x, y);
+        super(IMG2, 400, 40, 40, 11, vect, x, y);
     }
 
     public Shotgun2Bullet(Vector3 vect, float x, float y, boolean isEn) {
-        super(IMG2, 400, 40, 40, 15, vect, x, y);
+        super(IMG2, 400, 40, 40, 11, vect, x, y);
         if (isEn) {
             isEnemy = true;
             texture = IMG;

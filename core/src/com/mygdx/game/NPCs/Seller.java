@@ -48,7 +48,7 @@ public class Seller extends NPC {
 
     public Dialogue createDialogue() {
         Dialogue d = new Dialogue(this);
-        d.addSpeechFrame(HeadIMG, "Hey, Dude! Do you want to by something interesting. I'm sure, you'll like it");
+        d.addSpeechFrame(HeadIMG, "Hey, Dude! Do you want to buy something interesting. I'm sure, you'll like it");
         d.addSpeechFrame(HeadIMG, "Don't hesitate. Come on!");
         d.addSpeechFrame(null, "*thoughts* I think I really can find something useful here");
         return d;
