@@ -1,4 +1,28 @@
 package com.mygdx.game.MapGenerator;
 
-public class ConstantMapGenerator {
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+
+public class ConstantMapGenerator extends MapGenerator{
+    public static final int frame = 20;
+    int [][] map;
+    public ConstantMapGenerator(String filename) {
+        String [] s = Gdx.files.internal(filename).readString().split("\n");
+        map = new int[s[0].length()][s.length];
+        for (int i = 0; i < s[0].length(); i++) {
+            for (int j = 0; j < s.length; j++) {
+                map[i][j] = s[s.length - j - 1].charAt(i) - '0';
+            }
+        }
+    }
+
+    @Override
+    public int[][] getMap() {
+        return map;
+    }
+
+    @Override
+    public Texture getMiniMap() {
+        return super.getMiniMap();
+    }
 }

@@ -311,11 +311,11 @@ public class GameController implements InputProcessor {
         MyGame.font.getData().setScale(1f * sizeX / 800);
         MyGame.font.draw(MyGame.batch, Integer.toString(World.pers.money), x + sizeX / 800 * 150 + sizeX / 800 * 20, y - sizeY / 480 * 5);
 
-        MyGame.batch.draw(World.miniMap, x + sizeX - World.map.length * zoom, y - World.map[0].length * zoom, World.map.length * zoom, World.map[0].length * zoom);
-
-        Vector3 p = GameMapController.gameCordsToMap(World.pers.getCenter());
-        MyGame.batch.draw(persColor, x + sizeX - World.map.length * zoom + p.x * zoom - 15 * zoom / 2, y - World.map[0].length * zoom + p.y * zoom - 15 * zoom / 2, 15 * zoom, 15 * zoom);
-
+        if (World.miniMap != null) {
+            MyGame.batch.draw(World.miniMap, x + sizeX - World.map.length * zoom, y - World.map[0].length * zoom, World.map.length * zoom, World.map[0].length * zoom);
+            Vector3 p = GameMapController.gameCordsToMap(World.pers.getCenter());
+            MyGame.batch.draw(persColor, x + sizeX - World.map.length * zoom + p.x * zoom - 15 * zoom / 2, y - World.map[0].length * zoom + p.y * zoom - 15 * zoom / 2, 15 * zoom, 15 * zoom);
+        }
         y -= sizeY;
         if (contrStart != null) {
             MyGame.batch.draw(contr1, contrStart.x + x - contrSize * sizeX / 800 / 2, contrStart.y - contrSize * sizeY / 480 / 2 + y, contrSize * sizeX / 800, contrSize * sizeY / 480);
