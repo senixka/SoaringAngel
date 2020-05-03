@@ -2,11 +2,14 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.maps.Map;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.MapGenerator.BossMapController;
 import com.mygdx.game.MapGenerator.BossMapGenerator;
 import com.mygdx.game.MapGenerator.GameMapController;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
+import com.mygdx.game.MapGenerator.MapController;
+import com.mygdx.game.MapGenerator.MapGenerator;
 import com.mygdx.game.MapGenerator.Pair;
 import com.mygdx.game.NPCs.Seller;
 import com.mygdx.game.Potions.EnergyPotion;
@@ -40,11 +43,16 @@ public class World {
     public static int[][] map;
     public static Texture miniMap;
     public static Texture pix, pix2, pix3, pix4;
-    public static GameMapController gameMapController;
-    public static BossMapController bossMapController;
+
+//    public static GameMapController gameMapController;
+//    public static BossMapController bossMapController;
+
+    public static MapController mapController;
+
     public static Texture CD1, CD2, CD3;
     public static boolean CDFlag = false;
     public static int CDCnt = 150;
+    public static int mapLevel = 0;
 
     public static void start(GameController controller2) {
         pers = new Pers();
@@ -91,7 +99,8 @@ public class World {
 //        Inventory.add(new Icethrower());
 //        Inventory.add(new RicochetGun());
 
-        Pair temp = World.gameMapController.teleportPersInMaze();
+        //Pair temp = World.gameMapController.teleportPersInMaze();
+        Pair temp = mapController.teleportPersInMaze();
         Vector3 tmp = GameMapController.mapCordsToGame(new Vector3(temp.first, temp.second, 0));
         World.pers.setPosition(tmp.x, tmp.y);
 
@@ -131,37 +140,59 @@ public class World {
         pers.update(delta);
         setTarget();
 
-        if (gameMapController != null) {
-            if (gameMapController.goToNextLevel()) {
-                BossMapGenerator bossGen = new BossMapGenerator(100, 100, 35);
-                bossMapController = new BossMapController(bossGen);
-                map = bossMapController.getMap();
-                miniMap = bossMapController.getMiniMap();
-                Pair temp = World.bossMapController.teleportPersInMaze();
-                Vector3 tmp = BossMapController.mapCordsToGame(new Vector3(temp.first, temp.second, 0));
-                World.pers.setPosition(tmp.x, tmp.y);
-                subjects.clear();
-                gameMapController = null;
-                CDFlag = true;
-            } else {
-                gameMapController.update();
-            }
-        } else if (bossMapController != null) {
-            if (bossMapController.goToNextLevel()) {
-                GameMapGenerator gameGen = new GameMapGenerator(250, 250, 13, 15, 15, 30, "prt", 30, 30);
-                gameMapController = new GameMapController(gameGen);
-                map = gameMapController.getMap();
-                miniMap = gameMapController.getMiniMap();
-                Pair temp = World.gameMapController.teleportPersInMaze();
-                Vector3 tmp = GameMapController.mapCordsToGame(new Vector3(temp.first, temp.second, 0));
-                World.pers.setPosition(tmp.x, tmp.y);
-                subjects.clear();
-                bossMapController = null;
-                CDFlag = true;
-            } else {
-                bossMapController.update();
-            }
+
+        if (mapController != null) {
+            mapController.update();
         }
+        if (mapController != null && mapController.goToNextLevel()) {
+            MapGenerator mapGenerator;
+            if (mapController instanceof GameMapController) {
+                mapGenerator = new BossMapGenerator(100, 100, 35);
+                mapController = new BossMapController((BossMapGenerator) mapGenerator);
+            } else {
+                mapGenerator = new GameMapGenerator(250, 250, 13, 15, 15, 30, "prt", 30, 30);
+                mapController = new GameMapController((GameMapGenerator) mapGenerator);
+            }
+            map = mapController.getMap();
+            miniMap = mapController.getMiniMap();
+            Pair temp = mapController.teleportPersInMaze();
+            Vector3 tmp = BossMapController.mapCordsToGame(new Vector3(temp.first, temp.second, 0));
+            World.pers.setPosition(tmp.x, tmp.y);
+            subjects.clear();
+            CDFlag = true;
+        }
+
+//        if (gameMapController != null) {
+//            if (gameMapController.goToNextLevel()) {
+//                BossMapGenerator bossGen = new BossMapGenerator(100, 100, 35);
+//                bossMapController = new BossMapController(bossGen);
+//                map = bossMapController.getMap();
+//                miniMap = bossMapController.getMiniMap();
+//                Pair temp = World.bossMapController.teleportPersInMaze();
+//                Vector3 tmp = BossMapController.mapCordsToGame(new Vector3(temp.first, temp.second, 0));
+//                World.pers.setPosition(tmp.x, tmp.y);
+//                subjects.clear();
+//                gameMapController = null;
+//                CDFlag = true;
+//            } else {
+//                gameMapController.update();
+//            }
+//        } else if (bossMapController != null) {
+//            if (bossMapController.goToNextLevel()) {
+//                GameMapGenerator gameGen = new GameMapGenerator(250, 250, 13, 15, 15, 30, "prt", 30, 30);
+//                gameMapController = new GameMapController(gameGen);
+//                map = gameMapController.getMap();
+//                miniMap = gameMapController.getMiniMap();
+//                Pair temp = World.gameMapController.teleportPersInMaze();
+//                Vector3 tmp = GameMapController.mapCordsToGame(new Vector3(temp.first, temp.second, 0));
+//                World.pers.setPosition(tmp.x, tmp.y);
+//                subjects.clear();
+//                bossMapController = null;
+//                CDFlag = true;
+//            } else {
+//                bossMapController.update();
+//            }
+//        }
     }
 
     public static void delete() {
@@ -392,11 +423,15 @@ public class World {
     }
 
     public static void createMap() {
+        if (mapLevel == 0) {
+
+        }
         long start = System.currentTimeMillis();
         GameMapGenerator tempGenerator = new GameMapGenerator(250, 250, 13, 15, 15, 30, "prt", 30, 30);
         map = tempGenerator.getMap();
         miniMap = tempGenerator.getMiniMap();
-        gameMapController = new GameMapController(tempGenerator);
+        //gameMapController = new GameMapController(tempGenerator);
+        mapController = new GameMapController(tempGenerator);
         System.out.println("Generation time: " + (double) (System.currentTimeMillis() - start) + " millis");
     }
 }

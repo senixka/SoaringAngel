@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.World;
 
-public class BossMapController {
+public class BossMapController extends MapController{
     public static final int wallCode = 0, spaceCode = 1;
     public int WIDTH, HEIGHT, BORDER;
     public int[][] localGameMap;
@@ -16,6 +16,7 @@ public class BossMapController {
     public boolean isControllerActivate;
 
     public BossMapController(BossMapGenerator generator) {
+        super(generator);
         this.HEIGHT = generator.HEIGHT;
         this.WIDTH = generator.WIDTH;
         this.BORDER = generator.BORDER;

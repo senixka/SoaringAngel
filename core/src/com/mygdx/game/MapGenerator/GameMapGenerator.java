@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class GameMapGenerator {
+public class GameMapGenerator extends MapGenerator{
     /**
      * 0 <= BONUS_ROOM_EPS <= 100
      */

@@ -1,7 +1,9 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,6 +14,7 @@ public class MyGame extends Game {
     public static OrthographicCamera camera;
     public static MyGame game;
     public static GameScreen gameScreen;
+    public static Music music;
 
     public static void staticSetScreen(Screen sc) {
         game.setScreen(sc);
@@ -23,6 +26,11 @@ public class MyGame extends Game {
         batch = new SpriteBatch();
         font = new BitmapFont();
         camera = new OrthographicCamera();
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("IntroAction.mp3"));
+        music.setLooping(true);
+        music.play();
+
         game = this;
         game.setScreen(new MainMenuScreen());
     }
@@ -34,6 +42,7 @@ public class MyGame extends Game {
 
     @Override
     public void dispose() {
+        music.dispose();
         super.dispose();
     }
 }

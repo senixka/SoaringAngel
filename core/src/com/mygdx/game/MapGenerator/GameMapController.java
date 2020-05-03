@@ -12,7 +12,7 @@ import com.mygdx.game.World;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GameMapController {
+public class GameMapController extends MapController{
 
     public static final int wallCode = 0, spaceCode = 1, openDoorCode = 2, closeDoorCode = -2, roomPassedCode = 3, wayPassedCode = 3;
     public final int WIDTH, HEIGHT;
@@ -30,6 +30,7 @@ public class GameMapController {
     public boolean wasUpdateMiniMap;
 
     public GameMapController(GameMapGenerator generator) {
+        super(generator);
         this.mapGenerator = generator;
         this.HEIGHT = generator.HEIGHT;
         this.WIDTH = generator.WIDTH;
