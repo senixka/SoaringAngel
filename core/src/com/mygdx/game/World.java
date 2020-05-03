@@ -6,6 +6,8 @@ import com.badlogic.gdx.maps.Map;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.MapGenerator.BossMapController;
 import com.mygdx.game.MapGenerator.BossMapGenerator;
+import com.mygdx.game.MapGenerator.ConstantMapController;
+import com.mygdx.game.MapGenerator.ConstantMapGenerator;
 import com.mygdx.game.MapGenerator.GameMapController;
 import com.mygdx.game.MapGenerator.GameMapGenerator;
 import com.mygdx.game.MapGenerator.MapController;
@@ -410,7 +412,10 @@ public class World {
 
     public static void createMap() {
         MapGenerator mapGenerator;
-        if (mapLevel % 2 == 1) {
+        if (mapLevel == 0) {
+            mapGenerator = new ConstantMapGenerator("Maps/StartRoom.txt");
+            mapController = new ConstantMapController(mapGenerator);
+        } else if (mapLevel % 2 == 0) {
             mapGenerator = new BossMapGenerator(100, 100, 35);
             mapController = new BossMapController((BossMapGenerator) mapGenerator);
         } else {
