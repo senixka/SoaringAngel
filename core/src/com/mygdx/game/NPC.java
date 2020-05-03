@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 
 public class NPC {
-    float x, y, sizeX, sizeY;
-    Texture texture;
+    public float x, y, sizeX, sizeY;
+    public Texture texture;
 
     public NPC(Texture texture, float x, float y, float sizeX, float sizeY) {
         this.x = x;
@@ -14,6 +14,7 @@ public class NPC {
         this.sizeY = sizeY;
         this.texture = texture;
     }
+
 
     public void draw1() {
         if (y > World.pers.y) {

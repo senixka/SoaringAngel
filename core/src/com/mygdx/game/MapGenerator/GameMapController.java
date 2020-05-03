@@ -253,7 +253,8 @@ public class GameMapController extends MapController{
     }
 
     public boolean goToNextLevel() {
-        return roomQuantity == roomPassed;
+        return true;
+        //return roomQuantity == roomPassed;
     }
 
     private Node pointToNode(int pointX, int pointY) {
