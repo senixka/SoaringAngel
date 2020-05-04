@@ -339,9 +339,6 @@ public class World {
         for (Mob mob : mobs) {
             mob.draw();
         }
-        for (Bullet bullet : bullets) {
-            bullet.draw();
-        }
         for (Subject subject : subjects) {
             subject.drawSubject();
         }
@@ -360,6 +357,9 @@ public class World {
         }
         for (NPC npc : npcs) {
             npc.draw2();
+        }
+        for (Bullet bullet : bullets) {
+            bullet.draw();
         }
 
         controller.draw();
