@@ -6,13 +6,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class MyAnimation {
     public boolean looping;
+    public Animation<TextureRegion> walkAnimation;
+    public TextureRegion[] walkFrames;
     private int FRAME_COLS;
     private int FRAME_ROWS;
     private float stateTime;
     private float x, y, sizeX, sizeY;
-    public Animation<TextureRegion> walkAnimation;
     private Texture walkSheet;
-    public TextureRegion[] walkFrames;
     private TextureRegion currentFrame;
 
     public MyAnimation(Texture texture, int FRAME_COLS, int FRAME_ROWS) {

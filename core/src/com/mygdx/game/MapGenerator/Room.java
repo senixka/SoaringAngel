@@ -4,20 +4,20 @@ import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Mob;
 import com.mygdx.game.Mobs.Boss;
 import com.mygdx.game.Mobs.Slime;
-import com.mygdx.game.NPC;
+import com.mygdx.game.NPCs.Portal;
 import com.mygdx.game.NPCs.Seller;
 import com.mygdx.game.Subject;
-import com.mygdx.game.Weapon;
-import com.mygdx.game.Weapons.DNKgun;
 import com.mygdx.game.World;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static com.mygdx.game.World.npcs;
+
 public class Room {
     public int x, y, width, height;
-    public boolean isRoomVisible, isPassed, isActivated, isBonus, isEnter;
+    public boolean isRoomVisible, isPassed, isActivated, isBonus, isEnter, isPortal;
     public ArrayList<ArrayList<Pair>> ways;
     public ArrayList<Mob> mobs;
     public ArrayList<Door> doors;
@@ -38,6 +38,8 @@ public class Room {
         this.isPassed = false;
         this.isActivated = false;
         this.isBonus = false;
+        this.isEnter = false;
+        this.isPortal = false;
         this.node = node;
         this.ways = new ArrayList<>();
         this.mobs = new ArrayList<>();
@@ -50,31 +52,47 @@ public class Room {
     public void configureBonusEnvironment() {
         isBonus = true;
         isEnter = false;
+        isPortal = false;
         shelter.index = Shelter.shelters.indexOf(Shelter.tmpEmpty);
-        //Subject s = new DNKgun();
         Pair point = getCenterPointInRoom();
         Vector3 temp = GameMapController.mapCordsToGame(new Vector3(point.first, point.second, 0));
-        //s.setPosition(temp.x, temp.y);
-        //World.subjects.add(s);
-        //subjects.add(s);
         Seller seller = new Seller(temp.x, temp.y);
-        World.npcs.add(seller);
+        npcs.add(seller);
     }
 
     public void configureEnterEnvironment() {
         isEnter = true;
         isBonus = false;
+        isPortal = false;
         shelter.index = Shelter.shelters.indexOf(Shelter.tmpEmpty);
     }
 
+    public void configurePortalEnvironment() {
+        isPortal = true;
+        isBonus = false;
+        isEnter = false;
+        shelter.index = Shelter.shelters.indexOf(Shelter.tmpEmpty);
+        Pair point = getCenterPointInRoom();
+        Vector3 temp = GameMapController.mapCordsToGame(new Vector3(point.first, point.second, 0));
+        Portal portal = new Portal(temp.x, temp.y);
+        npcs.add(portal);
+    }
+
     public void markRoomBonus() {
-        if (!isEnter) {
+        if (!isEnter && !isPortal) {
             isBonus = true;
         }
     }
 
     public void markRoomEnter() {
         isEnter = true;
+        isBonus = false;
+        isPortal = false;
+    }
+
+    public void markRoomPortal() {
+        isPortal = true;
+        isEnter = false;
         isBonus = false;
     }
 

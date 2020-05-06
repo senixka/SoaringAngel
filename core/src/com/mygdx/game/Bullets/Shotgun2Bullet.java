@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.Bullet;
 import com.mygdx.game.Helper;
-import com.mygdx.game.Weapons.Shotgun2;
 
 public class Shotgun2Bullet extends Bullet {
 

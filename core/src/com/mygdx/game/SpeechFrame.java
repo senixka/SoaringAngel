@@ -6,15 +6,15 @@ import com.badlogic.gdx.graphics.Texture;
 public class SpeechFrame {
     //Very special instrument, don't use it
 
-    String text;
-    public boolean hasHead;
     public static final Texture background = new Texture(Gdx.files.internal("blue.png"));
     public static final float x = 0, y = 0, sizeX = 800, sizeY = 160;
     public static final float headSizeX = 160, headSizeY = 160;
     public static final int lineLenNoHead = 64, lineLenHead = 44;
+    public boolean hasHead;
     public int lineLen;
     public String[] write = new String[5];
     public Texture head;
+    String text;
 
     public SpeechFrame(Texture head) {
         this.hasHead = true;

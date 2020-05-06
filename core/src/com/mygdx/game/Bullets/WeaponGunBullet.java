@@ -25,17 +25,16 @@ public class WeaponGunBullet extends Bullet {
     }
 
 
-
     @Override
     public void update(float delta) {
         super.update(delta);
         if (dead % 50 == 0) {
             Mob target = null;
             float dist = 10000;
-            System.out.println("Pau");
+            //System.out.println("Pau");
             for (Mob mob : World.mobs) {
                 if (dist > Helper.dist(new Vector3(x, y, 0), mob.getCenter())) {
-                    System.out.println("Yes target");
+                    //System.out.println("Yes target");
                     dist = Helper.dist(new Vector3(x, y, 0), mob.getCenter());
                     target = mob;
                 }

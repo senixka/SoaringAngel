@@ -35,7 +35,7 @@ public class ShopController implements InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Vector3 v = new Vector3(screenX, screenY, 0);
         MyGame.camera.unproject(v);
-        System.out.println(v.x + " " + v.y);
+        //System.out.println(v.x + " " + v.y);
         if (back.contains(v)) {
             MyGame.gameScreen.contin();
         }

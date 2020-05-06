@@ -6,13 +6,10 @@ import com.mygdx.game.Dialogue;
 import com.mygdx.game.Helper;
 import com.mygdx.game.MyGame;
 import com.mygdx.game.NPC;
-import com.mygdx.game.PauseMenuScreen;
 import com.mygdx.game.Potions.EnergyPotion;
 import com.mygdx.game.Potions.HealthPotion;
 import com.mygdx.game.Shop;
 import com.mygdx.game.ShopScreen;
-import com.mygdx.game.Weapon;
-import com.mygdx.game.Weapons.FirstGun;
 import com.mygdx.game.World;
 
 public class Seller extends NPC {

@@ -12,7 +12,7 @@ import com.mygdx.game.World;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GameMapController extends MapController{
+public class GameMapController extends MapController {
 
     public static final int wallCode = 0, spaceCode = 1, openDoorCode = 2, closeDoorCode = -2, roomPassedCode = 3, wayPassedCode = 3;
     public final int WIDTH, HEIGHT;
@@ -58,17 +58,6 @@ public class GameMapController extends MapController{
         this.roomQuantity = localRooms.size();
     }
 
-    public int[][] getMap() {
-        int[][] gameMap = new int[HEIGHT][WIDTH];
-        copyMatrix(localGameMap, gameMap);
-        return gameMap;
-    }
-
-    public Texture getMiniMap() {
-        Texture temp = new Texture(localPixMiniMap);
-        return temp;
-    }
-
     public static Vector3 gameCordsToMap(Vector3 vec) {
         Vector3 tmp = new Vector3();
         tmp.x = (int) (vec.x / (float) World.pixSize);
@@ -105,6 +94,17 @@ public class GameMapController extends MapController{
         }
     }
 
+    public int[][] getMap() {
+        int[][] gameMap = new int[HEIGHT][WIDTH];
+        copyMatrix(localGameMap, gameMap);
+        return gameMap;
+    }
+
+    public Texture getMiniMap() {
+        Texture temp = new Texture(localPixMiniMap);
+        return temp;
+    }
+
     public void update() {
         Vector3 persVec = new Vector3(World.pers.getCenter());
         persVec = gameCordsToMap(persVec);
@@ -126,17 +126,7 @@ public class GameMapController extends MapController{
             return;
         }
 
-        if (room.isBonus) {
-            room.isPassed = true;
-            ++roomPassed;
-            openAllDoors(room);
-            breakAllDoors(room);
-            markRoomInMiniMap(localGameMiniMap, room);
-            updatePixelMiniMap(localGameMiniMap, localPixMiniMap);
-            return;
-        }
-
-        if (room.isEnter) {
+        if (room.isBonus || room.isEnter || room.isPortal) {
             room.isPassed = true;
             ++roomPassed;
             openAllDoors(room);

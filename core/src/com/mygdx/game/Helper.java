@@ -18,6 +18,7 @@ import java.util.Random;
 
 public class Helper {
     public static final Random rnd = new Random();
+
     public static float dist(Vector3 v, Vector3 v2) {
         float a = v.x - v2.x;
         float b = v.y - v2.y;

@@ -19,7 +19,7 @@ public class DNKgun extends Weapon {
     @Override
     public void draw() {
         if (getPers() == null) {
-            System.out.println("AAAAAAAAA");
+            //System.out.println("AAAAAAAAA");
         }
         float x = getPers().getX();
         float y = getPers().getY();

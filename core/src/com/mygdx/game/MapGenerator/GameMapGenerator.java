@@ -13,12 +13,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class GameMapGenerator extends MapGenerator{
+public class GameMapGenerator extends MapGenerator {
+    public static final int wallCode = 0, spaceCode = 1, openDoorCode = 2, closeDoorCode = -2;
     /**
      * 0 <= BONUS_ROOM_EPS <= 100
      */
     public final int WIDTH, HEIGHT, BORDER, MIN_HEIGHT, MIN_WIDTH, BONUS_ROOM_EPS, ENTER_ROOM_HEIGHT, ENTER_ROOM_WIDTH;
-    public static final int wallCode = 0, spaceCode = 1, openDoorCode = 2, closeDoorCode = -2;
     public String connectRoomsFunction;
     public int[][] localGameMap, localGameMiniMap;
 
@@ -29,6 +29,7 @@ public class GameMapGenerator extends MapGenerator{
     public Node root, mazeEnter;
     public Pixmap localPixMiniMap;
     public Texture miniMapTexture;
+    public Room portalRoom;
 
     //######################### PUBLIC #########################
 
@@ -65,6 +66,7 @@ public class GameMapGenerator extends MapGenerator{
             createRooms(root.rightChild);
             getLeafsRoom(rooms, root);
             java.util.Collections.shuffle(rooms);
+            createPortalRoom(rooms);
             createBonusRooms(rooms);
 
             initRoomGameMap(rooms);
@@ -113,8 +115,6 @@ public class GameMapGenerator extends MapGenerator{
         }
     }
 
-    //######################### INIT #########################
-
     private static void fillMatrix(boolean[][] matrix, boolean val) {
         for (int i = 0; i < matrix.length; ++i) {
             for (int j = 0; j < matrix[i].length; ++j) {
@@ -133,6 +133,8 @@ public class GameMapGenerator extends MapGenerator{
         Texture temp = new Texture(localPixMiniMap);
         return temp;
     }
+
+    //######################### INIT #########################
 
     private void initGameMap(int[][] gameMap, ArrayList<Room> rooms) {
         for (int i = 0; i < rooms.size(); ++i) {
@@ -175,21 +177,6 @@ public class GameMapGenerator extends MapGenerator{
         }
     }
 
-    //######################### PRINT #########################
-
-    private void initPixelMiniMap(int[][] gameMiniMap, Pixmap pixmap) {
-        pixmap.setColor(Color.BLUE);
-        pixmap.fill();
-        pixmap.setColor(Color.RED);
-        for (int i = 0; i < HEIGHT; i++) {
-            for (int j = 0; j < WIDTH; j++) {
-                if (gameMiniMap[i][j] != wallCode) {
-                    pixmap.drawPixel(i, WIDTH - 1 - j);
-                }
-            }
-        }
-    }
-
     private void initRoomGameMap(ArrayList<Room> rooms) {
         for (int r = 0; r < rooms.size(); ++r) {
             Room room = rooms.get(r);
@@ -216,6 +203,21 @@ public class GameMapGenerator extends MapGenerator{
             intToNode.put(r + 1, node);
         }
     }
+
+    private void initPixelMiniMap(int[][] gameMiniMap, Pixmap pixmap) {
+        pixmap.setColor(Color.BLUE);
+        pixmap.fill();
+        pixmap.setColor(Color.RED);
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                if (gameMiniMap[i][j] != wallCode) {
+                    pixmap.drawPixel(i, WIDTH - 1 - j);
+                }
+            }
+        }
+    }
+
+    //######################### PRINT #########################
 
     private void printRoomShelterToMap(int[][] gameMap, Room room) {
         ArrayList<Instruction> temp = Shelter.shelters.get(room.shelter.index).tmp;
@@ -250,16 +252,6 @@ public class GameMapGenerator extends MapGenerator{
         }
     }
 
-    //######################### CREATE #########################
-
-    private void printRoomToMap(int[][] gameMap, Room room) {
-        for (int i = room.x; i < room.x + room.height; ++i) {
-            for (int j = room.y; j < room.y + room.width; ++j) {
-                gameMap[i][j] = spaceCode;
-            }
-        }
-    }
-
     private void printWaysToMap(int[][] gameMap, Room room) {
         for (int i = 0; i < room.ways.size(); ++i) {
             ArrayList<Pair> way = room.ways.get(i);
@@ -277,6 +269,25 @@ public class GameMapGenerator extends MapGenerator{
             } else {
                 gameMap[door.x][door.y] = closeDoorCode;
             }
+        }
+    }
+
+    private void printRoomToMap(int[][] gameMap, Room room) {
+        for (int i = room.x; i < room.x + room.height; ++i) {
+            for (int j = room.y; j < room.y + room.width; ++j) {
+                gameMap[i][j] = spaceCode;
+            }
+        }
+    }
+
+    //######################### CREATE #########################
+
+    private void createRooms(Node v) {
+        if (v.rightChild != null) {
+            createRooms(v.leftChild);
+            createRooms(v.rightChild);
+        } else {
+            v.createRoom();
         }
     }
 
@@ -321,15 +332,14 @@ public class GameMapGenerator extends MapGenerator{
         }
     }
 
-    //######################### CONNECT #########################
-
-    private void createRooms(Node v) {
-        if (v.rightChild != null) {
-            createRooms(v.leftChild);
-            createRooms(v.rightChild);
-        } else {
-            v.createRoom();
+    private void createPortalRoom(ArrayList<Room> rooms) {
+        int index = Rand.AbsModInt(rooms.size());
+        while (rooms.get(index).isEnter) {
+            index = Rand.AbsModInt(rooms.size());
         }
+        portalRoom = rooms.get(index);
+        portalRoom.markRoomPortal();
+        portalRoom.configurePortalEnvironment();
     }
 
     private void createBonusRooms(ArrayList<Room> rooms) {
@@ -347,6 +357,8 @@ public class GameMapGenerator extends MapGenerator{
             room.extractDoorsFromWays();
         }
     }
+
+    //######################### CONNECT #########################
 
     private ArrayList<Pair> connectToPoints(int[][] gameMap, Pair a, Pair b) {
         ArrayList<Pair> path = new ArrayList<>();

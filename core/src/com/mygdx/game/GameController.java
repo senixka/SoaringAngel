@@ -6,7 +6,6 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.MapGenerator.GameMapController;
-import com.mygdx.game.MapGenerator.Pair;
 
 public class GameController implements InputProcessor {
     public static final float zoom = 1.0f;
@@ -17,6 +16,10 @@ public class GameController implements InputProcessor {
     public static final int speedSize = 40;
     public static final int menuSize = 40;
     public static final Vector3 menuButton = new Vector3(750, 300, 0);
+    public static final Texture deathMenuIMG = new Texture(Gdx.files.internal("DeathMenu.psd"));
+    public static final Vector3 deathMenu = new Vector3(300, 200, 0);
+    public static final int deathMenuSizeX = 200, deathMenuSizeY = 100;
+    public static final Texture moneyIMG = new Texture(Gdx.files.internal("Money.psd"));
     public static Texture hpAndEnergy = new Texture(Gdx.files.internal("HpAndEnergy.psd"));
     public static Texture hp = new Texture(Gdx.files.internal("red.png"));
     public static Texture energy = new Texture(Gdx.files.internal("blue.png"));
@@ -30,22 +33,14 @@ public class GameController implements InputProcessor {
     public static Texture speedButton2 = new Texture(Gdx.files.internal("Dodge2.psd"));
     public static Texture menuButtonIMG = new Texture(Gdx.files.internal("Inventory.psd"));
     public static boolean flag = true;
+    public static Button deathBackToMenu;
     public boolean flagA, flagS, flagD, flagW;
     public Vector3 speedVector;
     public int contrFinger = -1;
     public Vector3 contrStart;
     public int attackFinger = -1;
     public int speedFinger = -1;
-
     public int deadTime;
-    public static final Texture deathMenuIMG = new Texture(Gdx.files.internal("DeathMenu.psd"));
-    public static final Vector3 deathMenu = new Vector3(300, 200, 0);
-    public static final int deathMenuSizeX = 200, deathMenuSizeY = 100;
-
-    public static Button deathBackToMenu;
-
-    public static final Texture moneyIMG = new Texture(Gdx.files.internal("Money.psd"));
-
     public boolean isDialogue = false;
     public Dialogue dialogue = null;
 

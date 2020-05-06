@@ -8,7 +8,7 @@ import com.mygdx.game.Mobs.Boss;
 
 import java.util.ArrayList;
 
-public class BossMapGenerator extends MapGenerator{
+public class BossMapGenerator extends MapGenerator {
     public static final int wallCode = 0, spaceCode = 1;
     public int WIDTH, HEIGHT, BORDER;
     public int[][] localGameMap, localGameMiniMap;

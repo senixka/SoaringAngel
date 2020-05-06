@@ -12,8 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class VideoGenerator
-{
+public class VideoGenerator {
     public static void create(String input, String output, String videoFileName, float fps) {
         int i;
 
@@ -23,35 +22,27 @@ public class VideoGenerator
         File[] files = directory.listFiles();
         ArrayList<File> videoFiles = new ArrayList<File>();
 
-        for (i = 0; i < files.length; i++)
-        {
+        for (i = 0; i < files.length; i++) {
             String fileName = files[i].getName();
-            if (fileName.matches(videoFileName))
-            {
+            if (fileName.matches(videoFileName)) {
                 videoFiles.add(files[i]);
             }
         }
 
         // sorts the video files by name
-        Collections.sort(videoFiles, new Comparator<File>()
-        {
-            public int compare(File fileA, File fileB)
-            {
+        Collections.sort(videoFiles, new Comparator<File>() {
+            public int compare(File fileA, File fileB) {
                 return fileA.getName().compareTo(fileB.getName());
             }
         });
 
         // read byte arrays of audio and video files
         ArrayList<byte[]> videoFilesBytes = new ArrayList<byte[]>();
-        try
-        {
-            for (i = 0; i < videoFiles.size(); i++)
-            {
+        try {
+            for (i = 0; i < videoFiles.size(); i++) {
                 videoFilesBytes.add(Files.readAllBytes(videoFiles.get(i).toPath()));
             }
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -62,8 +53,7 @@ public class VideoGenerator
         int headerPosition = 0;
         headerBuffer.putFloat(fps);
         headerBuffer.putInt(videoFilesBytes.size());
-        for (i = 0; i < videoFilesBytes.size(); i++)
-        {
+        for (i = 0; i < videoFilesBytes.size(); i++) {
             headerBuffer.putInt(headerSize + headerPosition);
             headerBuffer.putInt(videoFilesBytes.get(i).length);
             headerPosition += videoFilesBytes.get(i).length;
@@ -71,31 +61,20 @@ public class VideoGenerator
 
         // outputs the data to new file
         OutputStream outputStream = null;
-        try
-        {
+        try {
             outputStream = new BufferedOutputStream(new FileOutputStream(output));
             outputStream.write(headerBuffer.array());
-            for (i = 0; i < videoFilesBytes.size(); i++)
-            {
+            for (i = 0; i < videoFilesBytes.size(); i++) {
                 outputStream.write(videoFilesBytes.get(i));
             }
-        }
-        catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
-        }
-        finally
-        {
-            try
-            {
+        } finally {
+            try {
                 outputStream.close();
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }

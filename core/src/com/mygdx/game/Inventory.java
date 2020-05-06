@@ -62,7 +62,7 @@ public class Inventory {
             Subject s = null;
             if (aim == 15) {
                 s = usingSubject;
-            } else if (aim < 10 && aim < subjects.size()){
+            } else if (aim < 10 && aim < subjects.size()) {
                 s = subjects.get(aim);
             }
             if (s != null) {
@@ -133,15 +133,15 @@ public class Inventory {
 
     public static void touchDown(Vector3 v) {
         if (aim >= 0 && aim < 10 && subjects.get(aim) instanceof Weapon && take.isPressed(v)) {
-            System.out.println("Yeeep");
+            //System.out.println("Yeeep");
             equip();
         }
         if (aim >= 0 && aim < 10 && subjects.get(aim) instanceof Potion && use.isPressed(v)) {
-            System.out.println("Yeeep");
+            //System.out.println("Yeeep");
             use();
         }
         if (aim != -1 && left.isPressed(v)) {
-            System.out.println("Yeeep");
+            //System.out.println("Yeeep");
             left();
         }
         setAim(v);

@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 
 public class Dot {
-    float x, y, sizeX, sizeY;
     public Texture img;
+    float x, y, sizeX, sizeY;
     private float timer, hesitate = 10, speed = 100;
 
     public Dot(float x, float y, float sizeX, float sizeY) {
@@ -35,9 +35,6 @@ public class Dot {
     }
 
     public boolean take() {
-        if (Helper.dist(World.pers.getCenter(), new Vector3(x, y, 0)) < 30) {
-            return true;
-        }
-        return false;
+        return Helper.dist(World.pers.getCenter(), new Vector3(x, y, 0)) < 30;
     }
 }

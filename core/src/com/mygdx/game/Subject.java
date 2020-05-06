@@ -18,7 +18,7 @@ public class Subject {
     }
 
     public void setText(String text) {
-        this.text = name + "\n"+ text;
+        this.text = name + "\n" + text;
     }
 
     public void setPosition(float x, float y) {

@@ -15,7 +15,8 @@ public class Pers {
     public Vector3 lastVect;
     public boolean flip = false;
     public int hp, energy;
-    public int maxHp = 50, maxEnergy = 250;
+    //public int maxHp = 50, maxEnergy = 250;
+    public int maxHp = 500000, maxEnergy = 2500000;
     public int money = 0;
 
     public Pers() {

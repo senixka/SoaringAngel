@@ -2,7 +2,6 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.maps.Map;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.MapGenerator.BossMapController;
 import com.mygdx.game.MapGenerator.BossMapGenerator;
@@ -17,18 +16,6 @@ import com.mygdx.game.NPCs.Portal;
 import com.mygdx.game.NPCs.Seller;
 import com.mygdx.game.Potions.EnergyPotion;
 import com.mygdx.game.Potions.HealthPotion;
-import com.mygdx.game.Weapons.Bazook;
-import com.mygdx.game.Weapons.DNKgun;
-import com.mygdx.game.Weapons.FirstGun;
-import com.mygdx.game.Weapons.Flamethrower;
-import com.mygdx.game.Weapons.Icethrower;
-import com.mygdx.game.Weapons.Relstron;
-import com.mygdx.game.Weapons.RicochetGun;
-import com.mygdx.game.Weapons.Shotgun;
-import com.mygdx.game.Weapons.Shotgun2;
-import com.mygdx.game.Weapons.SpeedGun;
-import com.mygdx.game.Weapons.TNTGun;
-import com.mygdx.game.Weapons.WeaponGun;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -276,7 +263,7 @@ public class World {
         }
 
         if (World.pers == null) {
-            System.out.println("Whaat");
+            //System.out.println("Whaat");
             return;
         }
 
@@ -427,7 +414,9 @@ public class World {
         Pair temp = mapController.teleportPersInMaze();
         Vector3 tmp = BossMapController.mapCordsToGame(new Vector3(temp.first, temp.second, 0));
         World.pers.setPosition(tmp.x, tmp.y);
-        npcs.add(new Portal(tmp.x + 200, tmp.y));
+        if (mapLevel == 0) {
+            npcs.add(new Portal(tmp.x + 200, tmp.y));
+        }
         CDFlag = true;
 //        long start = System.currentTimeMillis();
 //        GameMapGenerator tempGenerator = new GameMapGenerator(250, 250, 13, 15, 15, 30, "prt", 30, 30);

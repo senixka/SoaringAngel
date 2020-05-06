@@ -10,18 +10,18 @@ import com.mygdx.game.MapGenerator.GameMapGenerator;
 import com.mygdx.game.MapGenerator.Room;
 
 public class Mob {
+    public static final Texture fireConditionIMG = new Texture(Gdx.files.internal("FireCondition.psd"));
+    public static final Texture iceConditionIMG = new Texture(Gdx.files.internal("IceCondition.psd"));
+    public static final Texture preMobIMG = new Texture(Gdx.files.internal("PreMob.psd"));
     public float x, y, speed = 150;
     public int intX, intY, sizeX, sizeY, hp, maxHP;
     public Texture texture, mark;
     public Room room;
     public boolean target, isDead;
     public boolean fireCondition = false, iceCondition = false;
-    private float timerFire = 0, timerIce = 0;
-    public static final Texture fireConditionIMG = new Texture(Gdx.files.internal("FireCondition.psd"));
-    public static final Texture iceConditionIMG = new Texture(Gdx.files.internal("IceCondition.psd"));
-    public static final Texture preMobIMG = new Texture(Gdx.files.internal("PreMob.psd"));
     public float startTime = 1;
     public boolean isStarted = false;
+    private float timerFire = 0, timerIce = 0;
 
 
     public Mob() {

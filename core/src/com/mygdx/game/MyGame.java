@@ -22,7 +22,7 @@ public class MyGame extends Game {
 
     @Override
     public void create() {
-        System.out.println("We start");
+        //System.out.println("We start");
         batch = new SpriteBatch();
         font = new BitmapFont();
         camera = new OrthographicCamera();

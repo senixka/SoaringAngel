@@ -59,7 +59,7 @@ public class Weapon extends Subject {
         return s;
     }
 
-    public String  getDamage() {
+    public String getDamage() {
         return "";
     }
 

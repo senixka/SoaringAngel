@@ -9,9 +9,9 @@ import java.util.List;
 
 public class Shop {
     public static final Texture frame = new Texture(Gdx.files.internal("red.png"));
-    public List<Subject> subjects;
     public static Rectangle[] icons;
     public static Button take;
+    public List<Subject> subjects;
     public int aim = -1;
 
 
@@ -47,11 +47,11 @@ public class Shop {
             MyGame.font.getData().setScale(1.5f);
             Subject s = null;
 
-            if (aim < 10 && aim < subjects.size()){
+            if (aim < 10 && aim < subjects.size()) {
                 s = subjects.get(aim);
             }
             if (s != null) {
-                MyGame.font.draw(MyGame.batch, s.text + "\nCost: " + Integer.toString(s.getCost()), 410, 430);
+                MyGame.font.draw(MyGame.batch, s.text + "\nCost: " + s.getCost(), 410, 430);
             }
             MyGame.font.getData().setScale(2);
             take.draw(MyGame.batch, MyGame.font);
@@ -100,7 +100,7 @@ public class Shop {
 
     public void touchDown(Vector3 v) {
         if (aim != -1 && take.isPressed(v)) {
-            System.out.println("Yeeep");
+            //System.out.println("Yeeep");
             buy();
         }
         setAim(v);

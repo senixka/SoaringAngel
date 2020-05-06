@@ -12,6 +12,7 @@ public class FirstBullet extends Bullet {
     public FirstBullet(Vector3 vect, float x, float y) {
         super(IMG2, 600, 20, 20, 5, vect, x, y);
     }
+
     public FirstBullet(Vector3 vect, float x, float y, boolean isEn) {
         super(IMG2, 600, 20, 20, 5, vect, x, y);
         if (isEn) {

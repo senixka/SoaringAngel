@@ -3,16 +3,17 @@ package com.mygdx.game.MapGenerator;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
-public class ConstantMapGenerator extends MapGenerator{
+public class ConstantMapGenerator extends MapGenerator {
     public static final int frame = 20;
-    int [][] map;
+    int[][] map;
+
     public ConstantMapGenerator(String filename) {
-        System.out.println(Gdx.files.internal(filename).readString());
-        String [] s = Gdx.files.internal(filename).readString().split("\r\n");
-        System.out.println(s.length);
-        for (int i = 0; i < s.length; i++) {
-            System.out.println(s[i]);
-        }
+        //System.out.println(Gdx.files.internal(filename).readString());
+        String[] s = Gdx.files.internal(filename).readString().split("\r\n");
+        //System.out.println(s.length);
+//        for (int i = 0; i < s.length; i++) {
+//            System.out.println(s[i]);
+//        }
         map = new int[s[0].length()][s.length];
         for (int i = 0; i < s[0].length(); i++) {
             for (int j = 0; j < s.length; j++) {
