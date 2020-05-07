@@ -1,11 +1,11 @@
 package com.mygdx.game.MapGenerator;
 
 public class ConstantMapController extends MapController {
-    MapGenerator mapGenerator;
+    ConstantMapGenerator mapGenerator;
 
     public ConstantMapController(MapGenerator mapGenerator) {
         super(mapGenerator);
-        this.mapGenerator = mapGenerator;
+        this.mapGenerator = (ConstantMapGenerator) mapGenerator;
     }
 
     @Override
@@ -15,6 +15,6 @@ public class ConstantMapController extends MapController {
 
     @Override
     public Pair teleportPersInMaze() {
-        return new Pair(3, 3);
+        return new Pair(3 + ConstantMapGenerator.frame, 3 + ConstantMapGenerator.frame);
     }
 }

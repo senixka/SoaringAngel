@@ -14,10 +14,15 @@ public class ConstantMapGenerator extends MapGenerator {
 //        for (int i = 0; i < s.length; i++) {
 //            System.out.println(s[i]);
 //        }
-        map = new int[s[0].length()][s.length];
+        map = new int[s[0].length() + 2 * frame][s.length + 2 * frame];
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
+                map[i][j] = 0;
+            }
+        }
         for (int i = 0; i < s[0].length(); i++) {
             for (int j = 0; j < s.length; j++) {
-                map[i][j] = s[s.length - j - 1].charAt(i) - '0';
+                map[i + frame][j + frame] = s[s.length - j - 1].charAt(i) - '0';
             }
         }
     }

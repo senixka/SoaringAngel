@@ -55,7 +55,6 @@ public class World {
         bullets = new ArrayList<Bullet>();
 
         npcs = new ArrayList<>();
-        npcs.add(new Seller(-100, -100));
 
         dots = new ArrayList<>();
 

@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector3;
 public class Dot {
     public Texture img;
     float x, y, sizeX, sizeY;
-    private float timer, hesitate = 10, speed = 100;
+    private float timer, hesitate = 10, speed = 500;
 
     public Dot(float x, float y, float sizeX, float sizeY) {
         this.x = x;
@@ -35,6 +35,6 @@ public class Dot {
     }
 
     public boolean take() {
-        return Helper.dist(World.pers.getCenter(), new Vector3(x, y, 0)) < 30;
+        return Helper.dist(World.pers.getCenter(), new Vector3(x, y, 0)) < 50;
     }
 }
